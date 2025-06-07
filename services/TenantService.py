@@ -16,6 +16,16 @@ class TenantService:
         return TenantRepository.create_empty_tenant(user_id)
 
     @staticmethod
+
+    def get_tenant_id_by_user_id(user_id: int) -> Optional[int]:
+        """
+        Lấy ID của tenant dựa trên user_id.
+        :param user_id: ID của người dùng.
+        :return: ID của tenant nếu tìm thấy, None nếu không tìm thấy.
+        """
+        return TenantRepository.get_tenant_id_by_user_id(user_id)
+
+    @staticmethod
     def get_tenant_by_room_id(room_id: int):
         """Lấy tenant theo RoomID và trả về dict đơn giản cho UI"""
         tenant_obj = TenantRepository.get_tenant_by_room_id(room_id)

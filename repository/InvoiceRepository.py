@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from typing import List, Dict, Any
 
 from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
 from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
@@ -185,32 +186,43 @@ class InvoiceRepository:
 
         return invoice_data
 
-
     @staticmethod
-    def  get_data_invoice_by_lanlord_id(id_lanlord):
-        # TODO: tạo truy vấn SQL lấy danh sách tất cả hóa đơn theo id phòng from INVOICE
-        data_invoice = [{
-        'room_name': 'Phòng 101',
-        'cost_rent': 3500000,
-        'electricity_cost': 3800,
-        'water_cost': 100000,
-        'internet_cost': 100000,
-        'other_cost': 20000,
-        'created_date': '2025-04-06',
-        'id_invoice': '01'
-        },
-        {
-            'room_name': 'Phòng 102',
-            'cost_rent': 3500000,
-            'electricity_cost': 4800,
-            'water_cost': 102000,
-            'internet_cost': 102000,
-            'other_cost': 22000,
-            'created_date': '2025-05-06',
-            'id_invoice': '02'
-        }
-        ]
-        return data_invoice
+    def get_data_invoice_by_lanlord_id(id_lanlord: int) -> List[Dict[str, Any]]:
+        """
+        Lấy danh sách tất cả hóa đơn theo id chủ trọ, kèm theo tên phòng.
+        Trả về list[dict] với các khóa:
+          - room_name
+          - cost_rent
+          - electricity_cost
+          - water_cost
+          - internet_cost
+          - other_cost
+          - created_date
+          - id_invoice
+        """
+        if not db.connect():
+            return []
+
+        query = """
+                SELECT i.InvoiceID           AS id_invoice, 
+                       r.RoomName            AS room_name, 
+                       i.TotalRoomPrice      AS cost_rent, 
+                       i.TotalElectronicCost AS electricity_cost, 
+                       i.TotalWaterCost      AS water_cost, 
+                       i.InternetFee         AS internet_cost, 
+                       i.TotalGarbageFee     AS other_cost, 
+                       i.issue_date          AS created_date
+                FROM Invoices i JOIN Rooms r ON i.RoomID = r.RoomID
+                JOIN Landlords l ON i.LandlordID = l.LandlordID
+                WHERE i.LandlordID = ?
+                ORDER BY i.issue_date DESC 
+                """
+        cursor = db.execute(query, (id_lanlord,))
+        rows = cursor.fetchall() if cursor else []
+        db.close()
+
+        # Chuyển sqlite3.Row thành dict
+        return [dict(row) for row in rows]
 
 
     @staticmethod

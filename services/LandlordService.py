@@ -8,6 +8,15 @@ from QLNHATRO.RentalManagementApplication.backend.model.Landlord import Landlord
 class LandlordService:
     def __init__(self):  # Đúng
         pass
+    @staticmethod
+    def get_landlord_id_by_user_id(user_id: int) -> Optional[int]:
+        """
+        Lấy ID của landlord dựa trên user_id.
+        :param user_id: ID của người dùng.
+        :return: ID của landlord nếu tìm thấy, None nếu không tìm thấy.
+        """
+        return LanlordRepository.get_landlord_id_by_user_id(user_id)
+
 
     @staticmethod
     def create_empty_landlord(user_id):

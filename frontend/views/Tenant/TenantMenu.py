@@ -11,13 +11,13 @@ from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import Glob
 
 
 class TenantMenu(QWidget):
-    def __init__(self, main_window=None, user_id = None):
+    def __init__(self, main_window=None, id_tenant = None):
         super().__init__()
         print("[DEBUG] TenantMenu khởi tạo")
         self.setStyleSheet(GlobalStyle.global_stylesheet())
         self.main_window = main_window
         self.current_page = None
-        self.id_tenant = TenantRepository.get_tenant_id_from_user_id(user_id)
+        self.id_tenant = id_tenant
 
         self.main_window.setWindowTitle("Dashboard Người Thuê trọ")
         #self.main_window.setGeometry(300, 100, 1000, 600)

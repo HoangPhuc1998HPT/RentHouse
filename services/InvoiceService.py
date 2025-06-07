@@ -39,17 +39,8 @@ class InvoiceService:
     @staticmethod
     def handle_data_for_invoice_list_page(id_lanlord):
         raw_data = InvoiceRepository.get_data_invoice_by_lanlord_id(id_lanlord)
+        print(raw_data)
         number_data = []
-        '''
-                   'room_name': 'Phòng 101',
-                   'cost_rent': 3500000,
-                   'electricity_cost': 3800,
-                   'water_cost': 100000,
-                   'internet_cost': 100000,
-                   'other_cost': 20000,
-                   'created_date': '2025-04-06',
-                   'id_invoice': '01'
-        '''
         for idx, item in enumerate(raw_data, start=1):
             total_cost = (
                     item['cost_rent'] +

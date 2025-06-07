@@ -112,10 +112,6 @@ class LoginWindow(QWidget):
         login_btn.setStyleSheet("background-color: #233FF3; color: white; font-weight: bold; border-radius: 20px;")
 
 
-
-
-        #TODO đang xử lý lỗi ở đây
-
         #login_btn.clicked.connect(lambda: LoginController.go_to_check_login_window(main_window,self,email_input.text(), password_input.text()))
         login_btn.clicked.connect(self.on_click_btn_login)
 

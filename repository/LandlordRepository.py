@@ -8,6 +8,9 @@ db = Database()
 
 class LanlordRepository:
 
+
+
+
     @staticmethod
     def get_landlord_info_by_username(username: str) -> dict | None:
         """
@@ -243,6 +246,19 @@ class LanlordRepository:
             }
             landlords.append(Landlord(data))
         return landlords
+
+    @staticmethod
+    def get_landlord_id_by_user_id(user_id: int) -> int | None:
+        """
+        Trả về LandlordID tương ứng với UserID, hoặc None nếu không tìm thấy.
+        """
+        query = "SELECT LandlordID FROM Landlords WHERE UserID = ?"
+        # Bảng Landlords có cột UserID liên kết tới Users(UserID) :contentReference[oaicite:0]{index=0}
+        db.connect()
+        cursor = db.execute(query, (user_id,))
+        row = cursor.fetchone()
+        db.close()
+        return row["LandlordID"] if row else None
 
     @staticmethod
     def get_id_landlord_from_user_id(user_id: int) -> Optional[int]:
@@ -692,3 +708,5 @@ class LanlordRepository:
             print(f"[⚠️ LanlordRepository.get_landlord_data_for_invoice_view] Lỗi truy vấn: {e}")
             db.close()
             return None
+
+

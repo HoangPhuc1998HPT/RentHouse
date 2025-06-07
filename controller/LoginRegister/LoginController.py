@@ -1,4 +1,5 @@
-
+from QLNHATRO.RentalManagementApplication.services.LandlordService import LandlordService
+from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
 
 
 class LoginController:
@@ -21,13 +22,19 @@ class LoginController:
         role = user.role
         user_id = user.user_id
 
+
+
+
         if role == 'landlord':
             from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMenu import LandlordMenu
-            main_window.switch_to_page(LandlordMenu, user_id)
+            from QLNHATRO.RentalManagementApplication.Repository import LandlordRepository
+            id_landlord = LandlordService.get_landlord_id_by_user_id(user_id)
+            main_window.switch_to_page(LandlordMenu, id_landlord)
 
         elif role == 'tenant':
             from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantMenu import TenantMenu
-            main_window.switch_to_page(TenantMenu, user_id)
+            id_tenant = TenantService.get_tenant_id_by_user_id(user_id)
+            main_window.switch_to_page(TenantMenu, id_tenant)
 
         elif role == 'admin':
             from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminMenu import AdminMenu
@@ -62,24 +69,3 @@ class LoginController:
 
         # 3) (Nếu cần) điều chỉnh lại kích thước hoặc gọi lại show()
         main_window.show()
-
-    '''
-    def go_to_main_windown_lanlord(self,main_window ,user_id):
-        print(f"[LoginController] sắp MainWindowLandlord với ID: {user_id}")
-        id_lanlord = LanlordRepository.get_id_landlord_from_user_id(user_id)
-        print(f"ID landlord lấy được: {id_lanlord}")
-
-        try:
-            print(">> đang khởi tạo MainWindowLandlord")
-            #self.window = MainWindowLandlord(main_window, id_lanlord)
-            print(">> đã khởi tạo xong MainWindowLandlord")
-        except Exception as e:
-            print(f"[ERROR] Lỗi khi khởi tạo MainWindowLandlord với ID: {id_lanlord}")
-            print(e)
-            traceback.print_exc()
-
-        print(f"[LoginController] Đã tạo MainWindowLandlord với ID: {id_lanlord}")
-        self.main_window.setCentralWidget(self.window)
-        print(f"[LoginController] Đã setCentralWidget với ID: {id_lanlord}")
-        return self.main_window
-    '''
