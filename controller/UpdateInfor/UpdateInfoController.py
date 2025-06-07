@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMessageBox
-from QLNHATRO.RentalManagementApplication.backend.model.BaseInforForm import TenantFormModel, LandlordFormModel
-from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Register.UpdateInfoView import UpdateInfoView
+from RentalManagementApplication.backend.model.BaseInforForm import TenantFormModel, LandlordFormModel
+from RentalManagementApplication.frontend.views.Login_Register.Register.UpdateInfoView import UpdateInfoView
 
 
 class UpdateInfoController:
@@ -67,10 +67,10 @@ class UpdateInfoController:
         # Save data to database
         # TODO: Add database save code here
         if self.role == "Người thuê trọ":
-            from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+            from RentalManagementApplication.Repository.TenantRepository import TenantRepository
             TenantRepository.update_user_info(self.user_id, self.model.to_dict())
         else:
-            from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+            from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
             LanlordRepository.update_user_info(self.user_id, self.model.to_dict())
         print("[DEBUG] Đã lưu vào database thành công")  # Thêm dòng này
         # Show success message
@@ -134,6 +134,6 @@ class UpdateInfoController:
 
         if reply == QMessageBox.StandardButton.Yes:
             # Go back to login screen
-            from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import LoginWindow
+            from RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import LoginWindow
             self.main_window.setCentralWidget(LoginWindow(self.main_window))
 

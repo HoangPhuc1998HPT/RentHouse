@@ -1,8 +1,8 @@
 from typing import Optional
 
 
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-from QLNHATRO.RentalManagementApplication.backend.model.Landlord import Landlord
+from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from RentalManagementApplication.backend.model.Landlord import Landlord
 
 
 class LandlordService:

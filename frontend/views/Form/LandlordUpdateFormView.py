@@ -1,4 +1,4 @@
-from QLNHATRO.RentalManagementApplication.frontend.views.Form.BaseUpdateFormView import BaseUpdateFormView
+from RentalManagementApplication.frontend.views.Form.BaseUpdateFormView import BaseUpdateFormView
 
 class LandlordUpdateFormView(BaseUpdateFormView):
     def __init__(self, user_id=None):

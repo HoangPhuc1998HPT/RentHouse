@@ -4,11 +4,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 
-from QLNHATRO.RentalManagementApplication.Repository.LoginRepository import LoginRepository
-from QLNHATRO.RentalManagementApplication.controller.OTPController.OTPController import OTPController
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
+from RentalManagementApplication.Repository.LoginRepository import LoginRepository
+from RentalManagementApplication.controller.OTPController.OTPController import OTPController
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.utils.Validators import Validators
 
 
 class ForgotPasswordView(QWidget):
@@ -132,9 +132,6 @@ class ForgotPasswordView(QWidget):
         layout.addLayout(content_layout)
 
         return wrapper
-
-    from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
-    from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
 
     def on_submit(self):
         username = self.username_input.text().strip()

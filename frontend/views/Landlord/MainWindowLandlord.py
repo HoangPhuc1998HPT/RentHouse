@@ -1,9 +1,8 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
-from pydot import id_re_alpha_nums
 
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMenu import LandlordMenu
+from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Landlord.LandlordMenu import LandlordMenu
 
 
 class MainWindowLandlord(QMainWindow):

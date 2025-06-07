@@ -1,10 +1,11 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QPushButton
-
-from QLNHATRO.RentalManagementApplication.controller.AdminController.AdminController import AdminController
-from QLNHATRO.RentalManagementApplication.controller.RoomController.RoomMenuController import RoomMenuController
-from QLNHATRO.RentalManagementApplication.frontend.Component.ButtonUI import ButtonUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
+from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.controller.RoomController.RoomMenuController import RoomMenuController
+from RentalManagementApplication.frontend.Component.ButtonUI import ButtonUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class RoomMenu(QWidget):
@@ -56,6 +57,7 @@ class RoomMenu(QWidget):
         self.add_new_tenant_btn.clicked.connect(
             lambda: self.controller.go_to_open_right_frame_room_menu(self, self.main_window, self.room_id)
         )
+
         self.create_invoice_btn = QPushButton("Tạo hóa đơn")
         button_ui.apply_style(self.create_invoice_btn)
         self.create_invoice_btn.clicked.connect(lambda: self.controller.go_to_open_right_frame_ManagerInvoicePage(self, self.main_window, self.room_id))
@@ -90,19 +92,24 @@ class RoomMenu(QWidget):
         self.main_layout.addWidget(self.right_frame, 1)
 
     def set_right_frame(self, PageClass, *args):
-        """Thay đổi nội dung frame bên phải với khả năng truyền nhiều tham số khác nhau"""
         if self.current_page:
             self.right_layout.removeWidget(self.current_page)
             self.current_page.deleteLater()
             self.current_page = None
 
-        self.current_page = PageClass(*args)
-        self.right_layout.addWidget(self.current_page)
+        try:
+            if isinstance(PageClass, type):
+                self.current_page = PageClass(*args)
+            else:
+                # PageClass là function/lambda trả về widget
+                self.current_page = PageClass(*args) if args else PageClass()
+            self.right_layout.addWidget(self.current_page)
+        except Exception:
+            # in log như bạn đang làm
+            raise
 
     def confirm_and_delete_room(self):
-        from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
-        from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
-        from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+
         if ConfirmDialog.ask(self, f"Bạn có chắc muốn xóa phòng {self.room_id}?"):
             result = self.controller.delete_room(self.room_id)
             if result.get('success'):

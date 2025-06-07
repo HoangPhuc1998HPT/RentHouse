@@ -5,12 +5,11 @@ from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLay
                              QScrollArea, QFrame, QGridLayout, QGroupBox, QTableWidget,
                              QTableWidgetItem, QHeaderView)
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QFont
 
-from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.services.InvoiceService import InvoiceService
+from RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
+from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.services.InvoiceService import InvoiceService
 
 
 class InvoiceView(QWidget):
@@ -680,7 +679,7 @@ class InvoiceView(QWidget):
     def saveInvoice(self):
         """Lưu và xuất hóa đơn"""
         from PyQt5.QtWidgets import QFileDialog, QMessageBox
-        from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
+        from PyQt5.QtPrintSupport import QPrinter
         from PyQt5.QtGui import QPainter, QPixmap
 
         options = QFileDialog.Options()

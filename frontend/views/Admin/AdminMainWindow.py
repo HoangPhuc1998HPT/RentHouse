@@ -1,8 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminMenu import AdminMenu
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Admin.AdminMenu import AdminMenu
 
 
 class MainWindowAdmin(QMainWindow):

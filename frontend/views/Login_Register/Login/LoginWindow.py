@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve
 from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QFrame, QVBoxLayout, QPushButton, QLabel, QLineEdit, \
     QApplication
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class LoginWindow(QMainWindow):

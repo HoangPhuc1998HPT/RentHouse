@@ -1,13 +1,11 @@
 # LandlordListInvoices.py
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame
 
-from QLNHATRO.RentalManagementApplication.controller.InvoiceController.InvoiceController import InvoiceController
-from QLNHATRO.RentalManagementApplication.frontend.Component.tableUI import TableUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Invoices.InvoiceView import InvoiceView
-
+from RentalManagementApplication.controller.InvoiceController.InvoiceController import InvoiceController
+from RentalManagementApplication.frontend.Component.tableUI import TableUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class   ListInvoices(QWidget):
@@ -77,7 +75,7 @@ class   ListInvoices(QWidget):
 
                 invoice_data, landlord_data, tenant_data, room_data = InvoiceController.open_view_invoice(id_invoice)
 
-                from QLNHATRO.RentalManagementApplication.frontend.views.Invoices.MainWindowInvoice import \
+                from RentalManagementApplication.frontend.views.Invoices.MainWindowInvoice import \
                     MainWindowInvoice
                 # Mở hóa đơn trong cửa sổ mới
                 self.invoice_window = MainWindowInvoice(invoice_data, landlord_data, tenant_data, room_data)

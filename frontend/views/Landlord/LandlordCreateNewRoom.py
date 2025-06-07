@@ -6,9 +6,9 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import QRegExpValidator
 
-from QLNHATRO.RentalManagementApplication.controller.RoomController.RoomMenuController import RoomMenuController
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
+from RentalManagementApplication.controller.RoomController.RoomMenuController import RoomMenuController
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.utils.Validators import Validators
 
 ''' Đã kiểm tra đã đồng bộ và chuẩn hóa '''
 class CreateNewRoom(QWidget):

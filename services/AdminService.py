@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from QLNHATRO.RentalManagementApplication.Repository.AdminRepository import AdminRepository
-from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
-from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
-from QLNHATRO.RentalManagementApplication.Repository.UserRepository import UserRepository
+from RentalManagementApplication.Repository.AdminRepository import AdminRepository
+from RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
+from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from RentalManagementApplication.Repository.RoomRepository import RoomRepository
+from RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from RentalManagementApplication.Repository.UserRepository import UserRepository
 
 
 class AdminService:
@@ -168,8 +168,6 @@ class AdminService:
                 "id_invoice": invoice.get("invoice_id")
             })
         return result
-
-    from datetime import datetime
 
     @staticmethod
     def get_system_stats_by_month():

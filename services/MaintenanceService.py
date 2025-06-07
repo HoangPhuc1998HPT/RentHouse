@@ -1,7 +1,7 @@
 from _datetime import datetime
 from typing import List, Dict, Optional, Any
 
-from QLNHATRO.RentalManagementApplication.Repository.MaintenanceRepository import MaintenanceRepository
+from RentalManagementApplication.Repository.MaintenanceRepository import MaintenanceRepository
 
 
 

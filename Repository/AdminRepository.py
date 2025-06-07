@@ -1,7 +1,6 @@
-from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
-from QLNHATRO.RentalManagementApplication.backend.model.Landlord import Landlord
-from QLNHATRO.RentalManagementApplication.backend.model.Tenant import Tenant
-from QLNHATRO.RentalManagementApplication.backend.model.User import User
+from RentalManagementApplication.backend.database.Database import Database
+from RentalManagementApplication.backend.model.Landlord import Landlord
+from RentalManagementApplication.backend.model.Tenant import Tenant
 
 db = Database(db_filename="rent_house_database.sqlite")
 

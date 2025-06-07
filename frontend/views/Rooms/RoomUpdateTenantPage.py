@@ -4,11 +4,11 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.services.RoomService import RoomService
+
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.services.RoomService import RoomService
 
 
 class RoomUpdateTenantPage(QWidget):
@@ -50,7 +50,9 @@ class RoomUpdateTenantPage(QWidget):
         #self.room_combo.setStyleSheet("padding: 5px; font-weight: bold; background-color: white; border-radius: 8px;")
 
         for room in self.room_data_list:
-            self.room_combo.addItem(f"{room['ten_phong']} - ID: {room['id']}", userData=room)
+            label = room['ten_phong']
+            uid = room['id_room']
+            self.room_combo.addItem(f"{label} – ID: {uid}", userData=room)
         self.room_combo.setFixedWidth(300)
         self.room_combo.currentIndexChanged.connect(self.display_room_info)
 
@@ -104,12 +106,12 @@ class RoomUpdateTenantPage(QWidget):
         if room:
             self.selected_room = room
             info = (
-                f"Tên phòng: {room['ten_phong']}\n"
-                f"Giá phòng: {room['gia_phong']} VNĐ\n"
-                f"Chỉ số điện: {room['chi_so_dien']}\n"
-                f"Chỉ số nước: {room['chi_so_nuoc']}\n"
-                f"Diện tích: {room['dien_tich']} m2"
-            )
+                    f"Tên phòng: {room['ten_phong']}\n"
+                    f"Giá phòng: {room['gia']} VNĐ\n"
+                    f"Chỉ số điện: {room['so_dien']}\n"
+                    f"Chỉ số nước: {room['so_nuoc']}\n"
+                     # nếu bạn muốn hiển thị diện tích, service phải bổ sung thêm 'dien_tich'
+                    )
             self.room_info_label.setText(info)
         else:
             self.room_info_label.setText("Không có thông tin phòng")

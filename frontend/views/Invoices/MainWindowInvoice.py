@@ -1,6 +1,6 @@
 # MainWindowInvoice.py
 from PyQt5.QtWidgets import QMainWindow
-from QLNHATRO.RentalManagementApplication.frontend.views.Invoices.InvoiceView import InvoiceView
+from RentalManagementApplication.frontend.views.Invoices.InvoiceView import InvoiceView
 
 
 class MainWindowInvoice(QMainWindow):

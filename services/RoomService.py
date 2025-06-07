@@ -1,10 +1,10 @@
 from typing import List, Dict
 
-from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
-from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
-from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+from RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
+from RentalManagementApplication.Repository.RoomRepository import RoomRepository
+from RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
 
 
 class RoomService:
@@ -249,6 +249,11 @@ class RoomService:
             if en_key in row:
                 value = row[en_key]
 
+                # Nếu DB trả None, mặc định thành chuỗi rỗng
+
+                if value is None:
+                    value = ""
+
                 if isinstance(value, float):
                     value = f"{value:.1f}"
                 elif isinstance(value, int):
@@ -267,7 +272,7 @@ class RoomService:
                     value += " VNĐ/tháng"
                 elif en_key in ["Deposit"]:
                     value += " VNĐ"
-                elif en_key in ["ElectricityPrice", "InternetPrice", "WaterPrice", "GarbageServicePrice", "OtherFees"]:
+                elif en_key in ["ElectricityPrice", "InternetPrice", "WaterPrice", "GarbageServicePrice","OtherFees"]:
                     value += " VNĐ"
 
                 translated[vi_key] = value

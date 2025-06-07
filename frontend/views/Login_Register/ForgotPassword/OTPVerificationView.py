@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
-                             QFrame, QApplication, QLineEdit, QSizePolicy, QMessageBox)
+                             QFrame, QApplication, QLineEdit, QMessageBox)
 from PyQt5.QtCore import Qt, QRegExp, QTimer, pyqtSignal
 from PyQt5.QtGui import QFont, QRegExpValidator
 import sys
 
-from QLNHATRO.RentalManagementApplication.controller.OTPController.OTPController import OTPController
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ForgotPassword import ForgotPasswordView
+from RentalManagementApplication.controller.OTPController.OTPController import OTPController
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Login_Register.ForgotPassword import ForgotPasswordView
 
 
 

@@ -1,7 +1,7 @@
 
 
-from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
-from QLNHATRO.RentalManagementApplication.backend.model.Rooms import Room
+from RentalManagementApplication.backend.database.Database import Database
+from RentalManagementApplication.backend.model.Rooms import Room
 
 db = Database()
 class RoomRepository:
@@ -522,7 +522,6 @@ class RoomRepository:
 
     @staticmethod
     def delete_room(room_id):
-        from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
         db.connect()
         try:
             query = "DELETE FROM Rooms WHERE RoomID = ?"

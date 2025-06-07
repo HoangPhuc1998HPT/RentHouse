@@ -1,7 +1,7 @@
-from QLNHATRO.RentalManagementApplication.Repository.AdvertisementRepository import AdvertisementRepository
+from RentalManagementApplication.Repository.AdvertisementRepository import AdvertisementRepository
 
-from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
-from QLNHATRO.RentalManagementApplication.backend.model.Advertisement import Advertisement
+from RentalManagementApplication.Repository.RoomRepository import RoomRepository
+from RentalManagementApplication.backend.model.Advertisement import Advertisement
 
 
 class AdvertisementService:
@@ -30,7 +30,7 @@ class AdvertisementService:
             matched_room = next((r for r in rooms if r["id"] == ad.room_id), None)
             if matched_room:
                 landlord_id = matched_room.get("id_chutro")
-                from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+                from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
                 landlord_name = LanlordRepository.get_landlord_name_by_id(landlord_id)
                 data.append({
                     "STT": idx,

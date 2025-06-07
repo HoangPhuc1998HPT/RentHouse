@@ -3,9 +3,8 @@ from PyQt5.QtWidgets import (
     QHBoxLayout, QMessageBox, QGridLayout, QGroupBox, QScrollArea, QComboBox
 )
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
-from QLNHATRO.RentalManagementApplication.controller.InvoiceController.InvoiceController import InvoiceController
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.controller.InvoiceController.InvoiceController import InvoiceController
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class InvoiceInputPage(QWidget):
@@ -359,7 +358,7 @@ class InvoiceInputPage(QWidget):
     def update_room_tenant_info(self, room, tenant):
         """Cập nhật UI dựa trên dữ liệu từ service"""
         # Thêm import ở đầu file
-        from QLNHATRO.RentalManagementApplication.services.InvoiceService import InvoiceService
+        from RentalManagementApplication.services.InvoiceService import InvoiceService
         info_mapping = InvoiceService.map_room_tenant_info(room, tenant)
 
         for key, value in info_mapping.items():

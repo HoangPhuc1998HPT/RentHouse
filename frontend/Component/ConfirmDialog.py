@@ -11,7 +11,7 @@ class ConfirmDialog:
         box.setDefaultButton(QMessageBox.No)
 
         # Áp dụng GlobalStyle
-        from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+        from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
         box.setStyleSheet(f"""
             QMessageBox {{
                 background-color: {GlobalStyle.MAIN_BG};

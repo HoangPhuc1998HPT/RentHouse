@@ -3,12 +3,12 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QMessageBox
 
-from QLNHATRO.RentalManagementApplication.controller.InvoiceController.InvoiceController import InvoiceController
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.tableUI import TableUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Invoices.TenantInvoices import TenantInvoices
+from RentalManagementApplication.controller.InvoiceController.InvoiceController import InvoiceController
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+from RentalManagementApplication.frontend.Component.tableUI import TableUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Invoices.TenantInvoices import TenantInvoices
 
 
 class TenantListInvoices(QWidget):

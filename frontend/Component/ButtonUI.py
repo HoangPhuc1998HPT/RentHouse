@@ -1,4 +1,4 @@
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class ButtonUI:

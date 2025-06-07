@@ -12,7 +12,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon, QImage
 from PyQt5.QtPrintSupport import QPrinter
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class PageIndicator(QWidget):

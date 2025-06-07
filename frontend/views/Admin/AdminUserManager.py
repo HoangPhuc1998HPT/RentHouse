@@ -1,11 +1,11 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QMessageBox, QPushButton, QTableWidgetItem
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QPushButton, QTableWidgetItem
 
 
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.tableUI import TableUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Component.tableUI import TableUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class AdminUserManagement(QWidget):
@@ -78,15 +78,15 @@ class AdminUserManagement(QWidget):
                 return
 
             if role == 'Chủ trọ':
-                from QLNHATRO.RentalManagementApplication.controller.AdminController.AdminController import \
+                from RentalManagementApplication.controller.AdminController.AdminController import \
                     AdminController
                 AdminController.go_to_open_infor_lanlord(username)
             elif role == 'Người thuê trọ':
-                from QLNHATRO.RentalManagementApplication.controller.AdminController.AdminController import \
+                from RentalManagementApplication.controller.AdminController.AdminController import \
                     AdminController
                 AdminController.go_to_infor_tenant(username)
             elif role == 'admin':
-                from QLNHATRO.RentalManagementApplication.controller.AdminController.AdminController import \
+                from RentalManagementApplication.controller.AdminController.AdminController import \
                     AdminController
                 AdminController.open_infor_admin_page(username)
                 pass
@@ -104,7 +104,7 @@ class AdminUserManagement(QWidget):
         user = self.user_list[row]
         user["status"] = "Inactive" if user["status"] == "Active" else "Active"
         self.populate_table()
-        from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+        from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
 
         SuccessDialog.show_success(f"Đã chuyển '{user['username']}' thành '{user['status']}'",user['status'], self)
 

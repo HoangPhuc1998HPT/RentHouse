@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class FindNewTenant(QWidget):
@@ -464,7 +464,7 @@ class FindNewTenant(QWidget):
             return
 
         # Gọi controller xử lý với các tham số phù hợp với định nghĩa hiện tại
-        from QLNHATRO.RentalManagementApplication.controller.AdvertisementController.AdvertisementController import \
+        from RentalManagementApplication.controller.AdvertisementController.AdvertisementController import \
             AdvertisementController
         AdvertisementController.handle_submit_ad(
             room_name=phong,

@@ -2,10 +2,10 @@ from PyQt5.QtWidgets import QApplication
 
 
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminUserManager import AdminUserManagement
-from QLNHATRO.RentalManagementApplication.services.AdminService import AdminService
-from QLNHATRO.RentalManagementApplication.services.RoomService import RoomService
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.views.Admin.AdminUserManager import AdminUserManagement
+from RentalManagementApplication.services.AdminService import AdminService
+from RentalManagementApplication.services.RoomService import RoomService
 
 
 class AdminController:
@@ -14,8 +14,8 @@ class AdminController:
 
     @staticmethod
     def go_to_home(view):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminHomePage import AdminHome
-        from QLNHATRO.RentalManagementApplication.services.AdminService import AdminService
+        from RentalManagementApplication.frontend.views.Admin.AdminHomePage import AdminHome
+        from RentalManagementApplication.services.AdminService import AdminService
 
         summary_data = AdminService.get_summary_dashboard_data_with_growth()
         monthly_data = AdminService.get_system_stats_by_month()
@@ -29,20 +29,20 @@ class AdminController:
 
     @staticmethod
     def go_to_landlord_list(view):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminLandlordList import AdminLandlordList
+        from RentalManagementApplication.frontend.views.Admin.AdminLandlordList import AdminLandlordList
         # Tạm thời dùng mock data; sau này sẽ gọi từ AdminService
         landlord_list = AdminService.get_all_landlords() # đã có id_landlord
         view.set_right_frame(lambda: AdminLandlordList(view.main_window, landlord_list))
 
     @staticmethod
     def go_to_tenant_list(view):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminTenantList import AdminTenantList
+        from RentalManagementApplication.frontend.views.Admin.AdminTenantList import AdminTenantList
         tenant_list = AdminService.get_all_tenants()  # Hoặc dữ liệu giả lập
         view.set_right_frame(lambda: AdminTenantList(view.main_window, tenant_list))
 
     @staticmethod
     def go_to_room_list(view):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminRoomList import AdminRoomList
+        from RentalManagementApplication.frontend.views.Admin.AdminRoomList import AdminRoomList
         room_list = RoomService.get_all_rooms()  # Dữ liệu thật hoặc giả lập
         view.set_right_frame(lambda: AdminRoomList(view.main_window, room_list))
 
@@ -50,8 +50,8 @@ class AdminController:
     def go_to_invoice_list(view):
         #print("[INFO] Điều hướng đến Danh sách hóa đơn")
 
-        from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminInvoiceList import AdminInvoiceList
-        from QLNHATRO.RentalManagementApplication.services.AdminService import AdminService
+        from RentalManagementApplication.frontend.views.Admin.AdminInvoiceList import AdminInvoiceList
+        from RentalManagementApplication.services.AdminService import AdminService
 
         invoice_list = AdminService.get_all_invoices_for_admin()
         view.set_right_frame(lambda: AdminInvoiceList(view.main_window, invoice_list))
@@ -68,10 +68,10 @@ class AdminController:
 
     @staticmethod
     def go_to_open_infor_lanlord(username):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordInfo import LandlordInfo
-        from QLNHATRO.RentalManagementApplication.frontend.Component.UserInfoWindow import UserInfoWindow
+        from RentalManagementApplication.frontend.views.Landlord.LandlordInfo import LandlordInfo
+        from RentalManagementApplication.frontend.Component.UserInfoWindow import UserInfoWindow
 
-        from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+        from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
         information_data = LanlordRepository.get_landlord_info_by_username(username)
 
         id_landlord = information_data.pop('id_landlord', None)
@@ -85,9 +85,9 @@ class AdminController:
 
     @staticmethod
     def go_to_infor_tenant(username: str):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantInfo import TenantInfo
-        from QLNHATRO.RentalManagementApplication.frontend.Component.UserInfoWindow import UserInfoWindow
-        from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+        from RentalManagementApplication.frontend.views.Tenant.TenantInfo import TenantInfo
+        from RentalManagementApplication.frontend.Component.UserInfoWindow import UserInfoWindow
+        from RentalManagementApplication.Repository.TenantRepository import TenantRepository
 
         # 1 truy vấn duy nhất, trả về dict hoặc None
         initial_data = TenantRepository.get_tenant_info_by_username(username)
@@ -107,7 +107,7 @@ class AdminController:
 
     @staticmethod
     def open_infor_admin_page(username):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminInfor import AdminInfo
+        from RentalManagementApplication.frontend.views.Admin.AdminInfor import AdminInfo
         window = AdminInfo()
         window.show()
         window.activateWindow()

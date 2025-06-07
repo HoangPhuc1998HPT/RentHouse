@@ -2,12 +2,12 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QFrame, QVBoxLayout, QPushButton, QStackedWidget, QLabel, QLineEdit, \
-    QRadioButton, QMessageBox
+    QRadioButton
 
-from QLNHATRO.RentalManagementApplication.controller.LoginRegister.LoginController import LoginController
-from QLNHATRO.RentalManagementApplication.controller.LoginRegister.RegisterController import RegisterController
-from QLNHATRO.RentalManagementApplication.frontend.Component.InputTextUI import InputTextUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.controller.LoginRegister.LoginController import LoginController
+from RentalManagementApplication.controller.LoginRegister.RegisterController import RegisterController
+from RentalManagementApplication.frontend.Component.InputTextUI import InputTextUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class LoginWindow(QWidget):
@@ -214,7 +214,7 @@ class LoginWindow(QWidget):
 
 
     def on_click_btn_login(self):
-        from QLNHATRO.RentalManagementApplication.controller.LoginRegister.LoginController import LoginController
+        from RentalManagementApplication.controller.LoginRegister.LoginController import LoginController
         LoginController.on_click_btn_login(self.main_window, self.email_input.text(), self.password_input.text())
 
     def get_selected_role(self):

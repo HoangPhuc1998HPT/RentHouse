@@ -3,8 +3,8 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QFrame
 )
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.tableUI import TableUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.tableUI import TableUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class RoomList(QWidget):
@@ -64,7 +64,7 @@ class RoomList(QWidget):
         self.id_room = room.get('id_room')
         if self.id_room:
             print(f"🔍 Mở chi tiết phòng: {room['ten_phong']} (ID: {self.id_room})")
-            from QLNHATRO.RentalManagementApplication.controller.RoomController.RoomMenuController import RoomMenuController
+            from RentalManagementApplication.controller.RoomController.RoomMenuController import RoomMenuController
             RoomMenuController.go_to_room_management(self.id_room)
         else:
             print("❌ Không tìm thấy ID phòng trong dữ liệu.")

@@ -1,10 +1,9 @@
 
 
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton
-from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class ContactDialog(QDialog):

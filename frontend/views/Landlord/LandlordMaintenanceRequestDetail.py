@@ -3,14 +3,14 @@ from PyQt5.QtWidgets import (
     QScrollArea, QTextEdit, QGridLayout, QGroupBox, QMessageBox,
     QComboBox
 )
-from PyQt5.QtCore import Qt, QDate, pyqtSignal
-from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QPixmap
 import os
 from datetime import datetime
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
+from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
 
 
 class MaintenanceRequestDetail(QWidget):
@@ -403,7 +403,7 @@ class MaintenanceRequestDetail(QWidget):
         if confirmed == QMessageBox.Yes:
             try:
                 # Gọi Service cập nhật DB
-                from QLNHATRO.RentalManagementApplication.services.MaintenanceService import MaintenanceService
+                from RentalManagementApplication.services.MaintenanceService import MaintenanceService
                 result = MaintenanceService.update_maintenance_status(self.request_data.get('request_id'), new_status)
                 if result.get('success'):
                     self.request_data['status'] = new_status
@@ -501,7 +501,7 @@ class MaintenanceRequestDetail(QWidget):
     def close_window_menu(self):
         """Đóng cửa sổ và quay về danh sách maintenance"""
         try:
-            from QLNHATRO.RentalManagementApplication.controller.MaintenanceController.MaintenanceController import \
+            from RentalManagementApplication.controller.MaintenanceController.MaintenanceController import \
                 MaintenanceController
 
             # Kiểm tra xem main_window có tồn tại không
@@ -518,9 +518,9 @@ class MaintenanceRequestDetail(QWidget):
                 MaintenanceController.go_to_maintenance_list(self, id_landlord)
             elif hasattr(self.main_window, "setCentralWidget"):
                 # Trường hợp main_window là QMainWindow với setCentralWidget
-                from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMaintenanceList import \
+                from RentalManagementApplication.frontend.views.Landlord.LandlordMaintenanceList import \
                     RoomMaintenanceList
-                from QLNHATRO.RentalManagementApplication.services.MaintenanceService import MaintenanceService
+                from RentalManagementApplication.services.MaintenanceService import MaintenanceService
 
                 # Lấy danh sách maintenance mới nhất
                 maintenance_list = MaintenanceService.get_maintenance_list(id_landlord)

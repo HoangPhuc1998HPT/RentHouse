@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class FindNewRoom(QWidget):
@@ -180,7 +180,7 @@ class FindNewRoom(QWidget):
         if room_id:
             try:
                 print(f"[DEBUG] Đang mở chi tiết phòng với ID: {room_id}")
-                from QLNHATRO.RentalManagementApplication.controller.RoomController.RoomMenuController import \
+                from RentalManagementApplication.controller.RoomController.RoomMenuController import \
                     RoomMenuController
                 controller = RoomMenuController()
                 controller.open_room_detail_popup_for_tenant(room_id)

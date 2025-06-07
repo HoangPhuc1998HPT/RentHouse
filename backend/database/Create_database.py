@@ -2,7 +2,7 @@ import os
 import sqlite3
 
 # Đường dẫn tuyệt đối (hoặc tương đối) đến file SQLite và file schema SQL
-DB_PATH       = r"H:\My Drive\01.UIT\HK7\03.DOAN\QLNHATRO\RentalManagementApplication\backend\database\rent_house_database.sqlite"
+DB_PATH       = r"/RentalManagementApplication/backend/database/rent_house_database.sqlite"
 SCHEMA_SQL    = r"H:\My Drive\01.UIT\HK7\03.DOAN\QLNHATRO\RentalManagementApplication\backend\database\init_db.sql"
 
 def database_exists_and_initialized(db_path: str) -> bool:

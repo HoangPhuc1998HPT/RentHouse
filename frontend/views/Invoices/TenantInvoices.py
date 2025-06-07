@@ -7,12 +7,11 @@ from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLay
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 
-from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
-from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
-from QLNHATRO.RentalManagementApplication.controller.LandlordController.LandlordController import LandlordController
-from QLNHATRO.RentalManagementApplication.controller.TenantController.TenantController import TenantController
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.services.InvoiceService import InvoiceService
+from RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
+from RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from RentalManagementApplication.controller.TenantController.TenantController import TenantController
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.services.InvoiceService import InvoiceService
 
 
 class TenantInvoices(QWidget):
@@ -690,7 +689,7 @@ class TenantInvoices(QWidget):
     def saveInvoice(self):
         """Lưu và xuất hóa đơn"""
         from PyQt5.QtWidgets import QFileDialog, QMessageBox
-        from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
+        from PyQt5.QtPrintSupport import QPrinter
         from PyQt5.QtGui import QPainter, QPixmap
 
         options = QFileDialog.Options()
@@ -741,7 +740,7 @@ class TenantInvoices(QWidget):
                 QMessageBox.critical(self, "Lỗi", f"Đã xảy ra lỗi khi lưu hóa đơn: {str(e)}")
 
     def go_back_to_tenant_menu(self):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantMenu import TenantMenu
+        from RentalManagementApplication.frontend.views.Tenant.TenantMenu import TenantMenu
 
         # Tạo lại dashboard chủ trọ
         tenant_menu = TenantMenu(main_window=self.main_window, user_id=self.user_id)

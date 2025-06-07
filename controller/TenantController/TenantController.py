@@ -1,7 +1,7 @@
 
-from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantHome import TenantHome
+from RentalManagementApplication.frontend.views.Tenant.TenantHome import TenantHome
 
-from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
+from RentalManagementApplication.services.TenantService import TenantService
 
 
 class TenantController:
@@ -35,7 +35,7 @@ class TenantController:
 
     @staticmethod
     def go_to_tenant_info_page(view, id_tenant):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantInfo import TenantInfo
+        from RentalManagementApplication.frontend.views.Tenant.TenantInfo import TenantInfo
         initial_data = TenantService.get_tenant_infor(id_tenant)
         tenant_info = TenantInfo(view.main_window, initial_data, id_tenant)
         view.set_right_frame(lambda *_: tenant_info)
@@ -43,14 +43,14 @@ class TenantController:
 
     @staticmethod
     def go_to_tenant_room_infor_page(view,id_tenant):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantRoomInfo import TenantRoomInfo
+        from RentalManagementApplication.frontend.views.Tenant.TenantRoomInfo import TenantRoomInfo
         data_room =  TenantService.handle_data_for_tenant_room_infor(id_tenant)
         tenant_room_infor = TenantRoomInfo(view.main_window,data_room,id_tenant)
         view.set_right_frame(lambda *_: tenant_room_infor)
 
     @staticmethod
     def go_to_tenant_invoice_list_page(view, id_tenant):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantInvoiceList import TenantListInvoices
+        from RentalManagementApplication.frontend.views.Tenant.TenantInvoiceList import TenantListInvoices
         try:
             # Get invoice list data from the service
             invoice_list = TenantService.get_tenant_invoices(id_tenant)
@@ -76,7 +76,7 @@ class TenantController:
             # Gọi service lấy danh sách các phòng đang quảng cáo
             advertised_rooms = TenantService.get_all_advertised_rooms()
             print(f"[DEBUG] Số phòng quảng cáo: {len(advertised_rooms)}")
-            from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.FindNewRoom import FindNewRoom
+            from RentalManagementApplication.frontend.views.Tenant.FindNewRoom import FindNewRoom
             find_new_room_page = FindNewRoom(view.main_window, advertised_rooms)
             view.set_right_frame(lambda *_: find_new_room_page)
 
@@ -87,13 +87,13 @@ class TenantController:
 
     @staticmethod
     def submit_maintenance_request(request_data):
-        from QLNHATRO.RentalManagementApplication.services.MaintenanceService import MaintenanceService
+        from RentalManagementApplication.services.MaintenanceService import MaintenanceService
         MaintenanceService.create_maintenance_request(room_id, tenant_id,**request_data)
         print("[DEBUG] Gửi yêu cầu sửa chữa:", request_data)
 
     @staticmethod
     def go_to_tenant_maintenance_request(view, id_tenant):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Request.TenantMaintenanceRequest import \
+        from RentalManagementApplication.frontend.views.Request.TenantMaintenanceRequest import \
             TenantMaintenanceRequest
         view.set_right_frame(lambda *_: TenantMaintenanceRequest(view.main_window, id_tenant))
 

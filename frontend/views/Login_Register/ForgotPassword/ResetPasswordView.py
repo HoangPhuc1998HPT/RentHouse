@@ -2,12 +2,11 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QSizePolicy, QLineEdit
 from PyQt5.QtCore import Qt
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.Repository.LoginRepository import LoginRepository
-from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.LabelUI import LabelUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.Repository.LoginRepository import LoginRepository
+from RentalManagementApplication.utils.Validators import Validators
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
 
 
 class ResetPasswordView(QWidget):

@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.DateTableUI import DateTableUI
-from QLNHATRO.RentalManagementApplication.frontend.Component.GenderComboUI import GenderComboUI
-from QLNHATRO.RentalManagementApplication.frontend.Component.InputFieldUI import FormSection, InputFieldUI
-from QLNHATRO.RentalManagementApplication.frontend.Component.MaritalComboUI import MaritalComboUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.DateTableUI import DateTableUI
+from RentalManagementApplication.frontend.Component.GenderComboUI import GenderComboUI
+from RentalManagementApplication.frontend.Component.InputFieldUI import FormSection, InputFieldUI
+from RentalManagementApplication.frontend.Component.MaritalComboUI import MaritalComboUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class BaseUpdateFormView(QWidget):

@@ -5,8 +5,8 @@ from PyQt5.QtWidgets import (
     QTableWidget, QTableWidgetItem, QHeaderView
 )
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class RoomMaintenanceList(QWidget):
@@ -293,7 +293,7 @@ class RoomMaintenanceList(QWidget):
     def show_request_details(self, row):
         request_data = self.maintenance_requests[row]
         request_data["id_landlord"] = self.id_landlord
-        from QLNHATRO.RentalManagementApplication.controller.MaintenanceController.MaintenanceController import \
+        from RentalManagementApplication.controller.MaintenanceController.MaintenanceController import \
             MaintenanceController
         MaintenanceController.go_to_maintenance_detail_page(self, request_data)
 
@@ -353,7 +353,7 @@ class RoomMaintenanceList(QWidget):
 
             # TODO: Gọi controller để cập nhật database
             # MaintenanceController.update_status(request_id, 'Đang xử lý')
-            from QLNHATRO.RentalManagementApplication.services.MaintenanceService import MaintenanceService
+            from RentalManagementApplication.services.MaintenanceService import MaintenanceService
             result = MaintenanceService.update_maintenance_status(request_id, 'Đang xử lý')
 
     def refresh_table(self):

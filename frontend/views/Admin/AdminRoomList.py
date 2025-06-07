@@ -1,8 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QMessageBox
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.tableUI import TableUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.tableUI import TableUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 
@@ -62,7 +62,7 @@ class AdminRoomList(QWidget):
             id_room = room['room_id']
 
             # Mở Dashboard Room trong một cửa sổ mới
-            from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.MainWindowRoom import MainWindowRoom
+            from RentalManagementApplication.frontend.views.Rooms.MainWindowRoom import MainWindowRoom
             dashboard = MainWindowRoom(id_room)
             dashboard.show()
 

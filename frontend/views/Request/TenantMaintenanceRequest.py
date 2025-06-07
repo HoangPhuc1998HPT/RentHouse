@@ -5,13 +5,13 @@ from PyQt5.QtWidgets import (
     QHBoxLayout, QMessageBox, QComboBox, QDateEdit, QLineEdit,
     QFormLayout, QFrame, QGridLayout
 )
-from PyQt5.QtGui import QPixmap, QFont, QIcon
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QDate
 import os
 
-from QLNHATRO.RentalManagementApplication.controller.ControllerMaintenance.ControllerMaintenance import \
+from RentalManagementApplication.controller.ControllerMaintenance.ControllerMaintenance import \
     ControllerMaintenance
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class TenantMaintenanceRequest(QWidget):
@@ -193,7 +193,7 @@ class TenantMaintenanceRequest(QWidget):
         self.setLayout(main_layout)
 
     def add_maintenance_history(self):
-        from QLNHATRO.RentalManagementApplication.services.MaintenanceService import MaintenanceService
+        from RentalManagementApplication.services.MaintenanceService import MaintenanceService
         try:
             # Truy xuất danh sách yêu cầu sửa chữa từ Service
             all_requests = MaintenanceService.get_requests_by_room_id(self.room_id)
@@ -366,10 +366,9 @@ class TenantMaintenanceRequest(QWidget):
         self.available_time.clear()
 
     # Gợi ý sửa:
-    from QLNHATRO.RentalManagementApplication.controller.TenantController import TenantController
 
     def get_room_id_for_tenant(self, tenant_id):
-        from QLNHATRO.RentalManagementApplication.controller.TenantController.TenantController import TenantController
+        from RentalManagementApplication.controller.TenantController.TenantController import TenantController
         try:
             return TenantController.get_room_id_by_tenant(tenant_id)
         except Exception:

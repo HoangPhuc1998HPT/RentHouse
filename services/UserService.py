@@ -1,4 +1,4 @@
-from QLNHATRO.RentalManagementApplication.Repository.UserRepository import UserRepository
+from RentalManagementApplication.Repository.UserRepository import UserRepository
 
 
 class UserService:

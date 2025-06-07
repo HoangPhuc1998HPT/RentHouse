@@ -3,12 +3,12 @@ from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLay
                              QScrollArea, QFrame, QGroupBox, QGridLayout, QDialog, QLineEdit)
 from PyQt5.QtCore import Qt
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
 
 
 class RoomsInfor(QWidget):
-    def __init__(self, main_window, room_id,data_room_infor):
+    def __init__(self, main_window, room_id, data_room_infor):
         super().__init__()
         self.setStyleSheet(GlobalStyle.global_stylesheet())
         self.main_window = main_window

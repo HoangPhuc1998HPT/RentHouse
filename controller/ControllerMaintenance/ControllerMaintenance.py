@@ -1,7 +1,6 @@
 import os
 import shutil
-from PyQt5.QtGui import QPixmap
-from QLNHATRO.RentalManagementApplication.services.MaintenanceService import MaintenanceService
+from RentalManagementApplication.services.MaintenanceService import MaintenanceService
 
 
 class ControllerMaintenance:

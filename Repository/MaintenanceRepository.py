@@ -2,8 +2,8 @@ import sqlite3
 from datetime import datetime
 from typing import List, Dict, Optional
 
-from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
-from QLNHATRO.RentalManagementApplication.backend.model.MaintenanceRequest import MaintenanceRequest
+from RentalManagementApplication.backend.database.Database import Database
+from RentalManagementApplication.backend.model.MaintenanceRequest import MaintenanceRequest
 
 db = Database()
 class MaintenanceRepository:

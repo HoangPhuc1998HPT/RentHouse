@@ -1,13 +1,10 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QPushButton
-from torch.distributed.fsdp.wrap import lambda_auto_wrap_policy
 
-from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
-from QLNHATRO.RentalManagementApplication.controller.AdminController.AdminController import AdminController
-from QLNHATRO.RentalManagementApplication.controller.LandlordController.LandlordController import LandlordController
-from QLNHATRO.RentalManagementApplication.controller.TenantController.TenantController import TenantController
-from QLNHATRO.RentalManagementApplication.frontend.Component.ButtonUI import ButtonUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.controller.LandlordController.LandlordController import LandlordController
+from RentalManagementApplication.controller.TenantController.TenantController import TenantController
+from RentalManagementApplication.frontend.Component.ButtonUI import ButtonUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class TenantMenu(QWidget):

@@ -1,11 +1,11 @@
-from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
-from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.ManageInvoicePage import InvoiceInputPage
-from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.RoomUpdateTenantPage import RoomUpdateTenantPage
-from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.RoomsHome import RoomsHome
-from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.RoomsInfor import RoomsInfor
-from QLNHATRO.RentalManagementApplication.services.InvoiceService import InvoiceService
-from QLNHATRO.RentalManagementApplication.services.RoomService import RoomService
-from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
+from RentalManagementApplication.Repository.RoomRepository import RoomRepository
+from RentalManagementApplication.frontend.views.Rooms.ManageInvoicePage import InvoiceInputPage
+from RentalManagementApplication.frontend.views.Rooms.RoomUpdateTenantPage import RoomUpdateTenantPage
+from RentalManagementApplication.frontend.views.Rooms.RoomsHome import RoomsHome
+from RentalManagementApplication.frontend.views.Rooms.RoomsInfor import RoomsInfor
+from RentalManagementApplication.services.InvoiceService import InvoiceService
+from RentalManagementApplication.services.RoomService import RoomService
+from RentalManagementApplication.services.TenantService import TenantService
 
 
 class RoomMenuController:
@@ -33,18 +33,13 @@ class RoomMenuController:
 
     ## Xử lý nạp dữ liệu cho RoomUpdateTenant page
     def go_to_open_right_frame_room_menu(self, room_menu_instance, main_window, room_id):
-        # Xử lý nạp data cho room list
-        # đi ngược về Service ơ==> repository
-        room_data_list = self.get_room_data_list()
+
+        # Nếu bạn chỉ có room_id, có thể fetch landlord_id từ service trước:
+        room = RoomService.get_room_by_id(room_id)
+        landlord_id = room.landlord_id
+        room_data_list = RoomService.handle_data_for_room_list_page(landlord_id)
+
         tenant_callback = self.find_tenant_by_cccd
-        '''
-        data_tenant_show = {
-                    'name_tenant': tenant['name'],
-                    'cccd': tenant['cccd'],
-                    'phone': tenant['sdt'],
-                    'email': tenant['email'],
-                }
-        '''
         update_callback = self.update_tenant_for_room
 
         room_menu_instance.set_right_frame(
@@ -55,16 +50,23 @@ class RoomMenuController:
             update_callback,
             room_id
         )
+
     def go_to_open_right_frame_rooms_infor(self, room_menu_instance, main_window, room_id):
-        #Xử lý dữ liệu ở service
         data_room_infor = RoomService.get_translated_room_info(room_id)
-        # Chỉnh sửa hàm và call hàm thêm biến vào
-        room_menu_instance.set_right_frame(RoomsInfor, main_window, room_id, data_room_infor)
+        # sử dụng class + đúng số tham số match __init__(main_window, room_id, data)
+        room_menu_instance.set_right_frame(
+            RoomsInfor,
+            main_window,
+            room_id,
+            data_room_infor
+        )
+
+
 
     def open_room_detail_popup_for_tenant(self, room_id):
         try:
             print(f"[DEBUG] Đang mở chi tiết phòng cho tenant với ID: {room_id}")
-            from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.RoomInforFromTenantFindRoom import \
+            from RentalManagementApplication.frontend.views.Rooms.RoomInforFromTenantFindRoom import \
                 RoomsInforViewFromTenant
             data_room_infor = RoomService.get_translated_room_info(room_id)
 
@@ -113,7 +115,7 @@ class RoomMenuController:
     @staticmethod
     def go_to_room_management(room_id):
         print(" đây là roomMenucontroller")
-        from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.MainWindowRoom import MainWindowRoom
+        from RentalManagementApplication.frontend.views.Rooms.MainWindowRoom import MainWindowRoom
         room_window = MainWindowRoom(room_id)
         room_window.show()
     '''Đã kiểm tra đồng bộ và chuẩn hóa'''

@@ -1,7 +1,7 @@
 # file: UserInfoWindow.py
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class UserInfoWindow(QMainWindow):

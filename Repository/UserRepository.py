@@ -1,7 +1,7 @@
 import hashlib
 
-from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
-from QLNHATRO.RentalManagementApplication.backend.model.User import User
+from RentalManagementApplication.backend.database.Database import Database
+from RentalManagementApplication.backend.model.User import User
 db = Database()
 class UserRepository:
 

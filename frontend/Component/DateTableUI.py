@@ -1,8 +1,8 @@
 from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import QDateEdit
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.InputFieldUI import InputFieldUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.InputFieldUI import InputFieldUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class DateTableUI(InputFieldUI):

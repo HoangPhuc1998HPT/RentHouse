@@ -1,9 +1,9 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QMessageBox
 
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-from QLNHATRO.RentalManagementApplication.frontend.Component.tableUI import TableUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from RentalManagementApplication.frontend.Component.tableUI import TableUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 
@@ -64,7 +64,7 @@ class AdminLandlordList(QWidget):
             user_id = LanlordRepository.get_user_id_lanlord_from_lanlord_id(id_landlord)
             print("đã check show detail của chủ trọ:", landlord['name'], "với id:", id_landlord)
             # Mở Dashboard của chủ trọ trong cửa sổ mới
-            from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.MainWindowLandlord import \
+            from RentalManagementApplication.frontend.views.Landlord.MainWindowLandlord import \
                 MainWindowLandlord
             dashboard = MainWindowLandlord(self.main_window ,user_id)
             dashboard.show()

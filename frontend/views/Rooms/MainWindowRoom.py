@@ -1,9 +1,7 @@
-import sys
+from PyQt5.QtWidgets import QMainWindow
 
-from PyQt5.QtWidgets import QApplication, QMainWindow
-
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.RoomMenu import RoomMenu
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Rooms.RoomMenu import RoomMenu
 
 
 class MainWindowRoom(QMainWindow):

@@ -4,10 +4,10 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 import sys
 
-from QLNHATRO.RentalManagementApplication.Repository.LoginRepository import LoginRepository
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.services.OTPService import OTPService
-from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
+from RentalManagementApplication.Repository.LoginRepository import LoginRepository
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.services.OTPService import OTPService
+from RentalManagementApplication.utils.Validators import Validators
 
 
 class ChangePasswordView(QWidget):

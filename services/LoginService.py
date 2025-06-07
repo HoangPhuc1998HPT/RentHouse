@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QMessageBox
 
-from QLNHATRO.RentalManagementApplication.Repository.LoginRepository import LoginRepository
-from QLNHATRO.RentalManagementApplication.Repository.UserRepository import UserRepository
-from QLNHATRO.RentalManagementApplication.controller.UpdateInfor.UpdateInfoController import UpdateInfoController
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.Repository.LoginRepository import LoginRepository
+from RentalManagementApplication.Repository.UserRepository import UserRepository
+from RentalManagementApplication.controller.UpdateInfor.UpdateInfoController import UpdateInfoController
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
 
 
 class LoginService:

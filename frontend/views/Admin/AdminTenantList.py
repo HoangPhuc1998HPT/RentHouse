@@ -1,11 +1,9 @@
-from Demos.win32ts_logoff_disconnected import username
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame
 
-from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.tableUI import TableUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Component.tableUI import TableUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 
@@ -81,7 +79,7 @@ class AdminTenantList(QWidget):
 
             id_tenant = tenant['id_tenant']
             # Tạo và hiển thị dashboard người thuê trong cửa sổ mới
-            from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.MainWindowTenant import MainWindowTenant
+            from RentalManagementApplication.frontend.views.Tenant.MainWindowTenant import MainWindowTenant
             dashboard = MainWindowTenant(id_tenant)
             dashboard.show()
 

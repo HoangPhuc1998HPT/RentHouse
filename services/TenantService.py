@@ -2,11 +2,11 @@
 from datetime import datetime
 from typing import Optional
 
-from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
-from QLNHATRO.RentalManagementApplication.backend.model.Tenant import Tenant
-from QLNHATRO.RentalManagementApplication.services.LandlordService import LandlordService
+from RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
+from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from RentalManagementApplication.backend.model.Tenant import Tenant
+from RentalManagementApplication.services.LandlordService import LandlordService
 
 
 class TenantService:
@@ -57,7 +57,7 @@ class TenantService:
 
     @staticmethod
     def handle_data_for_tenant_home_page(id_tenant):
-        from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+        from RentalManagementApplication.Repository.TenantRepository import TenantRepository
         month,year = TenantRepository.get_month_with_last_invoice(id_tenant)
         month_last, year_last = TenantService.get_previous_month_and_year(month,year)
         # Lấy dữ liệu sử dụng từ repository (giả lập, bạn cần thay bằng SQL thật)
@@ -106,13 +106,13 @@ class TenantService:
 
     @staticmethod
     def update_tenant_info(tenant_id, updated_data):
-        from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+        from RentalManagementApplication.Repository.TenantRepository import TenantRepository
         #print(f"[SERVICE] Đang cập nhật tenant {tenant_id} với dữ liệu: {updated_data}")
         return TenantRepository.update_tenant_info(tenant_id, updated_data)
 
     @staticmethod
     def handle_data_for_tenant_room_infor(tenant_id):
-        from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+        from RentalManagementApplication.Repository.TenantRepository import TenantRepository
         all_data = []
         raw_data_room = TenantRepository.get_room_infor_by_id_tenant(tenant_id)
 
@@ -232,7 +232,7 @@ class TenantService:
 
     @staticmethod
     def get_all_advertised_rooms():
-        from QLNHATRO.RentalManagementApplication.services.AdvertisementService import AdvertisementService
+        from RentalManagementApplication.services.AdvertisementService import AdvertisementService
         return AdvertisementService.get_all_advertised_rooms_for_view()
 
     @staticmethod

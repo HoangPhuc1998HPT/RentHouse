@@ -1,10 +1,10 @@
 import sys
 import os
 
-from QLNHATRO.RentalManagementApplication.controller.LoginRegister.LoginController import LoginController
-from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+from RentalManagementApplication.controller.LoginRegister.LoginController import LoginController
+from RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..")))
@@ -12,11 +12,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMessageBox, QPushButton, QHBoxLayout, QVBoxLayout,
                              QFrame, QWidget, QScrollArea, QLabel, QApplication)
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Form.LandlordUpdateFormView import LandlordUpdateFormView
-from QLNHATRO.RentalManagementApplication.frontend.views.Form.TenantUpdateFormView import TenantUpdateFormView
+from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Form.LandlordUpdateFormView import LandlordUpdateFormView
+from RentalManagementApplication.frontend.views.Form.TenantUpdateFormView import TenantUpdateFormView
 
 
 class OptimizedUpdateInfoView(QWidget):
@@ -326,7 +326,7 @@ class OptimizedUpdateInfoView(QWidget):
     def handle_save_clicked(self):
         """Validate form and update repository based on role"""
 
-        from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
+        from RentalManagementApplication.services.TenantService import TenantService
 
         if not self.form.validate():
             msg = QMessageBox(self)

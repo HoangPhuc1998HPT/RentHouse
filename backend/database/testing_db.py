@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 # ✅ Đường dẫn tuyệt đối đến file CSDL
-db_path = r"H:\My Drive\01.UIT\HK7\03.DOAN\QLNHATRO\RentalManagementApplication\backend\database\rent_house_database.sqlite"
+db_path = r"/RentalManagementApplication/backend/database/rent_house_database.sqlite"
 
 def test_database_connection():
     if not os.path.exists(db_path):

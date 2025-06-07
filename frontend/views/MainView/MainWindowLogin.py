@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import LoginWindow
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import LoginWindow
 
 
 class MainWindow(QMainWindow):

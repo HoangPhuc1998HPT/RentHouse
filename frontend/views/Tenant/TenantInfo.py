@@ -4,9 +4,9 @@ from PyQt5.QtWidgets import (
     QPushButton, QGroupBox
 )
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.LabelUI import LabelUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
+from RentalManagementApplication.frontend.Component.LabelUI import LabelUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
 
 
 class TenantInfo(QWidget):
@@ -111,7 +111,7 @@ class TenantInfo(QWidget):
         print(f"✅ Đã cập nhật {key}: {new_value}")
 
         # Cập nhật tenant data thông qua service
-        from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
+        from RentalManagementApplication.services.TenantService import TenantService
         if self.tenant_id:
             success = TenantService.update_tenant_info(self.tenant_id, self.information)
             if success:

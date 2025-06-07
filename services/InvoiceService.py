@@ -1,7 +1,7 @@
-from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
-from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
+from RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from RentalManagementApplication.Repository.RoomRepository import RoomRepository
+from RentalManagementApplication.Repository.TenantRepository import TenantRepository
 
 
 class InvoiceService:

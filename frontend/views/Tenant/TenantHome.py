@@ -1,9 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSizePolicy, QTableWidget, QTableWidgetItem, \
-    QHeaderView
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSizePolicy
 from PyQt5.QtCore import Qt
-from QLNHATRO.RentalManagementApplication.frontend.Component.DashboardCard import DashboardCard
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Chart.TenantCostChartWidget import TenantCostChartWidget
+from RentalManagementApplication.frontend.Component.DashboardCard import DashboardCard
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Chart.TenantCostChartWidget import TenantCostChartWidget
 
 
 class TenantHome(QWidget):

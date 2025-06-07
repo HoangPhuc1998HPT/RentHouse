@@ -5,9 +5,9 @@ from PyQt5.QtWidgets import (
 )
 from typing import List, Dict, Any
 
-from QLNHATRO.RentalManagementApplication.frontend.Component.LabelUI import LabelUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
+from RentalManagementApplication.frontend.Component.LabelUI import LabelUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
 
 
 class FormInforUI(QWidget):

@@ -1,18 +1,18 @@
 from PyQt5.QtCore import Qt
 
 
-from QLNHATRO.RentalManagementApplication.Repository.UserRepository import UserRepository
-from QLNHATRO.RentalManagementApplication.backend.model.Admin import Admin
-from QLNHATRO.RentalManagementApplication.backend.model.User import User
-from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
-from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
-from QLNHATRO.RentalManagementApplication.services.LandlordService import LandlordService
-from QLNHATRO.RentalManagementApplication.services.LoginService import LoginService
-from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
-from QLNHATRO.RentalManagementApplication.services.UserService import UserService
+from RentalManagementApplication.Repository.UserRepository import UserRepository
+from RentalManagementApplication.backend.model.Admin import Admin
+from RentalManagementApplication.backend.model.User import User
+from RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
+from RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+from RentalManagementApplication.services.LandlordService import LandlordService
+from RentalManagementApplication.services.LoginService import LoginService
+from RentalManagementApplication.services.TenantService import TenantService
+from RentalManagementApplication.services.UserService import UserService
 
-from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
+from RentalManagementApplication.utils.Validators import Validators
 
 
 
@@ -62,8 +62,8 @@ class RegisterController:
         Mở cửa sổ cập nhật thông tin sau đăng ký thành công.
         Không chuyển trang mà mở form riêng.
         """
-        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import LoginWindow
-        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Register.UpdateInfomationAfterRegister import \
+        from RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import LoginWindow
+        from RentalManagementApplication.frontend.views.Login_Register.Register.UpdateInfomationAfterRegister import \
             OptimizedUpdateInfoView
 
         update_window = OptimizedUpdateInfoView(main_window = main_window,
@@ -103,7 +103,7 @@ class RegisterController:
             return
 
         try:
-            from QLNHATRO.RentalManagementApplication.services.UserService import UserService
+            from RentalManagementApplication.services.UserService import UserService
             deleted = UserService.cancel_registration(username)
             if deleted:
                 SuccessDialog.show_success("Đã hủy đăng ký và xóa tài khoản tạm thời.", "Pending", main_window)

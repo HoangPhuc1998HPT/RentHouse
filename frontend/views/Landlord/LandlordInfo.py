@@ -4,10 +4,10 @@ from PyQt5.QtWidgets import (
     QPushButton, QGroupBox, QMessageBox
 )
 
-from QLNHATRO.RentalManagementApplication.backend.model.Landlord import Landlord
-from QLNHATRO.RentalManagementApplication.frontend.Component.LabelUI import LabelUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
+from RentalManagementApplication.backend.model.Landlord import Landlord
+from RentalManagementApplication.frontend.Component.LabelUI import LabelUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
 
 ''' Đã kiểm tra đồng bộ dữ liệu và chuẩn hóa '''
 class LandlordInfo(QWidget):
@@ -135,7 +135,7 @@ class LandlordInfo(QWidget):
         self.information[key] = new_value
         print(f"✅ Đã cập nhật {key}: {new_value}")
 
-        from QLNHATRO.RentalManagementApplication.controller.LandlordController.LandlordController import LandlordController
+        from RentalManagementApplication.controller.LandlordController.LandlordController import LandlordController
         controller = LandlordController()
         controller.update_landlord_field(self.id_lanlord, key, new_value)
 

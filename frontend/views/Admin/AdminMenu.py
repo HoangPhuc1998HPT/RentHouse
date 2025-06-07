@@ -1,10 +1,10 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QPushButton, QLabel
+from PyQt5.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QPushButton
 
-from QLNHATRO.RentalManagementApplication.controller.AdminController.AdminController import AdminController
-from QLNHATRO.RentalManagementApplication.controller.LandlordController.LandlordController import LandlordController
-from QLNHATRO.RentalManagementApplication.frontend.Component.ButtonUI import ButtonUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.controller.AdminController.AdminController import AdminController
+from RentalManagementApplication.controller.LandlordController.LandlordController import LandlordController
+from RentalManagementApplication.frontend.Component.ButtonUI import ButtonUI
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 

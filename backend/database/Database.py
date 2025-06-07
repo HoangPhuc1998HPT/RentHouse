@@ -8,7 +8,7 @@ class Database:
         # Lấy đường dẫn tuyệt đối đến thư mục hiện tại
         base_dir = os.path.dirname(os.path.abspath(__file__))
         # Ghép đường dẫn đến file .sqlite
-        self.db_path = r"H:\My Drive\01.UIT\HK7\03.DOAN\QLNHATRO\RentalManagementApplication\backend\database\rent_house_database.sqlite"
+        self.db_path = r"/RentalManagementApplication/backend/database/rent_house_database.sqlite"
 
         self.conn = None
         self.cursor = None

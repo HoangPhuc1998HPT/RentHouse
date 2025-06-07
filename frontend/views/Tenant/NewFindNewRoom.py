@@ -1,13 +1,10 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QScrollArea, QPushButton, QHBoxLayout,
-    QFrame, QGridLayout, QMessageBox, QLineEdit, QComboBox, QCheckBox,
-    QSpacerItem, QSizePolicy, QApplication
+    QFrame, QGridLayout, QMessageBox, QLineEdit, QComboBox, QCheckBox
 )
-from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QEasingCurve, QRect
-from PyQt5.QtGui import QPixmap, QPainter, QPainterPath, QFont, QIcon
-import os
+from PyQt5.QtCore import Qt
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class TenantFindNewRoom(QWidget):
@@ -632,7 +629,7 @@ class TenantFindNewRoom(QWidget):
         if room_id:
             try:
                 print(f"[DEBUG] Đang mở chi tiết phòng với ID: {room_id}")
-                from QLNHATRO.RentalManagementApplication.controller.RoomController.RoomMenuController import \
+                from RentalManagementApplication.controller.RoomController.RoomMenuController import \
                     RoomMenuController
                 controller = RoomMenuController()
                 controller.open_room_detail_popup_for_tenant(room_id)

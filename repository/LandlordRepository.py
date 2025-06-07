@@ -1,8 +1,8 @@
 import sqlite3
 from typing import Optional, List, Dict, Any
 
-from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
-from QLNHATRO.RentalManagementApplication.backend.model.Landlord import Landlord
+from RentalManagementApplication.backend.database.Database import Database
+from RentalManagementApplication.backend.model.Landlord import Landlord
 
 db = Database()
 
@@ -300,26 +300,42 @@ class LanlordRepository:
 
         return result[0]
 
-
     @staticmethod
     def get_total_income_last_month(id_landlord):
-        db.connect()
-        query = """
-                SELECT SUM(TotalRoomPrice + TotalElectronicCost + TotalWaterCost +
-                           InternetFee + TotalGarbageFee + TotalAnotherFee - Discount)
-                FROM Invoices
-                WHERE LandlordID = ?  
-                  AND strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-1 month'))  
-                """
-        cursor = db.execute(query, (id_landlord,))
-        result = cursor.fetchone()
-        db.close()
+        try:
+            db.connect()
+            query = """
+                    SELECT COALESCE(
+                                   SUM(
+                                           TotalRoomPrice
+                                               + TotalElectronicCost
+                                               + TotalWaterCost
+                                               + InternetFee
+                                               + TotalGarbageFee
+                                               + TotalAnotherFee
+                                               - Discount
+                                   ),
+                                   0
+                           ) AS total_income
+                    FROM Invoices
+                    WHERE LandlordID = ?
+                      AND strftime('%m-%Y', issue_date)
+                        = strftime('%m-%Y', 'now', 'start of month', '-1 month') \
+                    """
+            cursor = db.execute(query, (id_landlord,))
+            row = cursor.fetchone()
+            if row is None:
+                print(f"[LỖI] Không có kết quả trả về cho LandlordID={id_landlord}")
+                return 0
+            # row[0] đã chắc chắn là số (0 nếu không có bản ghi)
+            return row[0]
 
-        if not result or result[0] is None:
-            print("⚠️ [Sample] Không có dữ liệu thu nhập tháng trước, trả về mẫu.")
-            return 45_000_000  # sample
+        except Exception as e:
+            print(f"[LỖI] get_total_income_last_month(): {e}")
+            return 0
 
-        return result[0]
+        finally:
+            db.close()
 
     @staticmethod
     def get_data_for_handel_percent_income(id_landlord):
@@ -369,14 +385,9 @@ class LanlordRepository:
                            """
         cursor = db.execute(query_last_month, (id_landlord,))
         total_last = cursor.fetchone()[0] if cursor else 0
-
         db.close()
-        """if total_current == 0 and total_last == 0:
-            print("⚠️ [Sample] Không có hóa đơn chưa thanh toán, trả về mẫu.")
-            return 3, 2"""
-
         return total_current, total_last
-       # return total_number_invoice,total_number_invoice_last_month
+
     @staticmethod
     def get_to_total_number_not_tenant(id_landlord):
         db.connect()

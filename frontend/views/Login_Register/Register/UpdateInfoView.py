@@ -2,9 +2,9 @@ from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QFrame,
                              QLabel, QHBoxLayout, QPushButton)
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Form.LandlordUpdateFormView import LandlordUpdateFormView
-from QLNHATRO.RentalManagementApplication.frontend.views.Form.TenantUpdateFormView import TenantUpdateFormView
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.views.Form.LandlordUpdateFormView import LandlordUpdateFormView
+from RentalManagementApplication.frontend.views.Form.TenantUpdateFormView import TenantUpdateFormView
 
 
 class UpdateInfoView(QWidget):

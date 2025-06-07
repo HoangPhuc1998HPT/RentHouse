@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import (
-    QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
+    QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
     QScrollArea, QFrame, QGroupBox, QGridLayout, QDialog
 )
 from PyQt5.QtCore import Qt
 
 
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
+from RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
 class RoomsInforViewFromTenant(QDialog):
@@ -126,7 +126,7 @@ class RoomsInforViewFromTenant(QDialog):
 
     def contact_owner(self):
         phone = self.room_data.get("SĐT", "Không có số điện thoại")
-        from QLNHATRO.RentalManagementApplication.frontend.views.Form.ContactDialog import ContactDialog
+        from RentalManagementApplication.frontend.views.Form.ContactDialog import ContactDialog
         dialog = ContactDialog(phone)
         dialog.exec_()
 
