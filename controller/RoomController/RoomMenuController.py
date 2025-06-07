@@ -118,8 +118,9 @@ class RoomMenuController:
         room_window.show()
 
     @staticmethod
-    def go_to_handel_data_for_create_room(id_lanlord, room_create_data):
-        RoomService.handle_data_for_create_new_room(id_lanlord, room_create_data)
+    def go_to_handel_data_for_create_room(id_landlord, room_create_data) -> bool:
+        # Trả về True/False do Service trả về
+        return RoomService.handle_data_for_create_new_room(id_landlord, room_create_data)
 
     def delete_room(self, room_id, callback_success=None, callback_fail=None):
         result = RoomRepository.delete_room(room_id)

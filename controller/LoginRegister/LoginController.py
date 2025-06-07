@@ -1,4 +1,3 @@
-from QLNHATRO.RentalManagementApplication.Repository.LoginRepository import LoginRepository
 
 
 
@@ -8,59 +7,51 @@ class LoginController:
         self.main_window = None
         self.window = None
 
-
-    #TODO: chuyển check signUp qua LoginService
-
-    '''
-    go to check login xử lý
-    gọi Loginservice ==> check_login 
-            checklogn ==> gọi LoginRepository ==> get_user
-                getuser ==> truy ván sql thực tế lấy đối tượng user ==> trả về True or False
-    '''
-
+    ''' Đã check - đã chuẩn hóa'''
     @staticmethod
-    def on_click_btn_login_test_new(main_window, username, password):
-        user = LoginRepository.get_user(username)
+    def on_click_btn_login(main_window, username, password):
+        from QLNHATRO.RentalManagementApplication.services.LoginService import LoginService
+        from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
 
-        if user and user.password == password:  # kiểm tra đúng mật khẩu
-            role = user.role
-            user_id = user.user_id
+        success, user, error_msg = LoginService.authenticate(username, password)
+        if not success:
+            ErrorDialog.show_error(error_msg or "Sai tài khoản hoặc mật khẩu", main_window)
+            return
 
-            if role == 'landlord':
-                from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMenu import LandlordMenu
-                main_window.switch_to_page(LandlordMenu, user_id)
+        role = user.role
+        user_id = user.user_id
 
-            elif role == 'tenant':
-                from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantMenu import TenantMenu
-                main_window.switch_to_page(TenantMenu, user_id)
+        if role == 'landlord':
+            from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMenu import LandlordMenu
+            main_window.switch_to_page(LandlordMenu, user_id)
 
-            elif role == 'admin':
-                from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminMenu import AdminMenu
-                main_window.switch_to_page(AdminMenu, user_id)
-                print("[LoginController] Đã mở giao diện Admin")
+        elif role == 'tenant':
+            from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantMenu import TenantMenu
+            main_window.switch_to_page(TenantMenu, user_id)
 
-            else:
-                print("[LoginController] Vai trò không hợp lệ")
+        elif role == 'admin':
+            from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminMenu import AdminMenu
+            main_window.switch_to_page(AdminMenu, user_id)
 
         else:
-            print("[LoginController] Đăng nhập thất bại: Sai tài khoản hoặc mật khẩu")
+            ErrorDialog.show_error("Vai trò không hợp lệ. Vui lòng liên hệ quản trị.", main_window)
 
     @staticmethod
     def go_to_change_password_view():
-        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ChangePassword import ChangePasswordView
+        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ForgotPassword.ChangePassword import ChangePasswordView
         change_password_window = ChangePasswordView()
         change_password_window.show()
 
     @staticmethod
     def go_to_forgot_password_view():
-        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.OTPVerificationView import \
+        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ForgotPassword.OTPVerificationView import \
             PasswordRecoveryFlow
         flow = PasswordRecoveryFlow()
         flow.start_flow()  # KHÔNG gọi flow.run()
 
     @staticmethod
     def go_to_home_login(main_window):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.HomeLogin import \
+        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import \
             LoginWindow as LoginWidget
 
         # 1) Tạo instance của login-widget, với main_window làm parent

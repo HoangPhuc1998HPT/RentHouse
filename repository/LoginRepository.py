@@ -46,7 +46,7 @@ class LoginRepository:
 
             query = """
                     INSERT INTO Users (Username, Password, Role, IsActive)
-                    VALUES (?, ?, ?, ?) \
+                    VALUES (?, ?, ?, ?)  
                     """
             cursor = db.execute(query, (username, hashed_password, role, is_active))
             new_id = cursor.lastrowid
@@ -69,7 +69,7 @@ class LoginRepository:
             query = """
                     UPDATE Users
                     SET Password = ?
-                    WHERE Username = ? \
+                    WHERE Username = ?  
                     """
             db.execute(query, (new_hashed_password, username))
             # Chỉ cần gọi execute, commit đã được thực hiện bên trong db.execute
@@ -92,17 +92,17 @@ class LoginRepository:
         try:
             db.connect()
             query = """
-                    SELECT CASE u.Role \
-                               WHEN 'landlord' THEN (SELECT PhoneNumber \
-                                                     FROM Landlords l \
-                                                     WHERE l.UserID = u.UserID) \
-                               WHEN 'tenant' THEN (SELECT PhoneNumber \
-                                                   FROM Tenants t \
-                                                   WHERE t.UserID = u.UserID) \
-                               ELSE NULL \
+                    SELECT CASE u.Role  
+                               WHEN 'landlord' THEN (SELECT PhoneNumber  
+                                                     FROM Landlords l  
+                                                     WHERE l.UserID = u.UserID)  
+                               WHEN 'tenant' THEN (SELECT PhoneNumber  
+                                                   FROM Tenants t  
+                                                   WHERE t.UserID = u.UserID)  
+                               ELSE NULL  
                                END AS phone
                     FROM Users u
-                    WHERE u.Username = ? \
+                    WHERE u.Username = ?  
                     """
             cursor = db.execute(query, (username,))
             row = cursor.fetchone()
@@ -127,17 +127,17 @@ class LoginRepository:
         try:
             db.connect()
             query = """
-                    SELECT CASE u.Role \
-                               WHEN 'landlord' THEN (SELECT Email \
-                                                     FROM Landlords l \
-                                                     WHERE l.UserID = u.UserID) \
-                               WHEN 'tenant' THEN (SELECT Email \
-                                                   FROM Tenants t \
-                                                   WHERE t.UserID = u.UserID) \
-                               ELSE NULL \
+                    SELECT CASE u.Role  
+                               WHEN 'landlord' THEN (SELECT Email  
+                                                     FROM Landlords l  
+                                                     WHERE l.UserID = u.UserID)  
+                               WHEN 'tenant' THEN (SELECT Email  
+                                                   FROM Tenants t  
+                                                   WHERE t.UserID = u.UserID)  
+                               ELSE NULL  
                                END AS email
                     FROM Users u
-                    WHERE u.Username = ? \
+                    WHERE u.Username = ?  
                     """
             cursor = db.execute(query, (username,))
             row = cursor.fetchone()

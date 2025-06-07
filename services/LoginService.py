@@ -11,7 +11,34 @@ class LoginService:
         pass
 
     landlord_window = None  # thuộc tính class-level
+    '''Đã check - đã chuẩn hóa    '''
+    @staticmethod
+    def authenticate(username, password):
+        """
+        Trả về tuple (success, user object hoặc None, thông báo lỗi nếu có)
+        """
+        user = UserRepository.get_user_by_username(username)
+        if not user:
+            return False, None, "Tài khoản không tồn tại."
 
+        # So sánh mật khẩu đã hash
+        hashed_input = UserRepository.hash_password(password)
+        if user.password != hashed_input:
+            return False, None, "Mật khẩu không đúng."
+
+        if user.is_active == 0:
+            return False, None, "Tài khoản chưa được kích hoạt hoặc bị khóa."
+
+        return True, user, None
+
+    @staticmethod
+    def get_user_id_from_username(username):
+        """
+        Lấy user_id từ username.
+        :param username: Tên đăng nhập của người dùng.
+        :return: user_id nếu tìm thấy, None nếu không tìm thấy.
+        """
+        UserRepository.get_user_id_from_username(username)
     # xử lý 1 vấn đề là check user tồn tại và password đúng
     @staticmethod
     #"admin" "admin"

@@ -190,7 +190,6 @@ class LoginWindow(QWidget):
         self.exist_btn_signup.setFixedHeight(40)
         #self.exist_btn_signup.setObjectName("CancelBtn")
         self.exist_btn_signup.setStyleSheet("background-color: #FF6B6B; color: white; font-weight: bold; border-radius: 20px;")
-        ## TODO: Xử lý nhẹ phương thức sau
         self.exist_btn_signup.clicked.connect(lambda: self.close_window_menu())
 
 
@@ -220,7 +219,7 @@ class LoginWindow(QWidget):
 
     def on_click_btn_login(self):
         from QLNHATRO.RentalManagementApplication.controller.LoginRegister.LoginController import LoginController
-        LoginController.on_click_btn_login_test_new(self.main_window, self.email_input.text(), self.password_input.text())
+        LoginController.on_click_btn_login(self.main_window, self.email_input.text(), self.password_input.text())
 
     def get_selected_role(self):
         if self.role_selection.isChecked():

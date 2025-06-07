@@ -8,7 +8,7 @@ class AdvertisementRepository:
         db.connect()
         query = """
                 INSERT INTO Advertisements (RoomID, Description, Priority, ImagePath, CreatedAt)
-                VALUES (?, ?, ?, ?, ?) \
+                VALUES (?, ?, ?, ?, ?)  
                 """
         params = (room_id, ad.description, ad.priority, ad.image_path, ad.created_at)
         result = db.execute(query, params)

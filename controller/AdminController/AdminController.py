@@ -76,7 +76,7 @@ class AdminController:
 
         id_landlord = information_data.pop('id_landlord', None)
 
-        content_widget = LandlordInfo(None, id_landlord, information_data)
+        content_widget = LandlordInfo(None, information_data)
 
         window = UserInfoWindow(content_widget, title=f"Thông tin Chủ trọ: {username}")
         window.show()

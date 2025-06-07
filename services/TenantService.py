@@ -6,10 +6,14 @@ from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import In
 from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
 from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
 from QLNHATRO.RentalManagementApplication.backend.model.Tenant import Tenant
-from QLNHATRO.RentalManagementApplication.services.LanlordService import LanlordService
+from QLNHATRO.RentalManagementApplication.services.LandlordService import LandlordService
 
 
 class TenantService:
+
+    @staticmethod
+    def create_empty_tenant(user_id):
+        return TenantRepository.create_empty_tenant(user_id)
 
     @staticmethod
     def get_tenant_by_room_id(room_id: int):
@@ -255,7 +259,7 @@ class TenantService:
 
         mapped_data = {
             "Fullname": raw.get("name", "").strip(),
-            "Birth": LanlordService.convert_ddMMyyyy_to_ISO(raw.get("birthdate", "")),
+            "Birth": LandlordService.convert_ddMMyyyy_to_ISO(raw.get("birthdate", "")),
             "CCCD": raw.get("id_card", "").strip(),
             "Gender": raw.get("gender", "").strip(),
             "JobTitle": raw.get("job", "").strip(),

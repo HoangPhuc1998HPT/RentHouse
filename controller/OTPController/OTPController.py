@@ -51,7 +51,7 @@ class OTPController:
                 pass
 
             # Chuyển sang ResetPasswordView (giống logic cũ của bạn)
-            from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ResetPasswordView import ResetPasswordView
+            from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ForgotPassword.ResetPasswordView import ResetPasswordView
 
             view_instance.reset_password_view = ResetPasswordView(username=username)
             view_instance.hide()
@@ -95,7 +95,7 @@ class OTPController:
         """
         Chuyển thẳng sang màn hình ResetPassword (nếu cần từ view khác).
         """
-        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ResetPasswordView import ResetPasswordView
+        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ForgotPassword.ResetPasswordView import ResetPasswordView
 
         view_instance.hide()
         view_instance.reset_password_view = ResetPasswordView(username=username)
@@ -103,7 +103,7 @@ class OTPController:
 
     @staticmethod
     def go_to_opt_view(email_sdt, username):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.OTPVerificationView import \
+        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ForgotPassword.OTPVerificationView import \
             OTPVerificationView
         otp_window = OTPVerificationView(email_sdt = email_sdt, username= username)
         otp_window.show()

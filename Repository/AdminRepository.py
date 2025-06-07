@@ -23,35 +23,35 @@ class AdminRepository:
 
         # 2. Chạy truy vấn SQL
         query = """
-                SELECT l.LandlordID, \
-                       l.Fullname, \
-                       l.Birth, \
-                       l.CCCD, \
-                       l.Gender, \
-                       l.JobTitle, \
-                       l.MaritalStatus, \
-                       l.Email, \
-                       l.PhoneNumber, \
-                       l.HomeAddress, \
-                       l.UserID, \
-                       u.Username      AS Username, \
+                SELECT l.LandlordID, 
+                       l.Fullname, 
+                       l.Birth, 
+                       l.CCCD, 
+                       l.Gender, 
+                       l.JobTitle, 
+                       l.MaritalStatus, 
+                       l.Email, 
+                       l.PhoneNumber, 
+                       l.HomeAddress, 
+                       l.UserID, 
+                       u.Username      AS Username, 
                        COUNT(r.RoomID) AS so_phong
                 FROM Landlords l
                          LEFT JOIN Users u ON l.UserID = u.UserID
                          LEFT JOIN Rooms r ON l.LandlordID = r.LandlordID
-                GROUP BY l.LandlordID, \
-                         l.Fullname, \
-                         l.Birth, \
-                         l.CCCD, \
-                         l.Gender, \
-                         l.JobTitle, \
-                         l.MaritalStatus, \
-                         l.Email, \
-                         l.PhoneNumber, \
-                         l.HomeAddress, \
-                         l.UserID, \
+                GROUP BY l.LandlordID, 
+                         l.Fullname, 
+                         l.Birth, 
+                         l.CCCD, 
+                         l.Gender, 
+                         l.JobTitle, 
+                         l.MaritalStatus, 
+                         l.Email, 
+                         l.PhoneNumber, 
+                         l.HomeAddress, 
+                         l.UserID, 
                          u.Username
-                ORDER BY l.LandlordID \
+                ORDER BY l.LandlordID 
                 """
         cursor = db.execute(query)
         rows = cursor.fetchall() if cursor else []
@@ -108,18 +108,18 @@ class AdminRepository:
 
         # 2. Query lấy thông tin Tenant + Username
         query = """
-                SELECT t.TenantID, \
-                       t.Fullname, \
-                       t.Birth, \
-                       t.CCCD, \
-                       t.Gender, \
-                       t.JobTitle, \
+                SELECT t.TenantID, 
+                       t.Fullname, 
+                       t.Birth, 
+                       t.CCCD, 
+                       t.Gender, 
+                       t.JobTitle, 
                        t.MaritalStatus, \
                        t.Email, \
                        t.PhoneNumber, \
                        t.HomeAddress, \
-                       t.RentStartDate, \
-                       t.RentEndDate, \
+                       t.RentStartDate, 
+                       t.RentEndDate, 
                        t.UserID, \
                        u.Username AS Username
                 FROM Tenants t
@@ -251,7 +251,7 @@ class AdminRepository:
                     SELECT DISTINCT CAST (strftime('%Y', issue_date) AS INTEGER) FROM Invoices
                     WHERE issue_date IS NOT NULL
                     ) years
-                ORDER BY y, m \
+                ORDER BY y, m  
                 """
 
         cursor = db.execute(query)

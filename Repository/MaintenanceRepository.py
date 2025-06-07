@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional
 
 from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
 
@@ -34,7 +34,7 @@ class MaintenanceRepository:
                     INSERT INTO maintenance_requests
                     (TenantID, RoomID, issue_type, urgency_level, description,
                      contact_phone, available_time, discovery_date, image_path, status, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?) \
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?)  
                     """
             # Tạo created_at dạng ISO: "YYYY-MM-DDTHH:MM:SS"
             now_iso = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
@@ -62,27 +62,27 @@ class MaintenanceRepository:
         try:
             db.connect()
             query = """
-                    SELECT mr.request_id, \
-                           mr.TenantID       AS tenant_id, \
-                           mr.RoomID         AS room_id, \
-                           mr.issue_type     AS issue_type, \
-                           mr.urgency_level  AS urgency_level, \
-                           mr.description    AS description, \
-                           mr.contact_phone  AS contact_phone, \
-                           mr.available_time AS available_time, \
-                           mr.discovery_date AS discovery_date, \
-                           mr.image_path     AS image_path, \
-                           mr.status         AS status, \
-                           mr.created_at     AS created_at, \
-                           r.RoomName        AS room_name, \
-                           r.Address         AS room_address, \
-                           t.Fullname        AS tenant_name, \
-                           t.PhoneNumber     AS tenant_phone, \
+                    SELECT mr.request_id,  
+                           mr.TenantID       AS tenant_id,  
+                           mr.RoomID         AS room_id,  
+                           mr.issue_type     AS issue_type,  
+                           mr.urgency_level  AS urgency_level,  
+                           mr.description    AS description,  
+                           mr.contact_phone  AS contact_phone,  
+                           mr.available_time AS available_time,  
+                           mr.discovery_date AS discovery_date,  
+                           mr.image_path     AS image_path,  
+                           mr.status         AS status,  
+                           mr.created_at     AS created_at,  
+                           r.RoomName        AS room_name,  
+                           r.Address         AS room_address,  
+                           t.Fullname        AS tenant_name,  
+                           t.PhoneNumber     AS tenant_phone,  
                            t.Email           AS tenant_email
                     FROM maintenance_requests mr
                              JOIN Rooms r ON mr.RoomID = r.RoomID
                              JOIN Tenants t ON mr.TenantID = t.TenantID
-                    WHERE mr.request_id = ? LIMIT 1 \
+                    WHERE mr.request_id = ? LIMIT 1  
                     """
             cursor = db.execute(query, (request_id,))
             row = cursor.fetchone()
@@ -106,31 +106,31 @@ class MaintenanceRepository:
         try:
             db.connect()
             query = """
-                    SELECT mr.request_id, \
-                           mr.TenantID       AS tenant_id, \
-                           mr.RoomID         AS room_id, \
-                           mr.issue_type     AS issue_type, \
-                           mr.urgency_level  AS urgency_level, \
-                           mr.description    AS description, \
-                           mr.contact_phone  AS contact_phone, \
-                           mr.available_time AS available_time, \
-                           mr.discovery_date AS discovery_date, \
-                           mr.image_path     AS image_path, \
-                           mr.status         AS status, \
-                           mr.created_at     AS created_at, \
-                           r.RoomName        AS room_name, \
-                           t.Fullname        AS tenant_name, \
+                    SELECT mr.request_id,  
+                           mr.TenantID       AS tenant_id,  
+                           mr.RoomID         AS room_id,  
+                           mr.issue_type     AS issue_type,  
+                           mr.urgency_level  AS urgency_level,  
+                           mr.description    AS description,  
+                           mr.contact_phone  AS contact_phone,  
+                           mr.available_time AS available_time,  
+                           mr.discovery_date AS discovery_date,  
+                           mr.image_path     AS image_path,  
+                           mr.status         AS status,  
+                           mr.created_at     AS created_at,  
+                           r.RoomName        AS room_name,  
+                           t.Fullname        AS tenant_name,  
                            t.PhoneNumber     AS tenant_phone
                     FROM maintenance_requests mr
                              JOIN Rooms r ON mr.RoomID = r.RoomID
                              JOIN Tenants t ON mr.TenantID = t.TenantID
                     WHERE r.LandlordID = ?
-                    ORDER BY CASE mr.urgency_level \
-                                 WHEN 'Khẩn cấp' THEN 1 \
-                                 WHEN 'Bình thường' THEN 2 \
-                                 ELSE 3 \
-                                 END, \
-                             mr.created_at DESC \
+                    ORDER BY CASE mr.urgency_level  
+                                 WHEN 'Khẩn cấp' THEN 1  
+                                 WHEN 'Bình thường' THEN 2  
+                                 ELSE 3  
+                                 END,  
+                             mr.created_at DESC  
                     """
             cursor = db.execute(query, (landlord_id,))
             rows = cursor.fetchall()
@@ -150,21 +150,21 @@ class MaintenanceRepository:
         try:
             db.connect()
             query = """
-                    SELECT mr.request_id, \
-                           mr.TenantID       AS tenant_id, \
-                           mr.RoomID         AS room_id, \
-                           mr.issue_type     AS issue_type, \
-                           mr.urgency_level  AS urgency_level, \
-                           mr.description    AS description, \
-                           mr.contact_phone  AS contact_phone, \
-                           mr.available_time AS available_time, \
-                           mr.discovery_date AS discovery_date, \
-                           mr.image_path     AS image_path, \
-                           mr.status         AS status, \
+                    SELECT mr.request_id,  
+                           mr.TenantID       AS tenant_id,  
+                           mr.RoomID         AS room_id,  
+                           mr.issue_type     AS issue_type,  
+                           mr.urgency_level  AS urgency_level,  
+                           mr.description    AS description,  
+                           mr.contact_phone  AS contact_phone,  
+                           mr.available_time AS available_time,  
+                           mr.discovery_date AS discovery_date,  
+                           mr.image_path     AS image_path,  
+                           mr.status         AS status,  
                            mr.created_at     AS created_at
                     FROM maintenance_requests mr
                     WHERE mr.TenantID = ?
-                    ORDER BY mr.created_at DESC \
+                    ORDER BY mr.created_at DESC  
                     """
             cursor = db.execute(query, (tenant_id,))
             rows = cursor.fetchall()
@@ -187,7 +187,7 @@ class MaintenanceRepository:
                     UPDATE maintenance_requests
                     SET status     = ?,
                         created_at = ?
-                    WHERE request_id = ? \
+                    WHERE request_id = ?  
                     """
             # Cập nhật created_at thành ISO mới
             now_iso = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
@@ -208,14 +208,14 @@ class MaintenanceRepository:
         try:
             db.connect()
             query = """
-                    SELECT COUNT(*)                                                                 AS total_requests, \
-                           SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END)                      AS pending_count, \
-                           SUM(CASE WHEN status IN ('In Progress', 'Đang xử lý') THEN 1 ELSE 0 END) AS in_progress_count, \
-                           SUM(CASE WHEN status IN ('Resolved', 'Đã hoàn thành') THEN 1 ELSE 0 END) AS resolved_count, \
+                    SELECT COUNT(*)                                                                 AS total_requests,  
+                           SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END)                      AS pending_count,  
+                           SUM(CASE WHEN status IN ('In Progress', 'Đang xử lý') THEN 1 ELSE 0 END) AS in_progress_count,  
+                           SUM(CASE WHEN status IN ('Resolved', 'Đã hoàn thành') THEN 1 ELSE 0 END) AS resolved_count,  
                            SUM(CASE WHEN urgency_level = 'Khẩn cấp' THEN 1 ELSE 0 END)              AS urgent_count
                     FROM maintenance_requests mr
                              JOIN Rooms r ON mr.RoomID = r.RoomID
-                    WHERE r.LandlordID = ? \
+                    WHERE r.LandlordID = ?  
                     """
             cursor = db.execute(query, (landlord_id,))
             row = cursor.fetchone()
@@ -299,20 +299,20 @@ class MaintenanceRepository:
 
         try:
             query = """
-                    SELECT mr.request_id, \
-                           mr.issue_type, \
-                           mr.urgency_level, \
-                           mr.description, \
-                           mr.status, \
-                           mr.created_at, \
-                           r.RoomName AS room_name, \
+                    SELECT mr.request_id,  
+                           mr.issue_type,  
+                           mr.urgency_level,  
+                           mr.description,  
+                           mr.status,  
+                           mr.created_at,  
+                           r.RoomName AS room_name,  
                            t.Fullname AS tenant_name
                     FROM maintenance_requests mr
                              JOIN Rooms r ON mr.RoomID = r.RoomID
                              JOIN Tenants t ON mr.TenantID = t.TenantID
                     WHERE r.LandlordID = ?
                       AND mr.status = ?
-                    ORDER BY mr.created_at DESC; \
+                    ORDER BY mr.created_at DESC;  
                     """
             cursor = db.execute(query, (landlord_id, status))
             rows = cursor.fetchall()
@@ -339,20 +339,20 @@ class MaintenanceRepository:
 
         try:
             query = """
-                    SELECT mr.request_id, \
-                           mr.issue_type, \
-                           mr.urgency_level, \
-                           mr.description, \
-                           mr.status, \
-                           mr.created_at, \
-                           r.RoomName AS room_name, \
+                    SELECT mr.request_id,  
+                           mr.issue_type,  
+                           mr.urgency_level,  
+                           mr.description,  
+                           mr.status,  
+                           mr.created_at,  
+                           r.RoomName AS room_name,  
                            t.Fullname AS tenant_name
                     FROM maintenance_requests mr
                              JOIN Rooms r ON mr.RoomID = r.RoomID
                              JOIN Tenants t ON mr.TenantID = t.TenantID
                     WHERE r.LandlordID = ?
                       AND mr.urgency_level = ?
-                    ORDER BY mr.created_at DESC; \
+                    ORDER BY mr.created_at DESC;  
                     """
             cursor = db.execute(query, (landlord_id, urgency))
             rows = cursor.fetchall()

@@ -1,4 +1,8 @@
+from typing import List, Dict
+
+from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
 from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
+from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
 from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
 from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
 
@@ -50,37 +54,64 @@ class RoomService:
         """Cập nhật người thuê cho phòng"""
         return RoomRepository.update_room_tenant(room_id, tenant_id)
 
+    '''Đã kiểm tra đồng bộ và chuẩn hóa'''
     @staticmethod
-    def handle_data_for_room_list_page(id_lanlord):
-        raw_data = RoomRepository.get_infor_number_room_of_tenant(id_lanlord)
-        number_data =[]
+    def handle_data_for_room_list_page(landlord_id: int) -> List[Dict]:
+        """
+        Trả về list[dict] với mỗi dict có đầy đủ các key:
+          - stt         : số thứ tự
+          - id_room     : RoomID
+          - ten_phong   : RoomName
+          - nguoi_thue  : Fullname của tenant ('' nếu trống)
+          - gia         : RoomPrice
+          - so_dien     : CurrentElectricityNum
+          - so_nuoc     : CurrentWaterNum
+          - hoa_don     : trạng thái hóa đơn mới nhất ('Đã thanh toán' / 'Chưa thanh toán')
+        """
+        raw_rooms = RoomRepository.get_all_room_by_landlord(landlord_id)
+        room_list: List[Dict] = []
 
-        for idx , item in enumerate(raw_data,start=1):
-            item_with_stt = {"STT": idx, **item}
-            number_data.append(item_with_stt)
+        for idx, room in enumerate(raw_rooms, start=1):
+            # Lấy tên người thuê
+            tenant_name = ""
+            if room.tenant_id:
+                tenant = TenantRepository.get_tenant_by_id(room.tenant_id)
+                tenant_name = tenant.fullname if tenant else ""
 
-        return RoomService.map_keys_for_table(number_data)
+            # Lấy trạng thái hóa đơn gần nhất
+            latest_invoice = InvoiceRepository.get_latest_invoice_by_room(room.room_id)
+            invoice_status = latest_invoice.status if latest_invoice else "Chưa thanh toán"
 
-
-    @staticmethod
-    def map_keys_for_table(data):
-        """Chuyển đổi key từ dữ liệu gốc sang key UI cần"""
-        mapped = []
-        for item in data:
-            mapped.append({
-                'stt': item['STT'],
-                'ten_phong': item['room_name'],
-                'nguoi_thue': item['tenant_name'],
-                'gia': f"{item['price_rent']:,} VND",
-                'so_dien': f"{item['number_electric']} KWH",
-                'so_nuoc': f"{item['number_water']} m³",
-                'hoa_don': item['status_invoice'],
-                'id_room': item['id_room']
+            room_list.append({
+                "stt": idx,
+                "id_room": room.room_id,
+                "ten_phong": room.room_name,
+                "nguoi_thue": tenant_name,
+                "gia": room.room_price,
+                "so_dien": room.current_electricity_num,
+                "so_nuoc": room.current_water_num,
+                "hoa_don": invoice_status
             })
-        return mapped
+
+        return room_list
+
+
     @staticmethod
-    def handle_data_for_create_new_room(id_lanlord,room_create_data):
-        return RoomRepository.create_new_room(id_lanlord,room_create_data)
+    def handle_data_for_create_new_room(id_landlord, room_create_data) -> bool:
+        # (nếu cần) gắn lại id_landlord vào trong room_create_data
+        room_create_data["id_landlord"] = id_landlord
+        return RoomRepository.create_new_room(room_create_data)
+
+    @staticmethod
+    def collect_data_room(id_landlord: int, room_data: dict) -> dict:
+        """
+        room_data phải có thêm:
+          free_wifi, parking, air_conditioner, fridge, washing_machine,
+          security, television, kitchen, floor, has_loft,
+          bathroom, balcony, furniture, pet_allowed
+        """
+        room_data["id_landlord"] = id_landlord
+        return room_data
 
     @staticmethod
     def collect_data_create_room(id_landlord,room_name, number_people, address, type_room

@@ -12,9 +12,9 @@ class RoomRepository:
         db.connect()
 
         query = """
-                SELECT * \
-                FROM Rooms \
-                WHERE RoomID = ? \
+                SELECT *  
+                FROM Rooms  
+                WHERE RoomID = ?  
                 """
         cursor = db.execute(query, (room_id,))
         row = cursor.fetchone()
@@ -43,6 +43,65 @@ class RoomRepository:
                 'garbage_fee': 0,
             }
 
+
+    @staticmethod
+    def update_room(room_id: int, room_data: dict) -> bool:
+        """
+        Cập nhật tất cả các trường của một phòng theo room_id.
+        Trả về True nếu thành công, False nếu thất bại.
+        """
+        if not db.connect():
+            print(f"[LỖI] Không thể kết nối DB để cập nhật phòng {room_id}")
+            return False
+
+        try:
+            query = """
+                UPDATE Rooms
+                SET
+                    RoomName            = ?,
+                    MaxTenants          = ?,
+                    Address             = ?,
+                    RoomType            = ?,
+                    Status              = ?,
+                    Description         = ?,
+                    Area                = ?,
+                    RoomPrice           = ?,
+                    ElectricityPrice    = ?,
+                    WaterPrice          = ?,
+                    InternetPrice       = ?,
+                    OtherFees           = ?,
+                    GarbageServicePrice = ?,
+                    CurrElectric        = ?,
+                    CurrWater           = ?
+                WHERE RoomID = ?
+            """
+            params = (
+                room_data["room_name"],
+                int(room_data["number_people"]),
+                room_data["address"],
+                room_data["type_room"],
+                room_data["status"],
+                room_data.get("other_infor", ""),
+                float(room_data["area"]),
+                float(room_data["price_rent"]),
+                float(room_data["electric_price"]),
+                float(room_data["water_price"]),
+                float(room_data.get("internet_price", 0)),
+                room_data.get("other_infor", ""),
+                float(room_data.get("garbage_price", 0)),
+                int(room_data["num_electric"]),
+                int(room_data["num_water"]),
+                room_id
+            )
+            cursor = db.execute(query, params)
+            db.conn.commit()
+            return bool(cursor and cursor.rowcount > 0)
+        except Exception as e:
+            print(f"[LỖI] RoomRepository.update_room: {e}")
+            return False
+        finally:
+            db.close()
+
     @staticmethod
     def get_all_rooms():
         """
@@ -60,16 +119,16 @@ class RoomRepository:
         try:
             db.connect()
             query = """
-                    SELECT r.RoomID   AS room_id, \
-                           r.RoomName AS room_name, \
-                           r.RoomType AS room_style, \
-                           l.Fullname AS landlord_name, \
-                           t.Fullname AS tenant_name, \
+                    SELECT r.RoomID   AS room_id,  
+                           r.RoomName AS room_name,  
+                           r.RoomType AS room_style,  
+                           l.Fullname AS landlord_name,  
+                           t.Fullname AS tenant_name,  
                            r.Address  AS address
                     FROM Rooms r
                              LEFT JOIN Landlords l ON r.LandlordID = l.LandlordID
                              LEFT JOIN Tenants t ON r.TenantID = t.TenantID
-                    ORDER BY r.RoomID ASC \
+                    ORDER BY r.RoomID ASC  
                     """
             cursor = db.execute(query)
             rows = cursor.fetchall() if cursor else []
@@ -157,9 +216,9 @@ class RoomRepository:
         try:
             query = """
                     UPDATE Rooms
-                    SET CurrentElectricityNum = ?, \
+                    SET CurrentElectricityNum = ?,  
                         CurrentWaterNum       = ?
-                    WHERE RoomID = ? \
+                    WHERE RoomID = ?  
                     """
             cursor = db.execute(query, (electricity_num, water_num, room_id))
             if cursor and cursor.rowcount > 0:
@@ -174,90 +233,114 @@ class RoomRepository:
             return False
         finally:
             db.close()
+    '''Đã kiểm tra đồng bộ và chuẩn hóa'''
+    @staticmethod
+    def get_all_room_by_landlord(landlord_id):
+        ''' trả về danh sách các đối tượng gồm room_id'''
+        rooms: list[Room] = []
+
+        # Kết nối đến DB
+        if not db.connect():
+            return rooms
+
+        # Truy vấn các trường của bảng Rooms
+        query = """
+                SELECT *
+                FROM Rooms
+                WHERE LandlordID = ?
+                """
+        cursor = db.execute(query, (landlord_id,))
+
+        # Đọc hết kết quả và khởi tạo Room object
+        rows = cursor.fetchall()
+        for row in rows:
+            # sqlite3.Row có thể cast thành dict để khớp với Room.__init__
+            rooms.append(Room(dict(row)))
+
+        # Đóng kết nối
+        db.close()
+        return rooms
 
     @staticmethod
-    def get_infor_number_room_of_tenant(landlord_id):
+    def create_new_room(room_data: dict) -> bool:
+        if not db.connect():
+            return False
+
         try:
-            db.connect()
             query = """
-                    SELECT r.RoomID AS id_room, \
-                           r.RoomName AS room_name, \
-                           t.Fullname AS tenant_name, \
-                           r.Price AS price_rent, \
-                           r.CurrElectric AS number_electric, \
-                           r.CurrWater AS number_water, \
-                           COALESCE(i.Status, 'Chưa thanh toán') AS status_invoice
-                    FROM Rooms r
-                             LEFT JOIN Tenants t ON r.TenantID = t.TenantID
-                             LEFT JOIN Invoices i ON i.RoomID = r.RoomID AND i.issue_date = (SELECT MAX(issue_date) \
-                                                                                             FROM Invoices i2 \
-                                                                                             WHERE i2.RoomID = r.RoomID)
-                    WHERE r.LandlordID = ? \
-                    """
-            cursor = db.execute(query, (landlord_id,))
-            result = cursor.fetchall()
-
-            # Mapping column names to dictionary keys
-            columns = [desc[0] for desc in cursor.description]
-            room_list = [dict(zip(columns, row)) for row in result]
-
-            return room_list
-        except Exception as e:
-            print(f"[LỖI] Truy vấn thông tin phòng thất bại: {e}")
-            return [
-            {
-                'id_room': 'P101',
-                'room_name': "Phòng 101",
-                'tenant_name': "Nguyen Van A",
-                'price_rent': 3500000,
-                'number_electric': 25,
-                'number_water': 28,
-                'status_invoice': 'Chưa thanh toán'
-            },
-            {
-                'id_room': 'P102',
-                'room_name': "Phòng 102",
-                'tenant_name': "Tran Thi B",
-                'price_rent': 3200000,
-                'number_electric': 20,
-                'number_water': 22,
-                'status_invoice': 'Đã thanh toán'
-            }
-        ]
-
-    @staticmethod
-    def create_new_room(id_landlord, room_create_data):
-        try:
-            db.connect()
-            query = """
-                    INSERT INTO Rooms (RoomName, MaxPeople, Address, Type, Status, \
-                                       Description, Area, Price, ElectricPrice, WaterPrice, \
-                                       CurrElectric, CurrWater, LandlordID) \
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) \
+                    INSERT INTO Rooms (RoomName, Address, RoomType, Status, Area, \
+                                       Floor, HasLoft, Bathroom, Kitchen, Furniture, Balcony, \
+                                       FreeWifi, Parking, AirConditioner, Fridge, WashingMachine, Security, Television, \
+                                       PetAllowed, \
+                                       RoomPrice, ElectricityPrice, WaterPrice, InternetPrice, \
+                                       OtherFees, GarbageServicePrice, Deposit, \
+                                       CurrentElectricityNum, CurrentWaterNum, \
+                                       MaxTenants, Description, \
+                                       TenantID, LandlordID) \
+                    VALUES (?, ?, ?, ?, ?, \
+                            ?, ?, ?, ?, ?, ?, \
+                            ?, ?, ?, ?, ?, ?, ?, \
+                            ?, \
+                            ?, ?, ?, ?, \
+                            ?, ?, ?, \
+                            ?, ?, \
+                            ?, ?, \
+                            ?, ?, \
+                            ?, ?) \
                     """
             params = (
-                room_create_data['room_name'],
-                int(room_create_data['number_people']),
-                room_create_data['address'],
-                room_create_data['type_room'],
-                room_create_data['status'],
-                room_create_data['other_infor'],
-                float(room_create_data['area']),
-                float(room_create_data['price_rent']),
-                float(room_create_data['electric_price']),
-                float(room_create_data['water_price']),
-                int(room_create_data['num_electric']),
-                int(room_create_data['num_water']),
-                id_landlord
+                room_data["room_name"],  # RoomName
+                room_data["address"],  # Address
+                room_data["type_room"],  # RoomType
+                room_data["status"],  # Status
+                float(room_data["area"]),  # Area
+
+                int(room_data["floor"]),  # Floor
+                int(room_data["has_loft"]),  # HasLoft
+                int(room_data["bathroom"]),  # Bathroom
+                int(room_data["kitchen"]),  # Kitchen
+                int(room_data["furniture"]),  # Furniture
+                int(room_data["balcony"]),  # Balcony
+
+                int(room_data["free_wifi"]),  # FreeWifi
+                int(room_data["parking"]),  # Parking
+                int(room_data["air_conditioner"]),  # AirConditioner
+                int(room_data["fridge"]),  # Fridge
+                int(room_data["washing_machine"]),  # WashingMachine
+                int(room_data["security"]),  # Security
+                int(room_data["television"]),  # Television
+
+                int(room_data["pet_allowed"]),  # PetAllowed
+
+                float(room_data["room_price"]),  # RoomPrice
+                float(room_data["electricity_price"]),  # ElectricityPrice
+                float(room_data["water_price"]),  # WaterPrice
+                float(room_data["internet_price"]),  # InternetPrice
+
+                room_data["other_fees"],  # OtherFees
+                float(room_data["garbage_service_price"]),  # GarbageServicePrice
+                float(room_data["deposit"]),  # Deposit
+
+                int(room_data["current_electricity_num"]),  # CurrentElectricityNum
+                int(room_data["current_water_num"]),  # CurrentWaterNum
+
+                int(room_data["max_tenants"]),  # MaxTenants
+                room_data["description"],  # Description
+
+                room_data["tenant_id"],  # TenantID
+                int(room_data["id_landlord"])  # LandlordID
             )
 
             db.execute(query, params)
-            print(f"✅ Đã tạo phòng mới cho landlord {id_landlord}: {room_create_data['room_name']}")
+            db.conn.commit()
             return True
 
         except Exception as e:
-            print(f"[LỖI] Không thể tạo phòng mới: {e}")
+            print(f"[LỖI] RoomRepository.create_new_room: {e}")
             return False
+
+        finally:
+            db.close()
 
     @staticmethod
     def get_data_for_handle_room_home(room_id):
@@ -267,7 +350,7 @@ class RoomRepository:
         query_current = """
                         SELECT CurrentElectricityNum, CurrentWaterNum, ElectricityPrice, WaterPrice
                         FROM Rooms
-                        WHERE RoomID = ? \
+                        WHERE RoomID = ?  
                         """
         cursor_current = db.execute(query_current, (room_id,))
         current = cursor_current.fetchone() if cursor_current else (0, 0, 0, 0)
@@ -277,8 +360,8 @@ class RoomRepository:
                     SELECT CurrElectric, CurrWater
                     FROM Invoices
                     WHERE RoomID = ?
-                    ORDER BY issue_date DESC LIMIT 1 \
-                    OFFSET 1 \
+                    ORDER BY issue_date DESC LIMIT 1  
+                    OFFSET 1  
                     """
         cursor_old = db.execute(query_old, (room_id,))
         old = cursor_old.fetchone() if cursor_old else (current[0], current[1])
@@ -319,43 +402,43 @@ class RoomRepository:
         try:
             db.connect()
             query = """
-                    SELECT r.RoomName              AS RoomName, \
-                           r.Address               AS Address, \
-                           r.RoomType              AS RoomType, \
-                           r.Status                AS Status, \
-                           r.Area                  AS Area, \
-                           r.Floor                 AS Floor, \
-                           r.HasLoft               AS HasLoft, \
-                           r.Bathroom              AS Bathroom, \
-                           r.Kitchen               AS Kitchen, \
-                           r.Balcony               AS Balcony, \
-                           r.Furniture             AS Furniture, \
-                           r.FreeWifi              AS FreeWifi, \
-                           r.Parking               AS Parking, \
-                           r.AirConditioner        AS AirConditioner, \
-                           r.Fridge                AS Fridge, \
-                           r.WashingMachine        AS WashingMachine, \
-                           r.Television            AS Television, \
-                           r.Security              AS Security, \
-                           r.CurrentElectricityNum AS CurrentElectricityNum, \
-                           r.CurrentWaterNum       AS CurrentWaterNum, \
-                           r.RoomPrice             AS RoomPrice, \
-                           r.Deposit               AS Deposit, \
-                           r.ElectricityPrice      AS ElectricityPrice, \
-                           r.WaterPrice            AS WaterPrice, \
-                           r.InternetPrice         AS InternetPrice, \
-                           r.OtherFees             AS OtherFees, \
-                           r.GarbageServicePrice   AS GarbageServicePrice, \
-                           r.MaxTenants            AS MaxTenants, \
-                           r.PetAllowed            AS PetAllowed, \
-                           r.RentalDate            AS RentalDate, \
-                           r.Description           AS Description, \
-                           l.Fullname              AS Fullname, \
-                           l.PhoneNumber           AS PhoneNumber, \
+                    SELECT r.RoomName              AS RoomName,  
+                           r.Address               AS Address,  
+                           r.RoomType              AS RoomType,  
+                           r.Status                AS Status,  
+                           r.Area                  AS Area,  
+                           r.Floor                 AS Floor,  
+                           r.HasLoft               AS HasLoft,  
+                           r.Bathroom              AS Bathroom,  
+                           r.Kitchen               AS Kitchen,  
+                           r.Balcony               AS Balcony,  
+                           r.Furniture             AS Furniture,  
+                           r.FreeWifi              AS FreeWifi,  
+                           r.Parking               AS Parking,  
+                           r.AirConditioner        AS AirConditioner,  
+                           r.Fridge                AS Fridge,  
+                           r.WashingMachine        AS WashingMachine,  
+                           r.Television            AS Television,  
+                           r.Security              AS Security,  
+                           r.CurrentElectricityNum AS CurrentElectricityNum,  
+                           r.CurrentWaterNum       AS CurrentWaterNum,  
+                           r.RoomPrice             AS RoomPrice,  
+                           r.Deposit               AS Deposit,  
+                           r.ElectricityPrice      AS ElectricityPrice,  
+                           r.WaterPrice            AS WaterPrice,  
+                           r.InternetPrice         AS InternetPrice,  
+                           r.OtherFees             AS OtherFees,  
+                           r.GarbageServicePrice   AS GarbageServicePrice,  
+                           r.MaxTenants            AS MaxTenants,  
+                           r.PetAllowed            AS PetAllowed,  
+                           r.RentalDate            AS RentalDate,  
+                           r.Description           AS Description,  
+                           l.Fullname              AS Fullname,  
+                           l.PhoneNumber           AS PhoneNumber,  
                            l.Email                 AS Email
                     FROM Rooms r
                              LEFT JOIN Landlords l ON r.LandlordID = l.LandlordID
-                    WHERE r.RoomID = ? \
+                    WHERE r.RoomID = ?  
                     """
             cursor = db.execute(query, (room_id,))
             row = cursor.fetchone() if cursor else None
@@ -462,7 +545,7 @@ class RoomRepository:
                 FROM Invoices
                 WHERE RoomID = ?
                 ORDER BY issue_date DESC
-                    LIMIT 12 \
+                    LIMIT 12  
                 """
 
         cursor = db.execute(query, (room_id,))

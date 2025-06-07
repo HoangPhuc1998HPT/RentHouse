@@ -1,8 +1,6 @@
 from PyQt5.QtWidgets import QMessageBox
 from QLNHATRO.RentalManagementApplication.backend.model.BaseInforForm import TenantFormModel, LandlordFormModel
-from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.UpdateInfoView import UpdateInfoView
-from QLNHATRO.RentalManagementApplication.services.LanlordService import LanlordService
-from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
+from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Register.UpdateInfoView import UpdateInfoView
 
 
 class UpdateInfoController:
@@ -136,6 +134,6 @@ class UpdateInfoController:
 
         if reply == QMessageBox.StandardButton.Yes:
             # Go back to login screen
-            from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.HomeLogin import LoginWindow
+            from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import LoginWindow
             self.main_window.setCentralWidget(LoginWindow(self.main_window))
 

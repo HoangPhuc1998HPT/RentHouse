@@ -459,13 +459,15 @@ END;
 -------------------------------------------------------------------------------
 
 -- Insert sample Users
+--password123
 INSERT INTO Users (Username, Password, Role, IsActive) VALUES
-('landlord1', 'password123', 'landlord', 1),
-('landlord2', 'password123', 'landlord', 1),
-('tenant1', 'password123', 'tenant', 1),
-('tenant2', 'password123', 'tenant', 1),
-('tenant3', 'password123', 'tenant', 1),
-('tenant4', 'password123', 'tenant', 1);
+('landlord1', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'landlord', 1),
+('landlord2', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'landlord', 1),
+('tenant1', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'tenant', 1),
+('tenant2', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'tenant', 1),
+('tenant3', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'tenant', 1),
+('tenant4', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'tenant', 1);
+
 
 -- Insert sample Admins
 INSERT INTO Admins (Fullname, UserID) VALUES

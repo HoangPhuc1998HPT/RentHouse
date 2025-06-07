@@ -5,16 +5,20 @@ from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import L
 from QLNHATRO.RentalManagementApplication.backend.model.Landlord import Landlord
 
 
-class LanlordService:
+class LandlordService:
     def __init__(self):  # Đúng
         pass
 
+    @staticmethod
+    def create_empty_landlord(user_id):
+        return LanlordRepository.create_empty_landlord(user_id)
 
     @staticmethod
     def update_field(id_lanlord, field, value):
         print(f"[Service] Cập nhật {field} = {value} cho landlord {id_lanlord}")
         LanlordRepository.update_field(id_lanlord, field, value)
 
+    '''Chưa hoạt động đúng yêu cầu'''
     @staticmethod
     def handle_data_for_home_page(id_lanlord):
         #prepare data
@@ -45,11 +49,13 @@ class LanlordService:
 
         return information_data
 
+    '''Đã kiểm tra đồng bộ dữ liệu và chuẩn hóa'''
     @staticmethod
     def handle_data_infor_page(landlord_id: int) -> Optional[Landlord]:
         """
         Trả về instance Landlord đã chứa đầy đủ dữ liệu,
         để View có thể gọi getattr(landlord, 'fullname')...
+        LandlordID, Fullname, Birth, CCCD, Gender, JobTitle, MaritalStatus, Email, PhoneNumber, HomeAddress, UserID, Username, so_phong Landlord
         """
         return LanlordRepository.get_landlord_by_id(landlord_id)
 
@@ -139,7 +145,7 @@ class LanlordService:
         # raw có keys: 'name', 'birth', 'cccd', 'sex', 'job', 'marital_status', 'email', 'phone', 'address'
         mapped_data = {
             "Fullname": raw.get("name", "").strip(),
-            "Birth": LanlordService.convert_ddMMyyyy_to_ISO(raw.get("birth", "")),
+            "Birth": LandlordService.convert_ddMMyyyy_to_ISO(raw.get("birth", "")),
             "CCCD": raw.get("cccd", "").strip(),
             "Gender": raw.get("sex", "").strip(),
             "JobTitle": raw.get("job", "").strip(),

@@ -18,22 +18,22 @@ class LanlordRepository:
             return None
 
         query = """
-                SELECT l.LandlordID    AS landlord_id, \
-                       l.Fullname      AS full_name, \
-                       l.Birth         AS birth_date, \
-                       l.CCCD          AS citizen_id, \
-                       l.Gender        AS gender, \
-                       l.JobTitle      AS job_title, \
-                       l.Email         AS email, \
-                       l.PhoneNumber   AS phone_number, \
-                       l.HomeAddress   AS home_address, \
-                       l.MaritalStatus AS marital_status, \
+                SELECT l.LandlordID    AS landlord_id, 
+                       l.Fullname      AS full_name, 
+                       l.Birth         AS birth_date, 
+                       l.CCCD          AS citizen_id, 
+                       l.Gender        AS gender,
+                       l.JobTitle      AS job_title, 
+                       l.Email         AS email, 
+                       l.PhoneNumber   AS phone_number, 
+                       l.HomeAddress   AS home_address, 
+                       l.MaritalStatus AS marital_status, 
                        COUNT(r.RoomID) AS room_count
                 FROM Landlords l
                          JOIN Users u ON l.UserID = u.UserID
                          LEFT JOIN Rooms r ON r.LandlordID = l.LandlordID
                 WHERE u.Username = ?
-                GROUP BY l.LandlordID \
+                GROUP BY l.LandlordID 
                 """
         cursor = db.execute(query, (username,))
         row = cursor.fetchone() if cursor else None
@@ -55,7 +55,7 @@ class LanlordRepository:
             "marital_status": row["marital_status"],
             "room_count": row["room_count"],
         }
-
+    '''Đã kiểm tra đồng bộ và chuẩn hóa'''
     @staticmethod
     def get_landlord_by_id(landlord_id: int) -> Optional[Landlord]:
         """
@@ -66,24 +66,24 @@ class LanlordRepository:
             return None
 
         query = """
-                SELECT l.LandlordID    AS LandlordID, \
-                       l.Fullname      AS Fullname, \
-                       l.Birth         AS Birth, \
-                       l.CCCD          AS CCCD, \
-                       l.Gender        AS Gender, \
-                       l.JobTitle      AS JobTitle, \
-                       l.MaritalStatus AS MaritalStatus, \
-                       l.Email         AS Email, \
-                       l.PhoneNumber   AS PhoneNumber, \
-                       l.HomeAddress   AS HomeAddress, \
-                       l.UserID        AS UserID, \
-                       u.Username      AS Username, \
+                SELECT l.LandlordID    AS LandlordID, 
+                       l.Fullname      AS Fullname, 
+                       l.Birth         AS Birth, 
+                       l.CCCD          AS CCCD, 
+                       l.Gender        AS Gender, 
+                       l.JobTitle      AS JobTitle, 
+                       l.MaritalStatus AS MaritalStatus, 
+                       l.Email         AS Email, 
+                       l.PhoneNumber   AS PhoneNumber, 
+                       l.HomeAddress   AS HomeAddress, 
+                       l.UserID        AS UserID, 
+                       u.Username      AS Username, 
                        COUNT(r.RoomID) AS so_phong
                 FROM Landlords l
                          LEFT JOIN Users u ON l.UserID = u.UserID
                          LEFT JOIN Rooms r ON r.LandlordID = l.LandlordID
                 WHERE l.LandlordID = ?
-                GROUP BY l.LandlordID \
+                GROUP BY l.LandlordID 
                 """
         cursor = db.execute(query, (landlord_id,))
         row = cursor.fetchone() if cursor else None
@@ -137,12 +137,12 @@ class LanlordRepository:
 
         try:
             insert_sql = """
-                         INSERT INTO Landlords(UserID, Fullname, Birth, CCCD, Gender, \
-                                               JobTitle, MaritalStatus, Email, PhoneNumber, \
-                                               HomeAddress, CreatedAt) \
-                         VALUES (?, ?, ?, ?, ?, \
-                                 ?, ?, ?, ?, ?, \
-                                 datetime('now', 'localtime')); \
+                         INSERT INTO Landlords(UserID, Fullname, Birth, CCCD, Gender, 
+                                               JobTitle, MaritalStatus, Email, PhoneNumber, 
+                                               HomeAddress, CreatedAt) 
+                         VALUES (?, ?, ?, ?, ?, 
+                                 ?, ?, ?, ?, ?, 
+                                 datetime('now', 'localtime')); 
                          """
             params = (
                 user_id,
@@ -186,37 +186,37 @@ class LanlordRepository:
             return []
 
         query = """
-                SELECT l.LandlordID, \
-                       l.Fullname, \
-                       l.Birth, \
-                       l.CCCD, \
-                       l.Gender, \
-                       l.JobTitle, \
-                       l.MaritalStatus, \
-                       l.Email, \
-                       l.PhoneNumber, \
-                       l.HomeAddress, \
-                       l.UserID, \
-                       u.Username      AS Username, \
-                       COUNT(r.RoomID) AS so_phong, \
+                SELECT l.LandlordID,  
+                       l.Fullname,  
+                       l.Birth,  
+                       l.CCCD,  
+                       l.Gender,  
+                       l.JobTitle,  
+                       l.MaritalStatus,  
+                       l.Email,  
+                       l.PhoneNumber,  
+                       l.HomeAddress,  
+                       l.UserID,  
+                       u.Username      AS Username,  
+                       COUNT(r.RoomID) AS so_phong,  
                        l.CreatedAt     AS CreatedAt
                 FROM Landlords AS l
                          LEFT JOIN Users AS u ON l.UserID = u.UserID
                          LEFT JOIN Rooms AS r ON l.LandlordID = r.LandlordID
-                GROUP BY l.LandlordID, \
-                         l.Fullname, \
-                         l.Birth, \
-                         l.CCCD, \
-                         l.Gender, \
-                         l.JobTitle, \
-                         l.MaritalStatus, \
-                         l.Email, \
-                         l.PhoneNumber, \
-                         l.HomeAddress, \
-                         l.UserID, \
-                         u.Username, \
+                GROUP BY l.LandlordID,  
+                         l.Fullname,  
+                         l.Birth,  
+                         l.CCCD,  
+                         l.Gender,  
+                         l.JobTitle,  
+                         l.MaritalStatus,  
+                         l.Email,  
+                         l.PhoneNumber,  
+                         l.HomeAddress,  
+                         l.UserID,  
+                         u.Username,  
                          l.CreatedAt
-                ORDER BY l.LandlordID; \
+                ORDER BY l.LandlordID;  
                 """
         cursor = db.execute(query)
         rows = cursor.fetchall() if cursor else []
@@ -267,7 +267,7 @@ class LanlordRepository:
                 SELECT SUM(TotalRoomPrice + TotalElectronicCost + TotalWaterCost +
                            InternetFee + TotalGarbageFee + TotalAnotherFee - Discount)
                 FROM Invoices
-                WHERE LandlordID = ? \
+                WHERE LandlordID = ?  
                 """
         cursor = db.execute(query, (id_landlord,))
 
@@ -292,8 +292,8 @@ class LanlordRepository:
                 SELECT SUM(TotalRoomPrice + TotalElectronicCost + TotalWaterCost +
                            InternetFee + TotalGarbageFee + TotalAnotherFee - Discount)
                 FROM Invoices
-                WHERE LandlordID = ? \
-                  AND strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-1 month')) \
+                WHERE LandlordID = ?  
+                  AND strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-1 month'))  
                 """
         cursor = db.execute(query, (id_landlord,))
         result = cursor.fetchone()
@@ -309,18 +309,18 @@ class LanlordRepository:
     def get_data_for_handel_percent_income(id_landlord):
         db.connect()
         query = """
-                SELECT SUM(CASE \
-                               WHEN strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-1 month')) \
-                                   THEN TotalRoomPrice + TotalElectronicCost + TotalWaterCost + InternetFee + \
-                                        TotalGarbageFee + TotalAnotherFee - Discount \
-                               ELSE 0 END) AS last_month, \
-                       SUM(CASE \
-                               WHEN strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-2 month')) \
-                                   THEN TotalRoomPrice + TotalElectronicCost + TotalWaterCost + InternetFee + \
-                                        TotalGarbageFee + TotalAnotherFee - Discount \
+                SELECT SUM(CASE  
+                               WHEN strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-1 month'))  
+                                   THEN TotalRoomPrice + TotalElectronicCost + TotalWaterCost + InternetFee +  
+                                        TotalGarbageFee + TotalAnotherFee - Discount  
+                               ELSE 0 END) AS last_month,  
+                       SUM(CASE  
+                               WHEN strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-2 month'))  
+                                   THEN TotalRoomPrice + TotalElectronicCost + TotalWaterCost + InternetFee +  
+                                        TotalGarbageFee + TotalAnotherFee - Discount  
                                ELSE 0 END) AS month_before
                 FROM Invoices
-                WHERE LandlordID = ? \
+                WHERE LandlordID = ?  
                 """
         cursor = db.execute(query, (id_landlord,))
         result = cursor.fetchone()
@@ -338,8 +338,8 @@ class LanlordRepository:
         query = """
                 SELECT COUNT(*)
                 FROM Invoices
-                WHERE LandlordID = ? \
-                  AND Status = 'Chưa thanh toán' \
+                WHERE LandlordID = ?  
+                  AND Status = 'Chưa thanh toán'  
                 """
         cursor = db.execute(query, (id_landlord,))
         total_current = cursor.fetchone()[0] if cursor else 0
@@ -347,9 +347,9 @@ class LanlordRepository:
         query_last_month = """
                            SELECT COUNT(*)
                            FROM Invoices
-                           WHERE LandlordID = ? \
+                           WHERE LandlordID = ?  
                              AND Status = 'Chưa thanh toán'
-                             AND strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-1 month')) \
+                             AND strftime('%m-%Y', issue_date) = strftime('%m-%Y', date('now','start of month','-1 month'))  
                            """
         cursor = db.execute(query_last_month, (id_landlord,))
         total_last = cursor.fetchone()[0] if cursor else 0
@@ -367,10 +367,10 @@ class LanlordRepository:
 
         # Phòng hiện tại không có người thuê
         query = """
-                SELECT COUNT(*) \
+                SELECT COUNT(*)  
                 FROM Rooms
-                WHERE LandlordID = ? \
-                  AND TenantID IS NULL \
+                WHERE LandlordID = ?  
+                  AND TenantID IS NULL  
                 """
         cursor = db.execute(query, (id_landlord,))
         total_current = cursor.fetchone()[0] if cursor else 0
@@ -380,14 +380,14 @@ class LanlordRepository:
         # 1. Hiện tại không có Tenant
         # 2. Và tháng trước vẫn chưa có tenant (RentalDate IS NULL hoặc < đầu tháng hiện tại)
         query_last_month = """
-                           SELECT COUNT(*) \
+                           SELECT COUNT(*)  
                            FROM Rooms
                            WHERE LandlordID = ?
                              AND TenantID IS NULL
                              AND (
                                RentalDate IS NULL OR
                                strftime('%Y-%m', RentalDate) <= strftime('%Y-%m', date('now', 'start of month', '-1 month'))
-                               ) \
+                               )  
                            """
         cursor = db.execute(query_last_month, (id_landlord,))
         total_last = cursor.fetchone()[0] if cursor else 0
@@ -423,16 +423,16 @@ class LanlordRepository:
                 return None
 
             query = """
-                    SELECT Fullname, \
-                           Birth, \
-                           CCCD, \
-                           Gender, \
-                           JobTitle, \
-                           Email, \
-                           PhoneNumber, \
+                    SELECT Fullname,  
+                           Birth,  
+                           CCCD,  
+                           Gender,  
+                           JobTitle,  
+                           Email,  
+                           PhoneNumber,  
                            MaritalStatus
                     FROM Landlords
-                    WHERE LandlordID = ? \
+                    WHERE LandlordID = ?  
                     """
             cursor = db.execute(query, (id_landlord,))
             row = cursor.fetchone() if cursor else None
@@ -546,7 +546,7 @@ class LanlordRepository:
                     FROM LandlordAnalytics
                     WHERE LandlordID = ?
                     ORDER BY year DESC, month DESC
-                        LIMIT 10 \
+                        LIMIT 12  
                     """
             cursor = db.execute(query, (landlord_id,))
             if cursor is None:
@@ -595,7 +595,7 @@ class LanlordRepository:
                     FROM LandlordAnalytics
                     WHERE LandlordID = ?
                     ORDER BY year DESC, month DESC
-                        LIMIT 12 \
+                        LIMIT 12  
                     """
             cursor= db.execute(query, (id_landlord,))
             rows = cursor.fetchall()
@@ -665,13 +665,13 @@ class LanlordRepository:
 
         try:
             query = """
-                    SELECT Fullname    AS full_name, \
-                           CCCD        AS citizen_id, \
-                           HomeAddress AS address, \
-                           Email       AS email, \
+                    SELECT Fullname    AS full_name,  
+                           CCCD        AS citizen_id,  
+                           HomeAddress AS address,  
+                           Email       AS email,  
                            PhoneNumber AS phone
                     FROM Landlords
-                    WHERE LandlordID = ? LIMIT 1; \
+                    WHERE LandlordID = ? LIMIT 1;  
                     """
             cursor = db.execute(query, (landlord_id,))
             row = cursor.fetchone() if cursor else None

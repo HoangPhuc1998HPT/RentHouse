@@ -1,0 +1,23 @@
+ landlord1 - password123
+ tenant2 - tenant3
+ Không cho phép các tầng gọi ngược lên tầng trên (chỉ đi xuống)
+ Trả về dữ liệu đúng kiểu ở mỗi tầng
+ Validate dữ liệu kỹ ở UI và Service
+ Repository chỉ trả về Model/Dict sạch, không để lọt lỗi DB lên trên
+ Xử lý exception rõ ràng ở từng tầng, trả lỗi lên đúng nơi
+ Log mọi thao tác bất thường
+ Không SELECT * bừa bãi
+ Không giữ connection DB quá lâu (nên dùng context manager)
+ Tất cả truy cập DB đều qua Repository
+ Transaction được rollback nếu có lỗi
+
+---------------------------------------
+HomeLogin --> RegisterController -->
+    + truy cập tài khoản mật khẩu thành công
+Flow Đăng nhập tài khoản Chủ trọ
+    + LandlordMenu -> LanlordController -> LanlordService -> LandlordRepository(Lanlord)
+    + MainWindowLandlord(user_id)
+    + LandlordMenu(self, main_window=None, user_id=None)
+    + LandlordHomepage => chưa xử lý được
+    + LandlordInfo -- OK
+    + LandlordRoomList --- OK

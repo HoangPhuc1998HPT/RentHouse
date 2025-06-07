@@ -2,10 +2,39 @@ from datetime import datetime, date
 
 from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
 from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
+from QLNHATRO.RentalManagementApplication.backend.model.Invoice import InvoiceModel
 
 db = Database()
 
 class InvoiceRepository:
+
+    @staticmethod
+    def get_latest_invoice_by_room(room_id: int) -> InvoiceModel | None:
+        """
+        Trả về hóa đơn mới nhất của phòng (theo issue_date giảm dần),
+        hoặc None nếu chưa có hóa đơn hoặc kết nối thất bại.
+        """
+        if not db.connect():  # Kết nối đến DB :contentReference[oaicite:0]{index=0}
+            return None
+
+        try:
+            query = """
+                    SELECT *
+                    FROM Invoices
+                    WHERE RoomID = ?
+                    ORDER BY issue_date DESC LIMIT 1 \
+                    """
+            cursor = db.execute(query, (room_id,))
+            row = cursor.fetchone()  # fetch one row
+            if row:
+                # row là sqlite3.Row, chuyển thành dict rồi khởi tạo model :contentReference[oaicite:1]{index=1}
+                return InvoiceModel(dict(row))
+        except Exception as e:
+            print(f"[LỖI] Lấy hóa đơn mới nhất thất bại: {e}")
+        finally:
+            db.close()
+
+        return None
 
     @staticmethod
     def save_invoice(invoice_data: dict) -> bool | None:
@@ -39,12 +68,12 @@ class InvoiceRepository:
 
         try:
             query = """
-                    INSERT INTO Invoices (RoomID, TenantID, LandlordID, issue_date, \
-                                          CurrElectric, CurrWater, PreElectric, PreWater, \
-                                          TotalElectronicCost, TotalWaterCost, TotalRoomPrice, \
-                                          InternetFee, TotalGarbageFee, TotalAnotherFee, \
-                                          Discount, Status) \
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) \
+                    INSERT INTO Invoices (RoomID, TenantID, LandlordID, issue_date,  
+                                          CurrElectric, CurrWater, PreElectric, PreWater,  
+                                          TotalElectronicCost, TotalWaterCost, TotalRoomPrice,  
+                                          InternetFee, TotalGarbageFee, TotalAnotherFee,  
+                                          Discount, Status)  
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  
                     """
             params = (
                 invoice_data['room_id'],

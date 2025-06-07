@@ -4,18 +4,37 @@ from PyQt5.QtWidgets import (
     QPushButton, QGroupBox, QMessageBox
 )
 
+from QLNHATRO.RentalManagementApplication.backend.model.Landlord import Landlord
 from QLNHATRO.RentalManagementApplication.frontend.Component.LabelUI import LabelUI
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 from QLNHATRO.RentalManagementApplication.frontend.Component.InforUpdater import InfoUpdater
 
-
+''' Đã kiểm tra đồng bộ dữ liệu và chuẩn hóa '''
 class LandlordInfo(QWidget):
-    def __init__(self, main_window, id_lanlord, information_data):
+    def __init__(self, main_window, landlord):
         super().__init__()
         self.setStyleSheet(GlobalStyle.global_stylesheet())
-        self.id_lanlord = id_lanlord
+        if isinstance(landlord, dict):
+            self.landlord = Landlord(landlord)
+        else:
+            self.landlord = landlord
+        self.id_lanlord = self.landlord.landlord_id
+
         self.main_window = main_window
-        self.information = information_data
+        self.information = {
+            'name': landlord.fullname,
+            'birth': landlord.birth,
+            'cccd': landlord.cccd,
+            'gender': landlord.gender,
+            'job_title': landlord.job_title,
+            'email': landlord.email,
+            'phone_number': landlord.phone_number,
+            'marital_status': landlord.marital_status,
+            # Thêm các thông tin phục vụ mục đích nâng cấp ứng dụng sau này
+            'username': landlord.username,
+            'so_phong': landlord.so_phong,
+            'created_at': landlord.created_at,
+        }
 
         main_layout = QVBoxLayout()
 
@@ -34,9 +53,12 @@ class LandlordInfo(QWidget):
 
         field_names = [
             "Họ và Tên", "Ngày Sinh", "CCCD", "Giới tính",
-            "Nghề nghiệp", "Email" ,"Số điện thoại", "Tình trạng hôn nhân"
+            "Nghề nghiệp", "Email", "Số điện thoại", "Tình trạng hôn nhân"
         ]
-        field_keys = ['name', 'birth', 'cccd', 'sex', 'job', 'email','phone', 'marriage']
+        field_keys = [
+            'name', 'birth', 'cccd', 'gender',
+            'job_title', 'email', 'phone_number', 'marital_status'
+        ]
 
         self.label_fields = []
 

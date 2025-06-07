@@ -8,15 +8,15 @@ from PyQt5.QtGui import QRegExpValidator
 
 from QLNHATRO.RentalManagementApplication.controller.RoomController.RoomMenuController import RoomMenuController
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.services.RoomService import RoomService
+from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
 
 
 class CreateNewRoom(QWidget):
-    def __init__(self, main_window=None):
+    def __init__(self, main_window=None, id_landlord=None):
         super().__init__()
         self.setStyleSheet(GlobalStyle.global_stylesheet())
         self.create_data_for_update = {}
-        self.id_landlord = None
+        self.id_landlord = id_landlord
         self.main_window = main_window
 
         # Thiết lập khu vực cuộn cho trường hợp form dài
@@ -340,281 +340,159 @@ class CreateNewRoom(QWidget):
         self.input_number_water.clear()
 
         # Xóa checkboxes
-        self.cb_wifi.setChecked(False)
-        self.cb_parking.setChecked(False)
-        self.cb_aircon.setChecked(False)
-        self.cb_fridge.setChecked(False)
-        self.cb_wm.setChecked(False)
-        self.cb_security.setChecked(False)
-        self.cb_tv.setChecked(False)
-        self.cb_kitchen.setChecked(False)
+        for cb in (
+                self.cb_wifi, self.cb_parking, self.cb_aircon, self.cb_fridge,
+                self.cb_wm, self.cb_security, self.cb_tv, self.cb_kitchen,
+                self.cb_floor, self.cb_hasLoft, self.cb_bathroom,
+                self.cb_balcony, self.cb_funiture, self.cb_pet
+        ):
+            cb.setChecked(False)
 
-    def validate_form(self):
-        # Kiểm tra các trường bắt buộc
-        required_fields = [
-            (self.input_name_room, "Tên phòng"),
-            (self.input_number_people_room, "Số người tối đa"),
-            (self.input_address_room, "Địa chỉ"),
-            (self.input_area, "Diện tích"),
-            (self.input_price_room, "Giá thuê")
-        ]
+    def validate_form(self) -> bool:
+        # 1. Thu thập dữ liệu từ form vào dict
+        data = {
+            "room_name":         self.input_name_room.text().strip(),
+            "max_tenants":        self.input_number_people_room.text().strip(),
+            "address":           self.input_address_room.text().strip(),
+            "area":              self.input_area.text().strip(),
+            "room_price":        self.input_price_room.text().strip(),
+            "electricity_price": self.input_price_electric.text().strip() or "0",
+            "water_price":       self.input_price_water.text().strip()   or "0",
+            "internet_price":    self.input_price_internet.text().strip() or "0",
+            "garbage_price":     self.input_price_garbage.text().strip()  or "0",
+            "initial_electric":  self.input_number_electric.text().strip() or "0",
+            "initial_water":     self.input_number_water.text().strip()   or "0",
+        }
 
-        for field, name in required_fields:
-            if not field.text().strip():
-                QMessageBox.warning(self, "Thiếu thông tin", f"Vui lòng nhập {name}.")
-                field.setFocus()
-                return False
+        # 2. Gọi validator tập trung
+        is_valid, errors = Validators.validate_room_data(data)  # bạn đã thêm hàm này vào Validators.py
 
-        # Kiểm tra định dạng số
-        number_fields = [
-            (self.input_number_people_room, "Số người tối đa"),
-            (self.input_area, "Diện tích"),
-            (self.input_price_room, "Giá thuê")
-        ]
+        if not is_valid:
+            # Lấy lỗi đầu tiên để hiển thị
+            first_field, first_msg = next(iter(errors.items()))
 
-        for field, name in number_fields:
-            try:
-                if field.text().strip():
-                    float(field.text().strip())
-            except ValueError:
-                QMessageBox.warning(self, "Định dạng không hợp lệ",
-                                    f"{name} phải là số.")
-                field.setFocus()
-                return False
+            # Map từ key của data → widget tương ứng
+            field_map = {
+                "room_name":         self.input_name_room,
+                "max_tenants":        self.input_number_people_room,
+                "address":           self.input_address_room,
+                "area":              self.input_area,
+                "rent_price":        self.input_price_room,
+                "electricity_price": self.input_price_electric,
+                "water_price":       self.input_price_water,
+                "internet_price":    self.input_price_internet,
+                "garbage_price":     self.input_price_garbage,
+                "initial_electric":  self.input_number_electric,
+                "initial_water":     self.input_number_water,
+            }
+
+            # Hiển thị cảnh báo và focus vào ô có lỗi
+            QMessageBox.warning(self, "Lỗi nhập liệu", first_msg)
+            field_map[first_field].setFocus()
+            return False
 
         return True
 
-    def collect_amenities(self):
-        amenities = []
-        if self.cb_wifi.isChecked():
-            amenities.append("Wifi miễn phí")
-        if self.cb_parking.isChecked():
-            amenities.append("Chỗ để xe")
-        if self.cb_aircon.isChecked():
-            amenities.append("Máy lạnh/Điều hòa")
-        if self.cb_fridge.isChecked():
-            amenities.append("Tủ lạnh")
-        if self.cb_wm.isChecked():
-            amenities.append("Máy giặt")
-        if self.cb_security.isChecked():
-            amenities.append("Bảo vệ 24/7")
-        if self.cb_tv.isChecked():
-            amenities.append("TV")
-        if self.cb_kitchen.isChecked():
-            amenities.append("Bếp")
-
-        return ", ".join(amenities)
+    def collect_amenities(self) -> dict:
+        return {
+            "free_wifi": int(self.cb_wifi.isChecked()),
+            "parking": int(self.cb_parking.isChecked()),
+            "air_conditioner": int(self.cb_aircon.isChecked()),
+            "fridge": int(self.cb_fridge.isChecked()),
+            "washing_machine": int(self.cb_wm.isChecked()),
+            "security": int(self.cb_security.isChecked()),
+            "television": int(self.cb_tv.isChecked()),
+            "kitchen": int(self.cb_kitchen.isChecked()),
+            "floor": int(self.cb_floor.isChecked()),
+            "has_loft": int(self.cb_hasLoft.isChecked()),
+            "bathroom": int(self.cb_bathroom.isChecked()),
+            "balcony": int(self.cb_balcony.isChecked()),
+            "furniture": int(self.cb_funiture.isChecked()),
+            "pet_allowed": int(self.cb_pet.isChecked()),
+        }
 
     def handle_create_room(self):
+        # 1. Validate form
         if not self.validate_form():
             return
 
-        # Thu thập thông tin tiện ích
+        # 2. Thu thập flags tiện ích
         amenities = self.collect_amenities()
+        # amenities là dict:
+        # {
+        #   "free_wifi":0/1, "parking":0/1, "air_conditioner":0/1, ..., "balcony":0/1,
+        #   "floor":0/1, "has_loft":0/1, "bathroom":0/1, "kitchen":0/1,
+        #   "furniture":0/1, "pet_allowed":0/1
+        # }
 
-        # Kết hợp thông tin bổ sung với tiện ích
-        other_info = self.input_infor_more.text().strip()
-        if amenities and other_info:
-            combined_info = f"Tiện ích: {amenities}. {other_info}"
-        elif amenities:
-            combined_info = f"Tiện ích: {amenities}"
-        else:
-            combined_info = other_info
+        # 3. Phần mô tả thuần (Description)
+        description = self.input_infor_more.text().strip()
 
-        create_data = RoomService.collect_data_create_room(
-            id_landlord=self.id_landlord,
-            room_name=self.input_name_room.text().strip(),
-            number_people=self.input_number_people_room.text().strip(),
-            address=self.input_address_room.text().strip(),
-            type_room=self.input_type_room.currentText(),
-            status=self.input_status_room.currentText(),
-            other_infor=combined_info,
-            area=self.input_area.text().strip(),
-            price_rent=self.input_price_room.text().strip(),
-            electric_price=self.input_price_electric.text().strip() or "0",
-            water_price=self.input_price_water.text().strip() or "0",
-            num_electric=self.input_number_electric.text().strip() or "0",
-            num_water=self.input_number_water.text().strip() or "0",
+        # 4. Gom payload tương ứng schema Rooms
+        create_data = {
+            # Quan hệ
+            "id_landlord":          self.id_landlord,
+            "tenant_id":            None,
+
+            # Thông tin cơ bản
+            "room_name":            self.input_name_room.text().strip(),
+            "address":              self.input_address_room.text().strip(),
+            "type_room":            self.input_type_room.currentText(),
+            "status":               self.input_status_room.currentText(),
+            "area":                 self.input_area.text().strip(),
+            "max_tenants":          self.input_number_people_room.text().strip(),
+
+            # Cấu trúc & tiện ích
+            **{k: amenities[k] for k in (
+                "floor","has_loft","bathroom","kitchen","furniture","balcony",
+                "free_wifi","parking","air_conditioner","fridge","washing_machine",
+                "security","television","pet_allowed"
+            )},
+
+            # Giá cả
+            "room_price":           self.input_price_room.text().strip(),
+            "electricity_price":    self.input_price_electric.text().strip() or "0",
+            "water_price":          self.input_price_water.text().strip()   or "0",
+            "internet_price":       self.input_price_internet.text().strip()or "0",
+            "garbage_service_price":self.input_price_garbage.text().strip() or "0",
+            "other_fees":           "",      # nếu có phí khác nhập thêm thì lấy ở đây
+            "deposit":              "0",     # nếu có cọc, thay đổi sau
+
+            # Chỉ số khởi tạo
+            "current_electricity_num": self.input_number_electric.text().strip() or "0",
+            "current_water_num":       self.input_number_water.text().strip()   or "0",
+
+            # Mô tả thêm
+            "description":          description
+        }
+
+        print("[DEBUG] Payload tạo phòng:", create_data)
+
+        # 5. Xác nhận
+        ans = QMessageBox.question(
+            self, "Xác nhận tạo phòng",
+            f"Bạn có chắc chắn muốn tạo phòng “{create_data['room_name']}” không?",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+        )
+        if ans != QMessageBox.Yes:
+            return
+
+        # 6. Gọi Controller → Service → Repository
+        ok = RoomMenuController.go_to_handel_data_for_create_room(
+            self.id_landlord, create_data
         )
 
-        print("[DEBUG] Dữ liệu tạo phòng:", create_data)
-
-        # Xác nhận tạo phòng
-        confirm_box = QMessageBox()
-        confirm_box.setIcon(QMessageBox.Question)
-        confirm_box.setWindowTitle("Xác nhận tạo phòng")
-        confirm_box.setText(f"Bạn có chắc chắn muốn tạo phòng {self.input_name_room.text()} không?")
-        confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        confirm_box.setDefaultButton(QMessageBox.No)
-
-        if confirm_box.exec_() == QMessageBox.Yes:
-            result = RoomMenuController.go_to_handel_data_for_create_room(self.id_landlord, create_data)
-
-            if result:  # Giả sử hàm trả về True nếu thành công
-                QMessageBox.information(
-                    self,
-                    "Tạo phòng thành công",
-                    "Phòng trọ đã được thêm vào hệ thống thành công!",
-                    QMessageBox.StandardButton.Ok
-                )
-                self.clear_form()
-            else:
-                QMessageBox.critical(
-                    self,
-                    "Lỗi",
-                    "Có lỗi xảy ra khi tạo phòng. Vui lòng thử lại sau!",
-                    QMessageBox.StandardButton.Ok
-                )
-
-'''
-from PyQt5.QtWidgets import (
-    QWidget, QLabel, QLineEdit, QComboBox, QPushButton,
-    QVBoxLayout, QHBoxLayout, QFormLayout, QMessageBox
-)
-from PyQt5.QtCore import Qt
-
-from QLNHATRO.RentalManagementApplication.controller.RoomController.RoomMenuController import RoomMenuController
-from QLNHATRO.RentalManagementApplication.frontend.Component.LabelUI import LabelDarkUI
-from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.services.RoomService import RoomService
-
-
-class CreateNewRoom(QWidget):
-    def __init__(self, main_window=None):
-        super().__init__()
-        self.setStyleSheet(GlobalStyle.global_stylesheet())
-        self.create_data_for_update ={}
-        self.id_lanlord = None
-
-        main_layout = QVBoxLayout(self)
-
-        # NỀN TRẮNG CHỨA NỘI DUNG
-        content = QWidget()
-        #content.setStyleSheet("background-color: white; border-radius: 16px; padding: 32px;")
-        content_layout = QVBoxLayout(content)
-
-        # TIÊU ĐỀ
-        title = QLabel("🏠 Tạo phòng trọ mới")
-        title.setAlignment(Qt.AlignCenter)
-        #title.setStyleSheet("font-size: 24px; font-weight: bold;")
-        title.setObjectName("Title")  # ✅ sẽ dùng style của QLabel#Title
-        title.setFixedHeight(60)
-        content_layout.addWidget(title)
-        content_layout.addSpacing(10)
-
-        # Thêm tiêu đề
-
-        desc = QLabel("** Vui lòng điền đầy đủ thông tin để thêm phòng mới vào hệ thống.")
-        #desc.setStyleSheet("color: #666; font-size: 13px;")
-        desc.setAlignment(Qt.AlignLeft)
-        desc_1 = QLabel("** Nhập đầy đủ thông tin và đảm bảo các thông tin được nhập là chính xác")
-        desc_1.setAlignment(Qt.AlignLeft)
-
-        content_layout.addWidget(desc)
-        content_layout.addWidget(desc_1)
-        # TẠO 2 FORM CỘT TRÁI & PHẢI
-        form_row = QHBoxLayout()
-        form_left = QFormLayout()
-        form_right = QFormLayout()
-
-        # Đặt style cho combo & input đồng bộ
-        def style_input(widget):
-            widget.setFixedHeight(36)
-            widget.setFixedWidth(240)
-            return widget
-
-        def create_input_with_unit(unit_text=None):
-            layout = QHBoxLayout()
-            input = style_input(QLineEdit())
-            layout.addWidget(input)
-
-            if unit_text:
-                unit = QLabel(unit_text)
-                unit.setFixedWidth(80)
-                unit.setAlignment(Qt.AlignLeft)
-                layout.addWidget(unit)
-            return input, layout
-
-        # Input Widgets
-        self.input_name_room = style_input(QLineEdit())
-        self.input_number_people_room = style_input(QLineEdit())
-        self.input_address_room = style_input(QLineEdit())
-
-        self.input_type_room = QComboBox()
-        self.input_type_room.addItems(["Phòng trọ", "Chung cư", "Nhà nguyên căn","Khác"])
-        style_input(self.input_type_room)
-
-        self.input_status_room = QComboBox()
-        self.input_status_room.addItems(["Trống", "Đã thuê"])
-        style_input(self.input_status_room)
-
-        self.input_infor_more = style_input(QLineEdit())
-        self.input_area, area_layout = create_input_with_unit("m²")
-        self.input_price_room, price_room_layout = create_input_with_unit("VNĐ")
-        self.input_price_electric, price_electric_layout = create_input_with_unit("VNĐ/kWh")
-        self.input_price_water, price_water_layout = create_input_with_unit("VNĐ/m³")
-        self.input_number_electric, number_electric_layout = create_input_with_unit("kWh")
-        self.input_number_water, number_water_layout = create_input_with_unit("m³")
-
-        # THÊM VÀO CỘT TRÁI
-        form_left.addRow(LabelDarkUI("Tên phòng:"), self.input_name_room)
-        form_left.addRow(LabelDarkUI("Số nguoif tối đa:"), self.input_number_people_room)
-        form_left.addRow(LabelDarkUI("Địa chỉ:"), self.input_address_room)
-        form_left.addRow(LabelDarkUI("Loại phòng:"), self.input_type_room)
-        form_left.addRow(LabelDarkUI("Trạng thái:"), self.input_status_room)
-        form_left.addRow(LabelDarkUI("Thông tin khác:"), self.input_infor_more)
-
-        # THÊM VÀO CỘT PHẢI
-        form_right.addRow(LabelDarkUI("Diện tích:"), area_layout)
-        form_right.addRow(LabelDarkUI("Giá thuê:"), price_room_layout)
-        form_right.addRow(LabelDarkUI("Giá điện:"), price_electric_layout)
-        form_right.addRow(LabelDarkUI("Giá nước:"), price_water_layout)
-        form_right.addRow(LabelDarkUI("Số điện:"), number_electric_layout)
-        form_right.addRow(LabelDarkUI("Số nước:"), number_water_layout)
-
-        # GỘP 2 FORM VÀO FORM ROW
-        form_row.addLayout(form_left)
-        form_row.addSpacing(10)
-        form_row.addLayout(form_right)
-        content_layout.addLayout(form_row)
-
-        # BUTTON TẠO PHÒNG
-        btn_create = QPushButton("Tạo phòng")
-        btn_create.setFixedWidth(180)
-
-
-
-        btn_create.clicked.connect(self.handle_create_room)
-        content_layout.addSpacing(10)
-        content_layout.addWidget(btn_create, alignment=Qt.AlignCenter)
-
-        # Thêm nội dung vào main
-        main_layout.addWidget(content)
-
-    def handle_create_room(self):
-        create_data = RoomService.collect_data_create_room(
-                id_landlord=self.id_lanlord,
-                room_name=self.input_name_room.text(),
-                number_people=self.input_number_people_room.text(),
-                address=self.input_address_room.text(),
-                type_room=self.input_type_room.currentText(),
-                status=self.input_status_room.currentText(),
-                other_infor=self.input_infor_more.text(),
-                area=self.input_area.text(),
-                price_rent=self.input_price_room.text(),
-                electric_price=self.input_price_electric.text(),
-                water_price=self.input_price_water.text(),
-                num_electric=self.input_number_electric.text(),
-                num_water=self.input_number_water.text(),
+        # 7. Phản hồi kết quả
+        if ok:
+            QMessageBox.information(
+                self, "Thành công",
+                "Phòng trọ đã được thêm vào hệ thống!",
+                QMessageBox.Ok
             )
-
-        print("[DEBUG] Dữ liệu tạo phòng:", create_data)
-        RoomMenuController.go_to_handel_data_for_create_room(self.id_lanlord, create_data)
-        # Xuất hộp thoại thông báo
-        QMessageBox.information(
-            self,
-            "Tạo phòng thành công",
-            "Phòng trọ đã được thêm vào hệ thống thành công!",
-            QMessageBox.StandardButton.Ok
-        )
-'''
+            self.clear_form()
+        else:
+            QMessageBox.critical(
+                self, "Lỗi",
+                "Không thể tạo phòng mới. Vui lòng thử lại sau.",
+                QMessageBox.Ok
+            )

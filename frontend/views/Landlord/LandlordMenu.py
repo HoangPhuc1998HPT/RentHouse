@@ -1,25 +1,26 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QPushButton, QLabel
-from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+
 from QLNHATRO.RentalManagementApplication.controller.LandlordController.LandlordController import LandlordController
 from QLNHATRO.RentalManagementApplication.controller.MaintenanceController.MaintenanceController import \
     MaintenanceController
+
 from QLNHATRO.RentalManagementApplication.frontend.Component.ButtonUI import ButtonUI
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordCreateNewRoom import CreateNewRoom
+
 
 
 
 
 class LandlordMenu(QWidget):
-    def __init__(self, main_window=None, user_id=None):
+    def __init__(self, main_window=None,id_lanlord=None):
         super().__init__()
         self.setStyleSheet(GlobalStyle.global_stylesheet())
-        print("[DEBUG] LandlordMenu khởi tạo")
+        print("[DEBUG] LandlordMenu khởi tạo","với id_lanlord:", id_lanlord)
 
         self.main_window = main_window
         self.current_page = None
-        self.id_lanlord = LanlordRepository.get_id_landlord_from_user_id(user_id)
+        self.id_lanlord = id_lanlord
 
         self.main_window.setWindowTitle("Dashboard Chủ trọ")
         #self.main_window.setGeometry(300, 100, 1000, 600)
@@ -51,17 +52,17 @@ class LandlordMenu(QWidget):
         button_ui.apply_style(self.home_btn)
         self.home_btn.clicked.connect(lambda : LandlordController.go_to_home_page(self, self.id_lanlord))
 
-        self.info_btn = QPushButton("👤 Thông tin chủ trọ")
+        self.info_btn = QPushButton("👤 Thông tin chủ trọ") # OK
         button_ui.apply_style(self.info_btn)
         self.info_btn.clicked.connect(lambda : LandlordController.go_to_info_page(self, self.id_lanlord))
 
-        self.infor_list_room_btn = QPushButton("📂 Danh sách phòng trọ")
+        self.infor_list_room_btn = QPushButton("📂 Danh sách phòng trọ") # OK
         button_ui.apply_style(self.infor_list_room_btn)
         self.infor_list_room_btn.clicked.connect(lambda : LandlordController.go_to_room_list(self, self.id_lanlord))
 
         self.create_new_room_btn = QPushButton("➕ Tạo phòng trọ mới")
         button_ui.apply_style(self.create_new_room_btn)
-        self.create_new_room_btn.clicked.connect(lambda : self.set_right_frame(CreateNewRoom))
+        self.create_new_room_btn.clicked.connect(lambda : LandlordController.go_to_create_new_room(self, self.id_lanlord))
 
         self.infor_list_invoice_btn = QPushButton("🧾 Danh sách hóa đơn")
         button_ui.apply_style(self.infor_list_invoice_btn)

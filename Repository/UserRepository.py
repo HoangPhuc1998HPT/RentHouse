@@ -12,7 +12,7 @@ class UserRepository:
         query = """
                 SELECT UserID, Username, Password, Role, IsActive
                 FROM Users
-                ORDER BY UserID \
+                ORDER BY UserID  
                 """
         cursor = db.execute(query)
         rows = cursor.fetchall() if cursor else []
@@ -83,7 +83,7 @@ class UserRepository:
         try:
             db.connect()
             query = """SELECT UserID, Username, Password, Role, IsActive
-                       FROM Users \
+                       FROM Users  
                        WHERE Username = ?"""
             cursor = db.execute(query, (username,))
             row = cursor.fetchone()
@@ -119,40 +119,33 @@ class UserRepository:
         finally:
             db.close()
         return None
-
+    ''' Đẫ kiểm tra và chuẩn hóa '''
     @staticmethod
-    def delete_user_by_username(username: str):
+    def delete_user_by_username(username: str) -> bool:
         """
         Xóa user khỏi bảng Users dựa vào Username.
-        Yêu cầu CSDL có FOREIGN KEY ON DELETE CASCADE để xóa dữ liệu liên quan.
+        Trả về True nếu xóa thành công, False nếu user không tồn tại hoặc lỗi.
         """
-        if db.connect():
-            try:
-                # Kiểm tra user có tồn tại không
-                check_query = "SELECT * FROM Users WHERE Username = ?"
-                cursor = db.execute(check_query, (username,))
-                user = cursor.fetchone() if cursor else None
-
-                if user is None:
-                    print(f"[WARNING] Không tìm thấy user có Username: {username}")
-                    return False
-
-                # Xóa user
-                delete_query = "DELETE FROM Users WHERE Username = ?"
-                result = db.execute(delete_query, (username,))
-
-                if result and result.rowcount > 0:
-                    print(f"[INFO] Đã xóa user: {username}")
-                    return True
-                else:
-                    print(f"[WARNING] Không thể xóa user: {username}")
-                    return False
-
-            except Exception as e:
-                print(f"[LỖI] Lỗi khi xóa user: {e}")
-                return False
-            finally:
-                db.close()
-        else:
+        if not db.connect():
             print("[LỖI] Không thể kết nối tới database.")
             return False
+        try:
+            check_query = "SELECT 1 FROM Users WHERE Username = ?"
+            cursor = db.execute(check_query, (username,))
+            user_exists = cursor.fetchone() if cursor else None
+            if not user_exists:
+                print(f"[WARNING] Không tìm thấy user có Username: {username}")
+                return False
+            delete_query = "DELETE FROM Users WHERE Username = ?"
+            result = db.execute(delete_query, (username,))
+            if result and result.rowcount > 0:
+                print(f"[INFO] Đã xóa user: {username}")
+                return True
+            else:
+                print(f"[WARNING] Không thể xóa user: {username}")
+                return False
+        except Exception as e:
+            print(f"[LỖI] Lỗi khi xóa user: {e}")
+            return False
+        finally:
+            db.close()

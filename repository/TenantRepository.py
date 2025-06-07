@@ -17,18 +17,18 @@ class TenantRepository:
             return None
 
         query = """
-                SELECT t.TenantID      AS tenant_id, \
-                       t.Fullname      AS full_name, \
-                       t.Birth         AS birth_date, \
-                       t.CCCD          AS citizen_id, \
-                       t.Gender        AS gender, \
-                       t.JobTitle      AS occupation, \
-                       t.Email         AS email, \
-                       t.PhoneNumber   AS phone_number, \
+                SELECT t.TenantID      AS tenant_id,  
+                       t.Fullname      AS full_name,  
+                       t.Birth         AS birth_date,  
+                       t.CCCD          AS citizen_id,  
+                       t.Gender        AS gender,  
+                       t.JobTitle      AS occupation,  
+                       t.Email         AS email,  
+                       t.PhoneNumber   AS phone_number,  
                        t.MaritalStatus AS marital_status
                 FROM Tenants t
                          JOIN Users u ON t.UserID = u.UserID
-                WHERE u.Username = ? LIMIT 1; \
+                WHERE u.Username = ? LIMIT 1;  
                 """
         cursor = db.execute(query, (username,))
         row = cursor.fetchone() if cursor else None
@@ -74,25 +74,25 @@ class TenantRepository:
             # 2) Truy vấn lấy toàn bộ thông tin cần của phòng từ Rooms
             #    với điều kiện Rooms.TenantID = ?
             query = """
-                    SELECT r.RoomID                AS id, \
-                           r.RoomName              AS room_name, \
-                           r.Address               AS address, \
-                           r.RoomType              AS room_type, \
-                           r.Area                  AS area, \
-                           r.RoomPrice             AS rent_price, \
-                           r.Deposit               AS deposit, \
-                           r.ElectricityPrice      AS electricity_price, \
-                           r.WaterPrice            AS water_price, \
-                           r.InternetPrice         AS internet_price, \
-                           r.GarbageServicePrice   AS garbage_price, \
-                           r.OtherFees             AS other_fees, \
-                           r.RentalDate            AS available_date, \
-                           r.CurrentElectricityNum AS current_electricity, \
-                           r.CurrentWaterNum       AS current_water, \
-                           r.TenantID              AS tenant_id, \
+                    SELECT r.RoomID                AS id,  
+                           r.RoomName              AS room_name,  
+                           r.Address               AS address,  
+                           r.RoomType              AS room_type,  
+                           r.Area                  AS area,  
+                           r.RoomPrice             AS rent_price,  
+                           r.Deposit               AS deposit,  
+                           r.ElectricityPrice      AS electricity_price,  
+                           r.WaterPrice            AS water_price,  
+                           r.InternetPrice         AS internet_price,  
+                           r.GarbageServicePrice   AS garbage_price,  
+                           r.OtherFees             AS other_fees,  
+                           r.RentalDate            AS available_date,  
+                           r.CurrentElectricityNum AS current_electricity,  
+                           r.CurrentWaterNum       AS current_water,  
+                           r.TenantID              AS tenant_id,  
                            r.LandlordID            AS landlord_id
                     FROM Rooms r
-                    WHERE r.TenantID = ? LIMIT 1; \
+                    WHERE r.TenantID = ? LIMIT 1;  
                     """
             cursor = db.execute(query, (tenant_id,))
             row = cursor.fetchone() if cursor else None
@@ -159,12 +159,12 @@ class TenantRepository:
                           - Discount
                         ) AS total_income
                     FROM Invoices AS i
-                        JOIN Rooms AS r \
+                        JOIN Rooms AS r  
                     ON i.RoomID = r.RoomID
                     WHERE i.TenantID = ?
                       AND i.Status = 'Đã thanh toán'
                     GROUP BY strftime('%Y-%m', issue_date)
-                    ORDER BY strftime('%Y-%m', issue_date); \
+                    ORDER BY strftime('%Y-%m', issue_date);  
                     """
             cursor = db.execute(query, (id_tenant,))
             rows = cursor.fetchall() if cursor else []
@@ -198,12 +198,12 @@ class TenantRepository:
 
         try:
             query = """
-                    SELECT Fullname    AS full_name, \
-                           CCCD        AS citizen_id, \
-                           HomeAddress AS address, \
+                    SELECT Fullname    AS full_name,  
+                           CCCD        AS citizen_id,  
+                           HomeAddress AS address,  
                            PhoneNumber AS phone
                     FROM Tenants
-                    WHERE TenantID = ? LIMIT 1; \
+                    WHERE TenantID = ? LIMIT 1;  
                     """
             cursor = db.execute(query, (tenant_id,))
             row = cursor.fetchone() if cursor else None
@@ -243,13 +243,13 @@ class TenantRepository:
         try:
             # 1) Tìm hóa đơn (nếu có) của tháng/year tương ứng, lấy bản ghi mới nhất
             query = """
-                    SELECT (CurrElectric - PreElectric) AS number_e, \
+                    SELECT (CurrElectric - PreElectric) AS number_e,  
                            (CurrWater - PreWater)       AS number_w
                     FROM Invoices
                     WHERE TenantID = ?
                       AND strftime('%m', issue_date) = printf('%02d', ?)
                       AND strftime('%Y', issue_date) = ?
-                    ORDER BY issue_date DESC LIMIT 1; \
+                    ORDER BY issue_date DESC LIMIT 1;  
                     """
             cursor = db.execute(query, (tenant_id, month, year))
             row = cursor.fetchone() if cursor else None
@@ -278,24 +278,24 @@ class TenantRepository:
             return []
 
         query = """
-                SELECT t.TenantID, \
-                       t.Fullname, \
-                       t.Birth, \
-                       t.CCCD, \
-                       t.Gender, \
-                       t.JobTitle, \
-                       t.MaritalStatus, \
-                       t.Email, \
-                       t.PhoneNumber, \
-                       t.HomeAddress, \
-                       t.RentStartDate, \
-                       t.RentEndDate, \
-                       t.UserID, \
-                       u.Username  AS Username, \
+                SELECT t.TenantID,  
+                       t.Fullname,  
+                       t.Birth,  
+                       t.CCCD,  
+                       t.Gender,  
+                       t.JobTitle,  
+                       t.MaritalStatus,  
+                       t.Email,  
+                       t.PhoneNumber,  
+                       t.HomeAddress,  
+                       t.RentStartDate,  
+                       t.RentEndDate,  
+                       t.UserID,  
+                       u.Username  AS Username,  
                        t.CreatedAt AS CreatedAt
                 FROM Tenants AS t
                          LEFT JOIN Users AS u ON t.UserID = u.UserID
-                ORDER BY t.TenantID; \
+                ORDER BY t.TenantID;  
                 """
         cursor = db.execute(query)
         rows = cursor.fetchall() if cursor else []
@@ -333,9 +333,9 @@ class TenantRepository:
         try:
             # 1) Thực hiện INSERT, gán CreatedAt = datetime('now','localtime')
             insert_sql = """
-                         INSERT INTO Tenants(UserID, Fullname, CCCD, Gender, JobTitle, MaritalStatus, \
+                         INSERT INTO Tenants(UserID, Fullname, CCCD, Gender, JobTitle, MaritalStatus,  
                                              Email, PhoneNumber, HomeAddress, RentStartDate, RentEndDate, CreatedAt)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime')); \
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'));  
                          """
             params = (
                 user_id, full_name, cccd, gender, job_title, marital_status, email, phone_number, home_address,
@@ -423,7 +423,7 @@ class TenantRepository:
                 SELECT t.*
                 FROM Tenants t
                          JOIN Rooms r ON t.TenantID = r.TenantID
-                WHERE r.RoomID = ?; \
+                WHERE r.RoomID = ?;  
                 """
         cursor = db.execute(query, (room_id,))
         row = cursor.fetchone() if cursor else None
@@ -468,21 +468,21 @@ class TenantRepository:
         try:
             # 2) Truy vấn hóa đơn gần nhất của tháng/year, sắp theo issue_date giảm dần
             query = """
-                    SELECT (CurrElectric - PreElectric) * ElectricityPrice AS tien_dien, \
-                           (CurrWater - PreWater) * WaterPrice             AS tien_nuoc, \
-                           ((CurrElectric - PreElectric) * ElectricityPrice \
-                                + (CurrWater - PreWater) * WaterPrice \
-                                + TotalRoomPrice \
-                                + InternetFee \
-                                + TotalGarbageFee \
-                                + TotalAnotherFee \
-                               - Discount)                                 AS tong_chi_phi, \
+                    SELECT (CurrElectric - PreElectric) * ElectricityPrice AS tien_dien,  
+                           (CurrWater - PreWater) * WaterPrice             AS tien_nuoc,  
+                           ((CurrElectric - PreElectric) * ElectricityPrice  
+                                + (CurrWater - PreWater) * WaterPrice  
+                                + TotalRoomPrice  
+                                + InternetFee  
+                                + TotalGarbageFee  
+                                + TotalAnotherFee  
+                               - Discount)                                 AS tong_chi_phi,  
                            COALESCE(DueDate, issue_date)                   AS ngay_den_han
                     FROM Invoices
                     WHERE TenantID = ?
                       AND strftime('%m', issue_date) = printf('%02d', ?)
                       AND strftime('%Y', issue_date) = ?
-                    ORDER BY issue_date DESC LIMIT 1; \
+                    ORDER BY issue_date DESC LIMIT 1;  
                     """
             cursor = db.execute(query, (id_tenant, month, year))
             row = cursor.fetchone() if cursor else None
@@ -519,7 +519,7 @@ class TenantRepository:
                     FROM Invoices
                     WHERE TenantID = ?
                     ORDER BY issue_date DESC
-                        LIMIT 1; \
+                        LIMIT 1;  
                     """
             cursor = db.execute(query, (id_tenant,))
             row = cursor.fetchone() if cursor else None
@@ -547,16 +547,16 @@ class TenantRepository:
 
         try:
             query = """
-                    SELECT Fullname      AS full_name, \
-                           Birth         AS birth_date, \
-                           CCCD          AS citizen_id, \
-                           Gender        AS gender, \
-                           JobTitle      AS job_title, \
-                           MaritalStatus AS marital_status, \
-                           Email         AS email, \
+                    SELECT Fullname      AS full_name,  
+                           Birth         AS birth_date,  
+                           CCCD          AS citizen_id,  
+                           Gender        AS gender,  
+                           JobTitle      AS job_title,  
+                           MaritalStatus AS marital_status,  
+                           Email         AS email,  
                            PhoneNumber   AS phone_number
                     FROM Tenants
-                    WHERE TenantID = ? LIMIT 1; \
+                    WHERE TenantID = ? LIMIT 1;  
                     """
             cursor = db.execute(query, (id_tenant,))
             row = cursor.fetchone() if cursor else None
@@ -686,13 +686,13 @@ class TenantRepository:
                           - i.Discount
                         ) AS tong
                     FROM Invoices AS i
-                        JOIN Rooms AS r \
+                        JOIN Rooms AS r  
                     ON i.RoomID = r.RoomID
                     WHERE i.TenantID = ?
-                      AND i.Status IN ('Chưa thanh toán' \
+                      AND i.Status IN ('Chưa thanh toán'  
                         , 'Đã thanh toán')
                     GROUP BY strftime('%Y-%m', i.issue_date)
-                    ORDER BY strftime('%Y-%m', i.issue_date); \
+                    ORDER BY strftime('%Y-%m', i.issue_date);  
                     """
             cursor = db.execute(query, (id_tenant,))
             rows = cursor.fetchall() if cursor else []
@@ -745,7 +745,7 @@ class TenantRepository:
                         JobTitle      = ?,
                         PhoneNumber   = ?,
                         MaritalStatus = ?
-                    WHERE TenantID = ?; \
+                    WHERE TenantID = ?;  
                     """
             # Lấy từng giá trị từ updated_data, nếu key không có, dùng giá trị cũ hoặc rỗng
             full_name = updated_data.get("full_name", "")
@@ -788,7 +788,7 @@ class TenantRepository:
             query = """
                     SELECT RoomID
                     FROM Rooms
-                    WHERE TenantID = ? LIMIT 1; \
+                    WHERE TenantID = ? LIMIT 1;  
                     """
             cursor = db.execute(query, (tenant_id,))
             row = cursor.fetchone() if cursor else None

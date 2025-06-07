@@ -1,4 +1,5 @@
 import re
+from typing import Dict, Tuple
 
 from sympy.printing.octave import print_octave_code
 
@@ -8,6 +9,72 @@ class Validators:
     A utility class providing static methods for validating different types of input data.
     All methods return True if validation passes, False otherwise.
     """
+
+    @staticmethod
+    def validate_room_data(data: Dict) -> Tuple[bool, Dict[str, str]]:
+        """
+        Kiểm tra dữ liệu từ form tạo phòng.
+        Args:
+            data: dict với các key:
+                - room_name (str)
+                - room_type (str)
+                - max_people (str or number)
+                - status (str)
+                - address (str)
+                - area (str or number)
+                - rent_price (str or number)
+                - electricity_price (str or number, optional)
+                - water_price (str or number, optional)
+                - internet_price (str or number, optional)
+                - garbage_price (str or number, optional)
+                - initial_electric (str or number)
+                - initial_water (str or number)
+        Returns:
+            (is_valid, errors):
+              - is_valid: True nếu tất cả đều OK
+              - errors: dict mapping field → thông báo lỗi
+        """
+        errors: Dict[str, str] = {}
+
+        # Tên phòng
+        if not Validators.is_valid_input(data.get("room_name"), allow_spaces=True, min_length=1, max_length=100):
+            errors["room_name"] = "Tên phòng không được để trống (1–100 ký tự)."
+
+        # Số người tối đa
+        if not Validators.is_positive_number(data.get("max_people")):
+            errors["max_people"] = "Số người tối đa phải là số nguyên dương."
+
+        # Địa chỉ
+        if not Validators.is_valid_input(data.get("address"), allow_spaces=True, min_length=1):
+            errors["address"] = "Địa chỉ không được để trống."
+
+        # Diện tích
+        if not Validators.is_valid_room_area(data.get("area")):
+            errors["area"] = "Diện tích phải >0 và <200 m²."
+
+        # Giá thuê
+        if not Validators.is_positive_number(data.get("rent_price")):
+            errors["rent_price"] = "Giá thuê phải là số dương."
+
+        # Các giá điện, nước, Internet, rác (nếu có nhập thì phải >0)
+        for field, label in [
+            ("electricity_price", "Giá điện"),
+            ("water_price", "Giá nước"),
+            ("internet_price", "Giá Internet"),
+            ("garbage_price", "Giá rác"),
+        ]:
+            val = data.get(field)
+            if val not in (None, "", 0) and not Validators.is_positive_number(val):
+                errors[field] = f"{label} phải là số dương."
+
+        # Chỉ số đồng hồ ban đầu
+        if not Validators.is_positive_number(data.get("initial_electric")):
+            errors["initial_electric"] = "Chỉ số điện ban đầu phải là số dương."
+        if not Validators.is_positive_number(data.get("initial_water")):
+            errors["initial_water"] = "Chỉ số nước ban đầu phải là số dương."
+
+        is_valid = len(errors) == 0
+        return is_valid, errors
 
     @staticmethod
     def is_valid_phone(phone):

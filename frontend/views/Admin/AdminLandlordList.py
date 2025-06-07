@@ -61,11 +61,12 @@ class AdminLandlordList(QWidget):
             landlord = self.landlord_list[row]
             #username = landlord['username']
             id_landlord = landlord['id_landlord']
-            #print("đã check show detail của chủ trọ:", landlord['name'], "với id:", id_landlord)
+            user_id = LanlordRepository.get_user_id_lanlord_from_lanlord_id(id_landlord)
+            print("đã check show detail của chủ trọ:", landlord['name'], "với id:", id_landlord)
             # Mở Dashboard của chủ trọ trong cửa sổ mới
             from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.MainWindowLandlord import \
                 MainWindowLandlord
-            dashboard = MainWindowLandlord(id_landlord)
+            dashboard = MainWindowLandlord(self.main_window ,user_id)
             dashboard.show()
 
             # Lưu lại tham chiếu để cửa sổ không bị thu hồi bộ nhớ

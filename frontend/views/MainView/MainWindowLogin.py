@@ -1,14 +1,14 @@
 import sys
 from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.HomeLogin import LoginWindow
+from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.Login.HomeLogin import LoginWindow
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setStyleSheet(GlobalStyle.global_stylesheet())
-        self.setWindowTitle("Ứng dụng Quản lý")
+        self.setWindowTitle("Ứng dụng Quản lý cho thuê nhà")
         self.setGeometry(200, 100, 300, 620)  # Ban đầu chỉ hiển thị khung trái
         self.switch_to_page(LoginWindow)
 
