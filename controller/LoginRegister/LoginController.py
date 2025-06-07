@@ -22,9 +22,6 @@ class LoginController:
         role = user.role
         user_id = user.user_id
 
-
-
-
         if role == 'landlord':
             from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMenu import LandlordMenu
             from QLNHATRO.RentalManagementApplication.Repository import LandlordRepository

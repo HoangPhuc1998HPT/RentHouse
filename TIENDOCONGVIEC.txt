@@ -24,4 +24,9 @@ Flow Đăng nhập tài khoản Chủ trọ
      #TODO    + Còn các chi tiết phòng trọ chưa chuẩn hóa
     + LandlordCreateNewRoom -- OK
     + LandlordMaintainceList -- đang fix -- Tạm đúng
-    +
+    + ....
+    + landlord đã xong
+---------------------------------------
+    + xử lý phòng trọ:
+        LandlordRoomList --> show_detail_room --> OK lấy được idroom
+        + RoomInfor --> go_to_open_right_frame_rooms_infor

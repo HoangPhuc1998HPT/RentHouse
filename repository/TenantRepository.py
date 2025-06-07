@@ -8,6 +8,26 @@ db = Database()
 class TenantRepository:
 
     @staticmethod
+    def get_tenant_id_by_user_id(user_id:int) -> Optional[int]:
+        """
+               Lấy TenantID dựa vào UserID.
+               """
+        # Kết nối đến DB
+        if not db.connect():
+            return None
+
+        # Truy vấn TenantID từ bảng Tenants theo UserID :contentReference[oaicite:0]{index=0}
+        query = "SELECT TenantID FROM Tenants WHERE UserID = ?;"
+        cursor = db.execute(query, (user_id,))
+        row = cursor.fetchone() if cursor else None
+
+        # Đóng kết nối
+        db.close()
+
+        # Trả về TenantID hoặc None nếu không tìm thấy
+        return row["TenantID"] if row else None
+
+    @staticmethod
     def get_tenant_info_by_username(username: str) -> dict | None:
         """
         Trả về dict thông tin tenant (full_name, birth_date, ...) dựa trên Username,

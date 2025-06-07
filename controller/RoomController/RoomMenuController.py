@@ -59,7 +59,7 @@ class RoomMenuController:
         #Xử lý dữ liệu ở service
         data_room_infor = RoomService.get_translated_room_info(room_id)
         # Chỉnh sửa hàm và call hàm thêm biến vào
-        room_menu_instance.set_right_frame(RoomsInfor, main_window, room_id,data_room_infor)
+        room_menu_instance.set_right_frame(RoomsInfor, main_window, room_id, data_room_infor)
 
     def open_room_detail_popup_for_tenant(self, room_id):
         try:
