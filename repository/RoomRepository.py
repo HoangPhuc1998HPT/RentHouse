@@ -233,6 +233,7 @@ class RoomRepository:
             return False
         finally:
             db.close()
+
     '''Đã kiểm tra đồng bộ và chuẩn hóa'''
     @staticmethod
     def get_all_room_by_landlord(landlord_id):
@@ -261,6 +262,7 @@ class RoomRepository:
         db.close()
         return rooms
 
+    ''' Đã kiểm tra đồng bộ và chuẩn hóa'''
     @staticmethod
     def create_new_room(room_data: dict) -> bool:
         if not db.connect():
@@ -268,67 +270,68 @@ class RoomRepository:
 
         try:
             query = """
-                    INSERT INTO Rooms (RoomName, Address, RoomType, Status, Area, \
-                                       Floor, HasLoft, Bathroom, Kitchen, Furniture, Balcony, \
-                                       FreeWifi, Parking, AirConditioner, Fridge, WashingMachine, Security, Television, \
-                                       PetAllowed, \
-                                       RoomPrice, ElectricityPrice, WaterPrice, InternetPrice, \
-                                       OtherFees, GarbageServicePrice, Deposit, \
-                                       CurrentElectricityNum, CurrentWaterNum, \
-                                       MaxTenants, Description, \
-                                       TenantID, LandlordID) \
-                    VALUES (?, ?, ?, ?, ?, \
-                            ?, ?, ?, ?, ?, ?, \
-                            ?, ?, ?, ?, ?, ?, ?, \
-                            ?, \
-                            ?, ?, ?, ?, \
-                            ?, ?, ?, \
-                            ?, ?, \
-                            ?, ?, \
-                            ?, ?, \
-                            ?, ?) \
+                    INSERT INTO Rooms (RoomName, Address, RoomType, Status, Area, 
+                                       Floor, HasLoft, Bathroom, Kitchen, Furniture, Balcony, 
+                                       FreeWifi, Parking, AirConditioner, Fridge, WashingMachine, Security, Television, 
+                                       PetAllowed, 
+                                       RoomPrice, ElectricityPrice, WaterPrice, InternetPrice, 
+                                       OtherFees, GarbageServicePrice, Deposit,
+                                       CurrentElectricityNum, CurrentWaterNum, 
+                                       MaxTenants, Description, 
+                                       TenantID, LandlordID)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
                     """
             params = (
-                room_data["room_name"],  # RoomName
-                room_data["address"],  # Address
-                room_data["type_room"],  # RoomType
-                room_data["status"],  # Status
-                float(room_data["area"]),  # Area
+                # 1–5
+                room_data["room_name"],
+                room_data["address"],
+                room_data["type_room"],
+                room_data["status"],
+                float(room_data["area"]),
 
-                int(room_data["floor"]),  # Floor
-                int(room_data["has_loft"]),  # HasLoft
-                int(room_data["bathroom"]),  # Bathroom
-                int(room_data["kitchen"]),  # Kitchen
-                int(room_data["furniture"]),  # Furniture
-                int(room_data["balcony"]),  # Balcony
+                # 6–11
+                int(room_data["floor"]),
+                int(room_data["has_loft"]),
+                int(room_data["bathroom"]),
+                int(room_data["kitchen"]),
+                int(room_data["furniture"]),
+                int(room_data["balcony"]),
 
-                int(room_data["free_wifi"]),  # FreeWifi
-                int(room_data["parking"]),  # Parking
-                int(room_data["air_conditioner"]),  # AirConditioner
-                int(room_data["fridge"]),  # Fridge
-                int(room_data["washing_machine"]),  # WashingMachine
-                int(room_data["security"]),  # Security
-                int(room_data["television"]),  # Television
+                # 12–18
+                int(room_data["free_wifi"]),
+                int(room_data["parking"]),
+                int(room_data["air_conditioner"]),
+                int(room_data["fridge"]),
+                int(room_data["washing_machine"]),
+                int(room_data["security"]),
+                int(room_data["television"]),
 
-                int(room_data["pet_allowed"]),  # PetAllowed
+                # 19
+                int(room_data["pet_allowed"]),
 
-                float(room_data["room_price"]),  # RoomPrice
-                float(room_data["electricity_price"]),  # ElectricityPrice
-                float(room_data["water_price"]),  # WaterPrice
-                float(room_data["internet_price"]),  # InternetPrice
+                # 20–23
+                float(room_data["room_price"]),
+                float(room_data["electricity_price"]),
+                float(room_data["water_price"]),
+                float(room_data["internet_price"]),
 
-                room_data["other_fees"],  # OtherFees
-                float(room_data["garbage_service_price"]),  # GarbageServicePrice
-                float(room_data["deposit"]),  # Deposit
+                # 24–26
+                room_data["other_fees"],
+                float(room_data["garbage_service_price"]),
+                float(room_data["deposit"]),
 
-                int(room_data["current_electricity_num"]),  # CurrentElectricityNum
-                int(room_data["current_water_num"]),  # CurrentWaterNum
+                # 27–28
+                int(room_data["current_electricity_num"]),
+                int(room_data["current_water_num"]),
 
-                int(room_data["max_tenants"]),  # MaxTenants
-                room_data["description"],  # Description
+                # 29–30
+                int(room_data["max_tenants"]),
+                room_data["description"],
 
-                room_data["tenant_id"],  # TenantID
-                int(room_data["id_landlord"])  # LandlordID
+                # 31–32
+                room_data["tenant_id"],
+                int(room_data["id_landlord"])
             )
 
             db.execute(query, params)

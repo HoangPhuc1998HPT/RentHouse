@@ -1,5 +1,5 @@
 from _datetime import datetime
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 
 from QLNHATRO.RentalManagementApplication.Repository.MaintenanceRepository import MaintenanceRepository
 
@@ -91,30 +91,30 @@ class MaintenanceService:
             return []
 
     @staticmethod
-    def get_maintenance_list(landlord_id: int) -> List[Dict]:
-        """
-        Lấy danh sách yêu cầu bảo trì cho landlord, đã format sẵn để UI hiển thị.
-        Trả về List[Dict], mỗi Dict đã qua _format_maintenance_request.
-        """
-        try:
-            # 1. Validate landlord_id
-            if not isinstance(landlord_id, int) or landlord_id <= 0:
-                print("❌ [Service] Landlord ID không hợp lệ")
-                return []
-
-            # 2. Lấy raw data từ repository
-            raw_requests = MaintenanceRepository.get_maintenance_requests_by_landlord(landlord_id)
-
-            # 3. Format từng request
-            formatted_requests = [
-                MaintenanceService._format_maintenance_request(r) for r in raw_requests
-            ]
-            print(f"✅ [Service] Lấy được {len(formatted_requests)} yêu cầu bảo trì cho landlord {landlord_id}")
-            return formatted_requests
-
-        except Exception as e:
-            print(f"❌ [Service] Lỗi get_maintenance_list: {e}")
+    def get_maintenance_list(landlord_id: int) -> List[Dict[str, Any]]:
+        # 1. Validate
+        if not isinstance(landlord_id, int) or landlord_id <= 0:
+            print("[Service] Landlord ID không hợp lệ")
             return []
+
+        # 2. Lấy object
+        raw_objs = MaintenanceRepository.get_maintenance_requests_by_landlord(landlord_id)
+        print(f"[DEBUG] raw_objs count = {len(raw_objs)}")
+        if raw_objs:
+            # In thử object đầu tiên để kiểm tra mapping
+            print("[DEBUG] sample raw_obj.__dict__ =", raw_objs[0].__dict__)
+
+        # 3. Convert → dict và inject stt
+        formatted = []
+        for idx, obj in enumerate(raw_objs, start=1):
+            data: Dict[str, Any] = obj.__dict__.copy()
+            data['stt'] = idx
+
+            # 4. Gọi formatter
+            formatted.append(MaintenanceService._format_maintenance_request(data))
+
+        print(f"✅ [Service] Lấy được {len(formatted)} yêu cầu bảo trì cho landlord {landlord_id}")
+        return formatted
 
     @staticmethod
     def get_requests_by_tenant_id(tenant_id: int) -> List[Dict]:

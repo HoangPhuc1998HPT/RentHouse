@@ -200,7 +200,7 @@ CREATE TABLE IF NOT EXISTS maintenance_requests (
     request_id INTEGER PRIMARY KEY AUTOINCREMENT,
     TenantID INTEGER NOT NULL,
     RoomID INTEGER NOT NULL,
-
+    LandlordID INTEGER NOT NULL,  -- Chủ trọ liên quan đến yêu cầu bảo trì
     issue_type TEXT NOT NULL,           -- VD: "Điện", "Nước", "Cấu trúc", v.v.
     urgency_level TEXT NOT NULL,        -- VD: "Bình thường", "Khẩn cấp"
     description TEXT NOT NULL,          -- Nội dung mô tả chi tiết
@@ -215,7 +215,8 @@ CREATE TABLE IF NOT EXISTS maintenance_requests (
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (TenantID) REFERENCES tenants(TenantID),
-    FOREIGN KEY (RoomID) REFERENCES rooms(RoomID)
+    FOREIGN KEY (RoomID) REFERENCES rooms(RoomID),
+    FOREIGN KEY (LandlordID) REFERENCES Landlords(LandlordID)
 );
 
 
@@ -559,16 +560,16 @@ INSERT INTO advertisements (RoomID, description, priority, image_path, created_a
 -- Insert sample Maintenance Requests
 INSERT INTO maintenance_requests (
     TenantID, RoomID, issue_type, urgency_level, description,
-    contact_phone, available_time, discovery_date, image_path, status
+    contact_phone, available_time, discovery_date, image_path, status,LandlordID
 ) VALUES
 (1, 1, 'Điện', 'Khẩn cấp', 'Ổ cắm điện trong phòng bị chập, có mùi khét. Cần sửa chữa gấp.',
- '0987654321', 'Sáng 8-12h, chiều 14-18h', '2024-03-20', 'electric_issue_room101.jpg', 'Pending'),
+ '0987654321', 'Sáng 8-12h, chiều 14-18h', '2024-03-20', 'electric_issue_room101.jpg', 'Pending',1),
 
 (2, 2, 'Nước', 'Bình thường', 'Vòi nước trong phòng tắm bị nhỏ giọt, cần thay gokét mới.',
- '0976543210', 'Chiều 13-17h', '2024-03-18', 'water_leak_room102.jpg', 'Đang xử lý'),
+ '0976543210', 'Chiều 13-17h', '2024-03-18', 'water_leak_room102.jpg', 'Đang xử lý',1),
 
 (3, 3, 'Cấu trúc', 'Bình thường', 'Cửa phòng bị kẹt, khó đóng mở. Có thể cần điều chỉnh bản lề.',
- '0965432109', 'Tối 18-20h', '2024-03-19', 'door_issue_room201.jpg', 'Đã hoàn thành');
+ '0965432109', 'Tối 18-20h', '2024-03-19', 'door_issue_room201.jpg', 'Đã hoàn thành',1);
 
 -- Insert sample Notifications
 INSERT INTO Notifications (UserID, Content, IsRead, CreatedAt) VALUES

@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List, Dict, Optional
 
 from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
+from QLNHATRO.RentalManagementApplication.backend.model.MaintenanceRequest import MaintenanceRequest
 
 db = Database()
 class MaintenanceRepository:
@@ -98,49 +99,53 @@ class MaintenanceRepository:
             db.close()
 
     @staticmethod
-    def get_maintenance_requests_by_landlord(landlord_id: int) -> List[Dict]:
+    def get_maintenance_requests_by_landlord(landlord_id: int) -> List[MaintenanceRequest]:
         """
         Lấy tất cả yêu cầu bảo trì (với thông tin Tenant, Room) theo landlord_id.
-        Trả về list of dict.
+        Trả về list MaintenanceRequest.
         """
         try:
             db.connect()
             query = """
-                    SELECT mr.request_id,  
-                           mr.TenantID       AS tenant_id,  
-                           mr.RoomID         AS room_id,  
-                           mr.issue_type     AS issue_type,  
-                           mr.urgency_level  AS urgency_level,  
-                           mr.description    AS description,  
-                           mr.contact_phone  AS contact_phone,  
-                           mr.available_time AS available_time,  
-                           mr.discovery_date AS discovery_date,  
-                           mr.image_path     AS image_path,  
-                           mr.status         AS status,  
-                           mr.created_at     AS created_at,  
-                           r.RoomName        AS room_name,  
-                           t.Fullname        AS tenant_name,  
-                           t.PhoneNumber     AS tenant_phone
+                    SELECT mr.request_id, \
+                           mr.TenantID, \
+                           mr.RoomID, \
+                           mr.LandlordID, \
+                           mr.issue_type, \
+                           mr.urgency_level, \
+                           mr.description, \
+                           mr.contact_phone, \
+                           mr.available_time, \
+                           mr.discovery_date, \
+                           mr.image_path, \
+                           mr.status, \
+                           mr.created_at, \
+                           r.RoomName    AS room_name, \
+                           t.Fullname    AS tenant_name, \
+                           t.PhoneNumber AS tenant_phone
                     FROM maintenance_requests mr
-                             JOIN Rooms r ON mr.RoomID = r.RoomID
-                             JOIN Tenants t ON mr.TenantID = t.TenantID
-                    WHERE r.LandlordID = ?
-                    ORDER BY CASE mr.urgency_level  
-                                 WHEN 'Khẩn cấp' THEN 1  
-                                 WHEN 'Bình thường' THEN 2  
-                                 ELSE 3  
-                                 END,  
-                             mr.created_at DESC  
+                             LEFT JOIN Rooms r ON mr.RoomID = r.RoomID
+                             LEFT JOIN Tenants t ON mr.TenantID = t.TenantID
+                    WHERE mr.LandlordID = ?
+                    ORDER BY CASE mr.urgency_level \
+                                 WHEN 'Khẩn cấp' THEN 1 \
+                                 WHEN 'Bình thường' THEN 2 \
+                                 ELSE 3 \
+                                 END, \
+                             mr.created_at DESC \
                     """
             cursor = db.execute(query, (landlord_id,))
             rows = cursor.fetchall()
-            return [dict(r) for r in rows]
+            # Với mỗi row (RowMapping), khởi tạo MaintenanceRequest từ dict(row)
+            return [MaintenanceRequest(dict(r)) for r in rows]
 
         except sqlite3.Error as e:
             print(f"❌ [Repository] Lỗi get_maintenance_requests_by_landlord: {e}")
             return []
         finally:
             db.close()
+
+
 
     @staticmethod
     def get_requests_by_tenant_id(tenant_id: int) -> List[Dict]:

@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import (
 )
 
 from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
-
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
 
@@ -17,67 +16,8 @@ class RoomMaintenanceList(QWidget):
         self.main_window = main_window
         self.id_landlord = id_landlord
 
-        # Dữ liệu yêu cầu bảo trì
-        if maintenance_requests is not None:
-            self.maintenance_requests = maintenance_requests
-        else:
-            # Dummy data fallback (chỉ dùng khi không có maintenance_requests)
-            self.maintenance_requests = [
-                {
-                    "stt": 1,
-                    "request_id": 101,
-                    "room_id": 1,
-                    "room_name": "Phòng 101",
-                    "tenant_id": 10,
-                    "tenant_name": "Nguyễn Văn A",
-                    "tenant_phone": "0912345678",
-                    "issue_type": "Điện",
-                    "urgency_level": "Khẩn cấp",
-                    "description": "Mất điện toàn bộ phòng",
-                    "contact_phone": "0912345678",
-                    "available_time": "08:00-12:00",
-                    "discovery_date": "2025-06-01",
-                    "image_path": "",
-                    "status": "Pending",
-                    "created_at": "2025-06-01T13:00:00"
-                },
-                {
-                    "stt": 2,
-                    "request_id": 102,
-                    "room_id": 2,
-                    "room_name": "Phòng 102",
-                    "tenant_id": 2,
-                    "tenant_name": "Nguyễn Văn C",
-                    "tenant_phone": "0912345678",
-                    "issue_type": "Điện",
-                    "urgency_level": "Khẩn cấp",
-                    "description": "Mất điện toàn bộ phòng",
-                    "contact_phone": "0912345678",
-                    "available_time": "08:00-12:00",
-                    "discovery_date": "2025-06-01",
-                    "image_path": "",
-                    "status": "Pending",
-                    "created_at": "2025-06-01T13:00:00"
-                },
-                {
-                    "stt": 3,
-                    "request_id": 103,
-                    "room_id": 3,
-                    "room_name": "Phòng 103",
-                    "tenant_id": 3,
-                    "tenant_name": "Nguyễn Văn C",
-                    "tenant_phone": "0912345678",
-                    "issue_type": "Điện",
-                    "urgency_level": "Khẩn cấp",
-                    "description": "Mất điện toàn bộ phòng",
-                    "contact_phone": "0912345678",
-                    "available_time": "08:00-12:00",
-                    "discovery_date": "2025-06-01",
-                    "image_path": "",
-                    "status": "Pending",
-                    "created_at": "2025-06-01T13:00:00"
-                }
-            ]
+        self.maintenance_requests = maintenance_requests
+
 
         self.setup_ui()
 
