@@ -41,7 +41,7 @@ class Validators:
             errors["room_name"] = "Tên phòng không được để trống (1–100 ký tự)."
 
         # Số người tối đa
-        if not Validators.is_positive_number(data.get("max_people")):
+        if not Validators.is_positive_number(data.get("max_tenants")):
             errors["max_people"] = "Số người tối đa phải là số nguyên dương."
 
         # Địa chỉ
@@ -53,7 +53,7 @@ class Validators:
             errors["area"] = "Diện tích phải >0 và <200 m²."
 
         # Giá thuê
-        if not Validators.is_positive_number(data.get("rent_price")):
+        if not Validators.is_positive_number(data.get("room_price")):
             errors["rent_price"] = "Giá thuê phải là số dương."
 
         # Các giá điện, nước, Internet, rác (nếu có nhập thì phải >0)

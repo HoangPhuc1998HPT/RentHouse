@@ -60,9 +60,13 @@ class LandlordMenu(QWidget):
         button_ui.apply_style(self.infor_list_room_btn)
         self.infor_list_room_btn.clicked.connect(lambda : LandlordController.go_to_room_list(self, self.id_lanlord))
 
-        self.create_new_room_btn = QPushButton("➕ Tạo phòng trọ mới")
+        self.create_new_room_btn = QPushButton("➕ Tạo phòng trọ mới") #OK
         button_ui.apply_style(self.create_new_room_btn)
         self.create_new_room_btn.clicked.connect(lambda : LandlordController.go_to_create_new_room(self, self.id_lanlord))
+
+        self.add_list_maintenance_btn = QPushButton("🛠️ Danh sách bảo trì")
+        button_ui.apply_style(self.add_list_maintenance_btn)
+        self.add_list_maintenance_btn.clicked.connect( lambda: MaintenanceController.go_to_maintenance_list(self, self.id_lanlord))
 
         self.infor_list_invoice_btn = QPushButton("🧾 Danh sách hóa đơn")
         button_ui.apply_style(self.infor_list_invoice_btn)
@@ -72,9 +76,7 @@ class LandlordMenu(QWidget):
         button_ui.apply_style(self.add_adv_find_tenant_btn)
         self.add_adv_find_tenant_btn.clicked.connect(lambda: LandlordController.go_to_LanlordFindNewTenant(self,self.id_lanlord))
 
-        self.add_list_maintenance_btn = QPushButton("🛠️ Danh sách bảo trì")
-        button_ui.apply_style(self.add_list_maintenance_btn)
-        self.add_list_maintenance_btn.clicked.connect(lambda: MaintenanceController.go_to_maintenance_list(self, self.id_lanlord))
+
 
         self.logout_btn = QPushButton("🚪 Đăng xuất")
         button_ui.apply_style(self.logout_btn)

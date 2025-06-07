@@ -95,7 +95,7 @@ class RoomService:
 
         return room_list
 
-
+    '''Đã kiểm tra đồng bộ và chuẩn hóa'''
     @staticmethod
     def handle_data_for_create_new_room(id_landlord, room_create_data) -> bool:
         # (nếu cần) gắn lại id_landlord vào trong room_create_data

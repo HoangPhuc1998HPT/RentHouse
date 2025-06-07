@@ -116,7 +116,7 @@ class RoomMenuController:
         from QLNHATRO.RentalManagementApplication.frontend.views.Rooms.MainWindowRoom import MainWindowRoom
         room_window = MainWindowRoom(room_id)
         room_window.show()
-
+    '''Đã kiểm tra đồng bộ và chuẩn hóa'''
     @staticmethod
     def go_to_handel_data_for_create_room(id_landlord, room_create_data) -> bool:
         # Trả về True/False do Service trả về

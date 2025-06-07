@@ -10,7 +10,7 @@ from QLNHATRO.RentalManagementApplication.controller.RoomController.RoomMenuCont
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
 
-
+''' Đã kiểm tra đã đồng bộ và chuẩn hóa '''
 class CreateNewRoom(QWidget):
     def __init__(self, main_window=None, id_landlord=None):
         super().__init__()
@@ -374,7 +374,7 @@ class CreateNewRoom(QWidget):
             # Map từ key của data → widget tương ứng
             field_map = {
                 "room_name":         self.input_name_room,
-                "max_tenants":        self.input_number_people_room,
+                "max_tenants":       self.input_number_people_room,
                 "address":           self.input_address_room,
                 "area":              self.input_area,
                 "rent_price":        self.input_price_room,
@@ -418,52 +418,45 @@ class CreateNewRoom(QWidget):
 
         # 2. Thu thập flags tiện ích
         amenities = self.collect_amenities()
-        # amenities là dict:
-        # {
-        #   "free_wifi":0/1, "parking":0/1, "air_conditioner":0/1, ..., "balcony":0/1,
-        #   "floor":0/1, "has_loft":0/1, "bathroom":0/1, "kitchen":0/1,
-        #   "furniture":0/1, "pet_allowed":0/1
-        # }
+
 
         # 3. Phần mô tả thuần (Description)
         description = self.input_infor_more.text().strip()
 
         # 4. Gom payload tương ứng schema Rooms
         create_data = {
-            # Quan hệ
-            "id_landlord":          self.id_landlord,
-            "tenant_id":            None,
-
-            # Thông tin cơ bản
-            "room_name":            self.input_name_room.text().strip(),
-            "address":              self.input_address_room.text().strip(),
-            "type_room":            self.input_type_room.currentText(),
-            "status":               self.input_status_room.currentText(),
-            "area":                 self.input_area.text().strip(),
-            "max_tenants":          self.input_number_people_room.text().strip(),
-
-            # Cấu trúc & tiện ích
-            **{k: amenities[k] for k in (
-                "floor","has_loft","bathroom","kitchen","furniture","balcony",
-                "free_wifi","parking","air_conditioner","fridge","washing_machine",
-                "security","television","pet_allowed"
-            )},
-
-            # Giá cả
-            "room_price":           self.input_price_room.text().strip(),
-            "electricity_price":    self.input_price_electric.text().strip() or "0",
-            "water_price":          self.input_price_water.text().strip()   or "0",
-            "internet_price":       self.input_price_internet.text().strip()or "0",
-            "garbage_service_price":self.input_price_garbage.text().strip() or "0",
-            "other_fees":           "",      # nếu có phí khác nhập thêm thì lấy ở đây
-            "deposit":              "0",     # nếu có cọc, thay đổi sau
-
-            # Chỉ số khởi tạo
+            "room_name": self.input_name_room.text().strip(),
+            "address": self.input_address_room.text().strip(),
+            "type_room": self.input_type_room.currentText(),
+            "status": self.input_status_room.currentText(),
+            "area": self.input_area.text().strip(),
+            "floor": int(self.cb_floor.isChecked()),
+            "has_loft": int(self.cb_hasLoft.isChecked()),
+            "bathroom": int(self.cb_bathroom.isChecked()),
+            "kitchen": int(self.cb_kitchen.isChecked()),
+            "furniture": int(self.cb_funiture.isChecked()),
+            "balcony": int(self.cb_balcony.isChecked()),
+            "free_wifi": int(self.cb_wifi.isChecked()),
+            "parking": int(self.cb_parking.isChecked()),
+            "air_conditioner": int(self.cb_aircon.isChecked()),
+            "fridge": int(self.cb_fridge.isChecked()),
+            "washing_machine": int(self.cb_wm.isChecked()),
+            "security": int(self.cb_security.isChecked()),
+            "television": int(self.cb_tv.isChecked()),
+            "pet_allowed": int(self.cb_pet.isChecked()),
+            "room_price": self.input_price_room.text().strip(),
+            "electricity_price": self.input_price_electric.text().strip() or "0",
+            "water_price": self.input_price_water.text().strip() or "0",
+            "internet_price": self.input_price_internet.text().strip() or "0",
+            "other_fees": 0,  # hoặc từ một input nếu có
+            "garbage_service_price": self.input_price_garbage.text().strip() or "0",
+            "deposit": "0",  # hoặc từ input
             "current_electricity_num": self.input_number_electric.text().strip() or "0",
-            "current_water_num":       self.input_number_water.text().strip()   or "0",
-
-            # Mô tả thêm
-            "description":          description
+            "current_water_num": self.input_number_water.text().strip() or "0",
+            "max_tenants": self.input_number_people_room.text().strip(),
+            "description": self.input_infor_more.text().strip(),
+            "tenant_id": None,
+            "id_landlord": self.id_landlord
         }
 
         print("[DEBUG] Payload tạo phòng:", create_data)

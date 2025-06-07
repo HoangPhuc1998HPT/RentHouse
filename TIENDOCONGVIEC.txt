@@ -21,3 +21,6 @@ Flow Đăng nhập tài khoản Chủ trọ
     + LandlordHomepage => chưa xử lý được
     + LandlordInfo -- OK
     + LandlordRoomList --- OK
+     #TODO    + Còn các chi tiết phòng trọ chưa chuẩn hóa
+    + LandlordCreateNewRoom -- OK
+    +

@@ -85,9 +85,9 @@ class LandlordController:
         find_new_tenant_view = FindNewTenant(view.main_window, ds_phong=ds_phong)
         view.set_right_frame(lambda *_: find_new_tenant_view)
 
+    ''' Đã kiểm tra đồng bộ và chuẩn hóa '''
     @staticmethod
     def go_to_create_new_room(view, id_lanlord):
         from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordCreateNewRoom import CreateNewRoom
-
         create_new_room_view = CreateNewRoom(view.main_window, id_lanlord)
         view.set_right_frame(lambda *_: create_new_room_view)
