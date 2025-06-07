@@ -1,13 +1,13 @@
 from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
-                             QFrame, QApplication, QButtonGroup, QRadioButton, QSizePolicy, QLineEdit, QMessageBox)
+                             QFrame, QButtonGroup, QRadioButton, QSizePolicy, QLineEdit)
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-import sys
+
 
 from QLNHATRO.RentalManagementApplication.Repository.LoginRepository import LoginRepository
+from QLNHATRO.RentalManagementApplication.controller.OTPController.OTPController import OTPController
 from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
-from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.ChangePassword import ChangePasswordView
 from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
 
 
@@ -139,50 +139,78 @@ class ForgotPasswordView(QWidget):
     def on_submit(self):
         username = self.username_input.text().strip()
 
+        # 1. Validate username
         if not Validators.is_valid_input(username, allow_spaces=False, min_length=4):
             ErrorDialog.show_error("⚠️ Vui lòng nhập tên người dùng hợp lệ.", self)
             return
 
-            # ✅ Kiểm tra username có tồn tại trong CSDL
+        # 2. Kiểm tra username có tồn tại trong CSDL
         if not LoginRepository.is_username_exists(username):
             ErrorDialog.show_error("❌ Tên người dùng không tồn tại trong hệ thống.", self)
             return
 
         selected_id = self.radio_group.checkedId()
 
+        # 3. Dựa vào radio chọn SMS (1) hay Email (2)
         if selected_id == 1:
-            from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.OTPVerificationView import \
-                OTPVerificationView
+            # Khôi phục bằng SMS
             sdt = LoginRepository.get_sdt_from_username(username)
             if not sdt:
                 ErrorDialog.show_error("⚠️ Không tìm thấy số điện thoại cho tên người dùng này.", self)
                 return
-            otp_window = OTPVerificationView(email=sdt, username=username)
-            otp_window.show()
+
+            # Gửi OTP và hiển thị mã OTP giả lập
+            success, message = OTPController.request_initial_otp(username, sdt, parent_view=self)
+            if not success:
+                ErrorDialog.show_error(message, self)
+                return
+
+            # Mở màn hình nhập OTP
+            OTPController.go_to_opt_view(sdt, username=username)
             self.close()
 
         elif selected_id == 2:
-            from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.OTPVerificationView import \
-                OTPVerificationView
+            # Khôi phục bằng Email
             email = LoginRepository.get_email_from_username(username)
             if not email:
                 ErrorDialog.show_error("⚠️ Không tìm thấy email cho tên người dùng này.", self)
                 return
-            otp_window = OTPVerificationView(email=email, username=username)
-            otp_window.show()
+
+            # Gửi OTP và hiển thị mã OTP giả lập
+            success, message = OTPController.request_initial_otp(username, email, parent_view=self)
+            if not success:
+                ErrorDialog.show_error(message, self)
+                return
+
+            # Mở màn hình nhập OTP
+            OTPController.go_to_opt_view(email, username=username)
             self.close()
 
         else:
             ErrorDialog.show_error("⚠️ Vui lòng chọn 1 phương thức để nhận OTP.", self)
 
     def resend_otp(self):
+        username = self.username_input.text().strip()
         selected_id = self.radio_group.checkedId()
         if selected_id == 1:
-            print("🔄 Gửi lại OTP đến SĐT")
+            sdt = LoginRepository.get_sdt_from_username(username)
+            if not sdt:
+                ErrorDialog.show_error("⚠️ Không tìm thấy số điện thoại để gửi lại OTP.", self)
+                return
+            success, message = OTPController.request_initial_otp(username, sdt, parent_view=self)
+            if not success:
+                ErrorDialog.show_error(message, self)
+
         elif selected_id == 2:
-            print("🔄 Gửi lại OTP đến Email")
+            email = LoginRepository.get_email_from_username(username)
+            if not email:
+                ErrorDialog.show_error("⚠️ Không tìm thấy email để gửi lại OTP.", self)
+                return
+            success, message = OTPController.request_initial_otp(username, email, parent_view=self)
+            if not success:
+                ErrorDialog.show_error(message, self)
         else:
-            print("⚠️ Vui lòng chọn phương thức để gửi lại OTP")
+            ErrorDialog.show_error("⚠️ Vui lòng chọn phương thức để gửi lại OTP.", self)
 
     def create_username_field(self, parent_layout, label_text, object_name):
         field_frame = QFrame()

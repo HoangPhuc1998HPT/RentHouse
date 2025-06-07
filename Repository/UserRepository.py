@@ -2,9 +2,35 @@ import hashlib
 
 from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
 from QLNHATRO.RentalManagementApplication.backend.model.User import User
-
+db = Database()
 class UserRepository:
-    db = Database()
+
+    @staticmethod
+    def get_all_users() -> list[User]:
+        # Kết nối và lấy về tất cả users
+        db.connect()
+        query = """
+                SELECT UserID, Username, Password, Role, IsActive
+                FROM Users
+                ORDER BY UserID \
+                """
+        cursor = db.execute(query)
+        rows = cursor.fetchall() if cursor else []
+        db.close()
+
+        # Chuyển thành domain model User
+        users = []
+        for row in rows:
+            users.append(User(
+                username=row["Username"],
+                password=row["Password"],  # Lưu ý: service/view sẽ không hiển thị mật khẩu
+                role=row["Role"],
+                user_id=row["UserID"],
+                is_active=row["IsActive"]
+            ))
+        return users
+
+
 
     @staticmethod
     def hash_password(password: str) -> str:
@@ -17,41 +43,49 @@ class UserRepository:
         hashed_pw = UserRepository.hash_password(password)
 
         try:
-            UserRepository.db.connect()
+            db.connect()
             query = """INSERT INTO Users (Username, Password, Role, IsActive)
                        VALUES (?, ?, ?, ?)"""
-            cursor = UserRepository.db.execute(query, (username, hashed_pw, role, is_active))
+            cursor = db.execute(query, (username, hashed_pw, role, is_active))
             if cursor:
                 user_id = cursor.lastrowid
                 print(f"Đã thêm user '{username}' với ID: {user_id}")
-                return User(username, hashed_pw, role, user_id, is_active)
+                row = db.execute(
+                "SELECT Username, Password, Role, UserID, IsActive, CreatedAt "
+                "FROM Users WHERE UserID = ?",(user_id,)).fetchone()
+                db.close()
+                if row:
+                    return User(
+                        username=row["Username"],password = row["Password"],
+                        role = row["Role"],user_id = row["UserID"],is_active = row["IsActive"],
+                        created_at = row["CreatedAt"] )
         except Exception as e:
             print(f"Lỗi khi thêm user: {e}")
         finally:
-            if UserRepository.db: UserRepository.db.close()
+            if db: db.close()
         return None
 
     @staticmethod
     def check_duplicate_user(username: str) -> bool:
         try:
-            UserRepository.db.connect()
+            db.connect()
             query = "SELECT 1 FROM Users WHERE Username = ?"
-            cursor = UserRepository.db.execute(query, (username,))
+            cursor = db.execute(query, (username,))
             return cursor.fetchone() is not None
         except Exception as e:
             print(f"Lỗi check duplicate user: {e}")
             return False
         finally:
-            UserRepository.db.close()
+            db.close()
 
     @staticmethod
     def get_user_by_username(username: str) -> User | None:
         try:
-            UserRepository.db.connect()
+            db.connect()
             query = """SELECT UserID, Username, Password, Role, IsActive
                        FROM Users \
                        WHERE Username = ?"""
-            cursor = UserRepository.db.execute(query, (username,))
+            cursor = db.execute(query, (username,))
             row = cursor.fetchone()
             if row:
                 return User(row["Username"], row["Password"], row["Role"], row["UserID"], row["IsActive"])
@@ -59,7 +93,7 @@ class UserRepository:
         except Exception as e:
             print(f"Lỗi khi lấy user theo username: {e}")
         finally:
-            UserRepository.db.close()
+            db.close()
         return None
 
     @staticmethod
@@ -73,9 +107,9 @@ class UserRepository:
     @staticmethod
     def get_user_id_from_username(username: str) -> int | None:
         try:
-            UserRepository.db.connect()
+            db.connect()
             query = "SELECT UserID FROM Users WHERE Username = ?"
-            cursor = UserRepository.db.execute(query, (username,))
+            cursor = db.execute(query, (username,))
             result = cursor.fetchone()
             if result:
                 return result[0]
@@ -83,7 +117,7 @@ class UserRepository:
         except Exception as e:
             print(f"Lỗi get_user_id_from_username: {e}")
         finally:
-            UserRepository.db.close()
+            db.close()
         return None
 
     @staticmethod
@@ -92,7 +126,6 @@ class UserRepository:
         Xóa user khỏi bảng Users dựa vào Username.
         Yêu cầu CSDL có FOREIGN KEY ON DELETE CASCADE để xóa dữ liệu liên quan.
         """
-        db = Database()
         if db.connect():
             try:
                 # Kiểm tra user có tồn tại không

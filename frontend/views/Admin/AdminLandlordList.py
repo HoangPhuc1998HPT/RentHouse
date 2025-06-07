@@ -15,8 +15,6 @@ class AdminLandlordList(QWidget):
         self._opened_windows = []
         self.landlord_list = landlord_list
 
-
-
         main_layout = QVBoxLayout()
 
         title = QLabel("📋 Danh sách chủ trọ")
@@ -61,9 +59,9 @@ class AdminLandlordList(QWidget):
     def show_detail(self, row):
         try:
             landlord = self.landlord_list[row]
-            username = landlord['username']
+            #username = landlord['username']
             id_landlord = landlord['id_landlord']
-            print("đã check show detail của chủ trọ:", landlord['name'], "với id:", id_landlord)
+            #print("đã check show detail của chủ trọ:", landlord['name'], "với id:", id_landlord)
             # Mở Dashboard của chủ trọ trong cửa sổ mới
             from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.MainWindowLandlord import \
                 MainWindowLandlord

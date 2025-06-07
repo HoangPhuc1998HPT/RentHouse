@@ -19,32 +19,9 @@ class Tenant:
         self.rent_end_date = data.get('RentEndDate')
         self.user_id = data.get('UserID')
         self.username = data.get("Username")
+        self.created_at = data.get("CreatedAt", None)  # Thêm trường created_at nếu cần
 
-    @staticmethod
-    def add_tenant_to_db(userID, full_name, cccd, gender, job_title, marital_status, email, phone_number, home_address):
-        try:
-            conn = sqlite3.connect(db)
-            cursor = conn.cursor()
-            cursor.execute("""
-                INSERT INTO Tenants(UserID, FullName, CCCD, Gender, JobTitle, MaritalStatus, Email, PhoneNumber, HomeAddress)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (userID, full_name, cccd, gender, job_title, marital_status, email, phone_number, home_address))
-            tenant_id = cursor.lastrowid
-            conn.commit()
-            cursor.execute("SELECT * FROM Tenants WHERE TenantID = ?", (tenant_id,))
-            row = cursor.fetchone()
-            conn.close()
-            if row:
-                columns = [column[0] for column in cursor.description]
-                data = dict(zip(columns, row))
-                print(f"Tenant with fullname: '{full_name}' added to database successfully with ID: {tenant_id}")
-                return Tenant(data)
-            else:
-                print("Failed to fetch tenant after insert.")
-                return None
-        except Exception as e:
-            print(e)
-            return None
+
 
     def to_dict(self):
         """Return tenant information as a dictionary (database field names)"""

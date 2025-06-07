@@ -10,6 +10,10 @@ from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import Glob
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        # ======== Bước 1: Khởi tạo / kiểm tra database =========
+        #initialize_database()
+        # =======================================================
+
         self.setStyleSheet(GlobalStyle.global_stylesheet())
         self.setWindowTitle("Login & Sign Up")
         self.setGeometry(200, 100, 300, 450)  # 📌 Ban đầu chỉ hiển thị frame trái

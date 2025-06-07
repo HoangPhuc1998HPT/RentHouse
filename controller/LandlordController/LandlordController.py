@@ -1,4 +1,8 @@
 from PyQt5.QtWidgets import QApplication
+
+from QLNHATRO.RentalManagementApplication.controller.AdminController.AdminController import AdminController
+from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordInfo import LandlordInfo
 from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordListInvoices import ListInvoices
 from QLNHATRO.RentalManagementApplication.services.InvoiceService import InvoiceService
 from QLNHATRO.RentalManagementApplication.services.LanlordService import LanlordService
@@ -22,18 +26,22 @@ class LandlordController:
         view.set_right_frame(lambda *_: lanlord_home)
 
     @staticmethod
-    def go_to_info_page(view,id_lanlord):
-        information_data = LanlordService.handle_data_infor_page(id_lanlord)
-        print("đây là information của infor",information_data)
-        from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordInfo import LandlordInfo
-        lanlord_infor = LandlordInfo(view.main_window,id_lanlord ,information_data)
-        view.set_right_frame(lambda *_: lanlord_infor)
+    def go_to_info_page(view, landlord_id: int):
+        landlord = LanlordService.handle_data_infor_page(landlord_id)
+        if not landlord:
+            ErrorDialog.show_error("Không tìm thấy thông tin chủ trọ.", view)
+            return
+
+        # truyền thẳng instance Landlord vào view
+        content = LandlordInfo(view.main_window, landlord)
+        view.set_right_frame(lambda *_: content)
+
 
     @staticmethod
     def go_to_room_list(view, id_lanlord):
         room_list = RoomService.handle_data_for_room_list_page(id_lanlord)
         #print("đây là room list",room_list)
-        from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.RoomList import RoomList
+        from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordRoomList import RoomList
         room_list_view = RoomList(view.main_window, room_list, id_lanlord)
         view.set_right_frame(lambda *_: room_list_view)
 

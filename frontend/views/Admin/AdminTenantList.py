@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QFrame, QMessageBox
 
 from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
 from QLNHATRO.RentalManagementApplication.frontend.Component.tableUI import TableUI
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
 
@@ -13,17 +14,22 @@ class AdminTenantList(QWidget):
         super().__init__()
         self.setStyleSheet(GlobalStyle.global_stylesheet())
         self.main_window = main_window
-        self.tenant_list = tenant_list or [
+        self.tenant_list = tenant_list
+
+        '''[
             {
-                "stt": 0,
-                "name": "Chưa có ",
-                "cccd": "00000000000",
-                "phone": "000000000",
-                "email": "00000000@example.com",
-                "ngay_thue": "00/00/1901",
-                "username":"tenant"
+                "stt": idx,
+                "name": t.fullname,
+                "cccd": t.cccd,
+                "phone": t.phone_number,
+                "email": t.email,
+                "ngay_thue": t.rent_start_date,  # hoặc chuyển format tại đây
+                "username": t.username,
+                "created_at": t.created_at,
+                "id_tenant": t.tenant_id
+                
             }
-        ]
+        ]'''
 
         main_layout = QVBoxLayout()
 
@@ -67,9 +73,13 @@ class AdminTenantList(QWidget):
     def show_detail(self, row):
         try:
             tenant = self.tenant_list[row]
-            username = tenant['username']
-            id_tenant = TenantRepository.get_tenant_id_from_user_name(username)
+            # Debug: in ra keys của dict xem có 'id_tenant' không
+            print("DEBUG: tenant keys =", list(tenant.keys()))
+            if 'id_tenant' not in tenant:
+                ErrorDialog.show_error( "Không tìm thấy khóa 'id_tenant' trong dữ liệu tenant.", self)
+                return
 
+            id_tenant = tenant['id_tenant']
             # Tạo và hiển thị dashboard người thuê trong cửa sổ mới
             from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.MainWindowTenant import MainWindowTenant
             dashboard = MainWindowTenant(id_tenant)
@@ -79,5 +89,6 @@ class AdminTenantList(QWidget):
             if not hasattr(self, "_opened_windows"):
                 self._opened_windows = []
             self._opened_windows.append(dashboard)
+
         except Exception as e:
-            QMessageBox.warning(self, "Lỗi", f"Không thể hiển thị chi tiết: {str(e)}")
+            ErrorDialog.show_error(f"Không thể hiển thị chi tiết: {str(e)}", self)

@@ -1,4 +1,8 @@
+from typing import Optional
+
+
 from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from QLNHATRO.RentalManagementApplication.backend.model.Landlord import Landlord
 
 
 class LanlordService:
@@ -42,20 +46,15 @@ class LanlordService:
         return information_data
 
     @staticmethod
-    def handle_data_infor_page(id_lanlord):
-        information_data = LanlordRepository.get_infor_lanlord(id_lanlord)
-        return information_data
+    def handle_data_infor_page(landlord_id: int) -> Optional[Landlord]:
+        """
+        Trả về instance Landlord đã chứa đầy đủ dữ liệu,
+        để View có thể gọi getattr(landlord, 'fullname')...
+        """
+        return LanlordRepository.get_landlord_by_id(landlord_id)
 
     '''---------------Analyst-----------------'''
-    @staticmethod
-    def get_dashboard_analyst(self, id_lanlord):
-        """
-        Lấy dữ liệu phân tích bảng điều khiển cho chủ nhà trọ.
-        Query LandlordAnalytics bảng theo landlord_id, lấy 6 tháng gần nhất
-        Tính tổng thu nhập, growth, số phòng cho thuê, v.v.
-        Trả về dict cho view
-        """
-        pass
+
     @staticmethod
     def get_monthly_income(id_lanlord):
         """
@@ -134,3 +133,25 @@ class LanlordService:
         except Exception as e:
             print(f"❌ Lỗi get_dashboard_summary: {e}")
             return None
+
+    @staticmethod
+    def prepare_update_data(raw: dict, role: str) -> dict:
+        # raw có keys: 'name', 'birth', 'cccd', 'sex', 'job', 'marital_status', 'email', 'phone', 'address'
+        mapped_data = {
+            "Fullname": raw.get("name", "").strip(),
+            "Birth": LanlordService.convert_ddMMyyyy_to_ISO(raw.get("birth", "")),
+            "CCCD": raw.get("cccd", "").strip(),
+            "Gender": raw.get("sex", "").strip(),
+            "JobTitle": raw.get("job", "").strip(),
+            "MaritalStatus": raw.get("marital_status", "").strip(),
+            "Email": raw.get("email", "").strip(),
+            "PhoneNumber": raw.get("phone", "").strip(),
+            "HomeAddress": raw.get("address", "").strip(),
+        }
+        # Loại bỏ những giá trị rỗng để tránh update không cần thiết
+        return {k: v for k, v in mapped_data.items() if v}
+
+    @staticmethod
+    def convert_ddMMyyyy_to_ISO(s: str) -> str:
+        day, month, year = s.split("/")
+        return f"{year}-{month}-{day}"

@@ -13,8 +13,6 @@ from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import Glob
 class LoginWindow(QWidget):
     def __init__(self, main_window):
         super().__init__()
-
-
         self.setStyleSheet(GlobalStyle.global_stylesheet())
 
         self.main_window = main_window  # Lưu lại để dùng cho chuyển trang
@@ -70,7 +68,7 @@ class LoginWindow(QWidget):
         # Gọi hàm để thêm trang LOGIN và SIGN UP vào stacked_widget
         self.Form_Login(self.main_window)
         #TODO: tương tự formlogin và fix sau
-        self.Form_sign_up()
+        self.register()
 
         self.main_layout.addWidget(self.right_frame)
         self.expand_window(0)  # Hiển thị ngay trang Login
@@ -142,7 +140,7 @@ class LoginWindow(QWidget):
 
 
 
-    def Form_sign_up(self):
+    def register(self):
         """Trang 2: Form Đăng ký"""
         signup_page = QWidget()
         signup_layout = QVBoxLayout(signup_page)
@@ -176,29 +174,15 @@ class LoginWindow(QWidget):
         signup_btn.setFixedHeight(45)
         signup_btn.setStyleSheet("background-color: #233FF3; color: white; font-weight: bold; border-radius: 20px;")
 
+        print(username_input.text().strip(), password_input.text(), confirm_password_input.text(), self.get_selected_role(), self.main_window)  # Debugging line
 
         signup_btn.clicked.connect(lambda: RegisterController.register_user(
             username_input.text().strip(),
-            password_input.text().strip(),
-            confirm_password_input.text().strip(),
+            password_input.text(),
+            confirm_password_input.text(),
             self.get_selected_role(),
             self.main_window
         ))
-
-        #TODO: Xử lý lấy thông tin qua page Update thông tin
-        #TODO: Cần thêm 1 hàm check correct password , check đúng mới cho chuyển page
-
-        # TODO" đúng MVC  ==> qua controller ==> gọi hàm kiểm ở Backend ==> mở register
-        '''
-        def go_to_check_sign_up(self, username, password, password_confirm, role, main_window=None):    
-        signup_btn.clicked.connect(lambda: self.login_controller.go_to_check_sign_up(
-            username_input.text(),
-            password_input.text(),
-            confirm_password_input.text(),
-            self.tenant_selection.isChecked(),
-            self.main_window  # thêm dòng này!
-        ))'''
-
         # chỉ cần kiểm tra tenant selection là True hoặc Fall
 
 

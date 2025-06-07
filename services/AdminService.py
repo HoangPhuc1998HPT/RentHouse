@@ -5,50 +5,63 @@ from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import In
 from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
 from QLNHATRO.RentalManagementApplication.Repository.RoomRepository import RoomRepository
 from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from QLNHATRO.RentalManagementApplication.Repository.UserRepository import UserRepository
 
 
 class AdminService:
 
     @staticmethod
-    def get_all_users():
-        """Trả về danh sách tài khoản người dùng (admin, chủ trọ, người thuê)"""
-        ''' Tài khoản admin tạo cố định không cho cập nhật hay update'''
+    def get_all_users() -> list[dict]:
+        users = UserRepository.get_all_users()
+        role_map = {
+            "admin": "admin",
+            "landlord": "Chủ trọ",
+            "tenant": "Người thuê trọ"
+        }
 
-        raw_data = AdminRepository.get_all_users()
-        return raw_data
+        ui_list = []
+        for idx, user in enumerate(users, start=1):
+            ui_list.append({
+                "stt": idx,
+                "username": user.username,
+                "role": role_map.get(user.role, user.role),
+                "status": "Active" if user.is_active else "Inactive"
+            })
+        return ui_list
 
     @staticmethod
-    def get_all_landlords():
-        """Trả về danh sách chủ trọ với thông tin cơ bản và số phòng đang quản lý"""
+    def get_all_landlords() -> list[dict]:
         landlord_models = LanlordRepository.get_all_landlords()
         result = []
-        for idx, landlord in enumerate(landlord_models, 1):
+        for idx, l in enumerate(landlord_models, start=1):
             result.append({
                 "stt": idx,
-                "name": landlord.fullname,
-                "cccd": landlord.cccd,
-                "phone": landlord.phone_number,
-                "email": landlord.email,
-                "so_phong": landlord.so_phong,
-                "username": landlord.username,
-                "id_landlord": landlord.landlord_id
+                "name": l.fullname,
+                "cccd": l.cccd,
+                "phone": l.phone_number,
+                "email": l.email,
+                "so_phong": l.so_phong,
+                "username": l.username,
+                "created_at": l.created_at,  # xử lý hiển thị ngay tại đây nếu cần format
+                "id_landlord": l.landlord_id
             })
         return result
 
     @staticmethod
-    def get_all_tenants():
-        """Trả về danh sách người thuê trọ"""
+    def get_all_tenants() -> list[dict]:
         tenant_models = TenantRepository.get_all_tenants()
         result = []
-        for idx, tenant in enumerate(tenant_models, 1):
+        for idx, t in enumerate(tenant_models, start=1):
             result.append({
                 "stt": idx,
-                "name": tenant.fullname,
-                "cccd": tenant.cccd,
-                "phone": tenant.phone_number,
-                "email": tenant.email,
-                "ngay_thue": tenant.rent_start_date,
-                "username": tenant.username
+                "name": t.fullname,
+                "cccd": t.cccd,
+                "phone": t.phone_number,
+                "email": t.email,
+                "ngay_thue": t.rent_start_date,  # hoặc chuyển format tại đây
+                "username": t.username,
+                "created_at": t.created_at,
+                "id_tenant": t.tenant_id
             })
         return result
 
@@ -156,6 +169,31 @@ class AdminService:
             })
         return result
 
+    from datetime import datetime
+
     @staticmethod
     def get_system_stats_by_month():
-        return AdminRepository.get_system_stats_by_month()
+        """
+        Trả về tối đa 12 tháng gần nhất từ kết quả thống kê.
+        """
+        all_stats = AdminRepository.get_system_stats_by_month()
+
+        # Chuyển định dạng tháng từ "MM/YYYY" thành datetime để dễ sắp xếp
+        for item in all_stats:
+            item["_dt"] = datetime.strptime(item["month"], "%m/%Y")
+
+        # Sắp xếp theo thời gian giảm dần (mới nhất trước)
+        all_stats.sort(key=lambda x: x["_dt"], reverse=True)
+
+        # Lấy 12 tháng gần nhất
+        latest_12 = all_stats[:12]
+
+        # Sắp xếp lại theo thời gian tăng dần (mới -> cũ → cũ -> mới)
+        latest_12.sort(key=lambda x: x["_dt"])
+
+        # Xóa trường phụ trợ _dt
+        for item in latest_12:
+            del item["_dt"]
+
+        return latest_12
+

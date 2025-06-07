@@ -1,7 +1,5 @@
 from QLNHATRO.RentalManagementApplication.Repository.LoginRepository import LoginRepository
-from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.OTPVerificationView import PasswordRecoveryFlow
 
-from QLNHATRO.RentalManagementApplication.services.LoginService import LoginService
 
 
 class LoginController:
@@ -59,6 +57,20 @@ class LoginController:
             PasswordRecoveryFlow
         flow = PasswordRecoveryFlow()
         flow.start_flow()  # KHÔNG gọi flow.run()
+
+    @staticmethod
+    def go_to_home_login(main_window):
+        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.HomeLogin import \
+            LoginWindow as LoginWidget
+
+        # 1) Tạo instance của login-widget, với main_window làm parent
+        login_widget = LoginWidget(main_window)
+
+        # 2) Cập nhật lại central widget của QMainWindow
+        main_window.setCentralWidget(login_widget)
+
+        # 3) (Nếu cần) điều chỉnh lại kích thước hoặc gọi lại show()
+        main_window.show()
 
     '''
     def go_to_main_windown_lanlord(self,main_window ,user_id):

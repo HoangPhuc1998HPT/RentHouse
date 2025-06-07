@@ -88,17 +88,7 @@ class AdminMenu(QWidget):
         self.right_layout = QVBoxLayout(self.right_frame)
         self.right_layout.setContentsMargins(0, 0, 0, 0)
 
-        # Giao diện mặc định là Home
-        #AdminController.go_to_home(self)
-
-        from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminHomePage import AdminHome
-        from QLNHATRO.RentalManagementApplication.services.AdminService import AdminService
-
-        #summary_data = AdminService.get_summary_dashboard_data_with_growth()
-        #self.set_right_frame(lambda: AdminHome(self.main_window, summary_data))
         AdminController.go_to_home(self)
-
-
 
         self.main_layout.addWidget(self.left_frame)
         self.main_layout.addWidget(self.right_frame)

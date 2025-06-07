@@ -182,13 +182,11 @@ class OTPVerificationView(QWidget):
         OTPController.verify_otp(otp, self.username, self)
 
     def resend_otp(self):
-        self.timer.stop()  # ⛔ Dừng timer hiện tại
-        self.close()  # 🔒 Đóng giao diện nhập OTP
-
-        # Mở lại giao diện chọn phương thức
-        self.forgot_password_view = ForgotPasswordView()
-        self.forgot_password_view.username_input.setText(self.username)  # Giữ lại username cũ nếu cần
-        self.forgot_password_view.show()
+        """
+        Khi user bấm "Gửi lại OTP" ở màn hình nhập mã.
+        Chúng ta không chuyển về ForgotPasswordView nữa, mà tạo OTP mới ngay, reset timer/fields.
+        """
+        OTPController.resend_otp(self.username, self.email, self)
 
     def reset_otp_fields(self):
         for field in self.otp_fields:
@@ -213,29 +211,55 @@ class PasswordRecoveryFlow:
         self.app = QApplication(sys.argv)
         self.forgot_password_view = None
         self.otp_verification_view = None
+        self.username = None  # giả sử username được thiết lập sau khi user chọn
 
     def start_flow(self):
-          # Import your existing class
-        self.forgot_password_view = ForgotPasswordView(on_success_callback=self.show_otp_screen)
+        # Khởi màn hình ForgotPasswordView, giả sử nó có callback on_success
+        self.forgot_password_view = ForgotPasswordView(on_success_callback=self.on_forgot_submitted)
         self.forgot_password_view.show()
 
-        # Override the on_submit method to open OTP screen
-        original_on_submit = self.forgot_password_view.on_submit
+    def on_forgot_submitted(self):
+        """
+        Hàm này sẽ được gọi khi user bấm 'Tiếp tục' trong ForgotPasswordView
+        và chọn được phương thức (email/SMS). Tại đây ta lấy username, gọi send_otp rồi hiển thị OTP screen.
+        """
+        # Giả sử ForgotPasswordView đã lưu username vào self.forgot_password_view.username_input
+        self.username = self.forgot_password_view.username_input.text().strip()
+        if not self.username:
+            QMessageBox.warning(self.forgot_password_view, "Lỗi", "Vui lòng nhập username trước!")
+            return
 
-        def new_on_submit():
-            selected_id = self.forgot_password_view.radio_group.checkedId()
-            original_on_submit()  # Gọi hàm in log
-            if selected_id in [1, 2]:
-                # Giả sử bạn có lấy được email người dùng từ một input nào đó hoặc mặc định
-                email = "phuctran@gmail.com"  # TODO: lấy email thật từ input người dùng
-                self.show_otp_screen(email)
+        # 1. Gọi controller để sinh và hiển thị mã OTP
+        # mới: lấy email (hoặc số điện thoại) từ ForgotPasswordView, rồi gọi đúng phương thức
+        email = (
+            self.forgot_password_view.email_input.text()
+            if hasattr(self.forgot_password_view, 'email_input')
+            else ""
+        )
+        OTPController.request_initial_otp(self.username, email, parent_view=self.forgot_password_view)
 
-        self.forgot_password_view.on_submit = new_on_submit
-        self.forgot_password_view.show()
+        # 2. Sau khi show mã OTP, ta chuyển sang màn hình nhập OTP
+        self.show_otp_screen()
 
-    def show_otp_screen(self, email):
-        self.otp_verification_view = OTPVerificationView(email=email,username = self.username)
+    def show_otp_screen(self):
+        # Lấy email từ view (nếu cần) hoặc chỉ truyền username
+        email = self.forgot_password_view.email_input.text() if hasattr(self.forgot_password_view, 'email_input') else ""
+        self.otp_verification_view = OTPVerificationView(email=email, username=self.username)
+
+        # Bắt sự kiện OTP đúng
+        self.otp_verification_view.otp_verified_successfully.connect(self.on_otp_verified)
         self.otp_verification_view.show()
+
+    def on_otp_verified(self):
+        """
+        Hàm này được gọi khi user nhập đúng OTP.
+        Tại đây, bạn có thể mở màn hình đổi mật khẩu mới.
+        """
+        QMessageBox.information(None, "Tiếp tục", "Bạn sẽ được chuyển đến màn hình đổi mật khẩu mới.")
+        # TODO: Chuyển sang màn hình ResetPasswordView
+        # Ví dụ:
+        # reset_view = ResetPasswordView(username=self.username)
+        # reset_view.show()
 
     def run(self):
         sys.exit(self.app.exec_())

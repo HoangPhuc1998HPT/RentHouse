@@ -16,4 +16,5 @@ class Landlord:
         self.user_id = data.get('UserID')
         self.username = data.get("Username")
         self.so_phong = data.get("so_phong", 0)
+        self.created_at = data.get("CreatedAt", None)  # Thêm trường created_at
 

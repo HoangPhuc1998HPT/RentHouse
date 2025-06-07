@@ -67,8 +67,6 @@ class AdminHome(QWidget):
             chart_placeholder.setAlignment(Qt.AlignCenter)
             main_layout.addWidget(chart_placeholder)
 
-
-
         # Card thống kê
         stats_layout = QHBoxLayout()
         stats_layout.setSpacing(20)

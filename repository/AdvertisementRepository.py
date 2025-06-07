@@ -1,11 +1,10 @@
 from QLNHATRO.RentalManagementApplication.backend.database.Database import Database
 from QLNHATRO.RentalManagementApplication.backend.model.Advertisement import Advertisement
 
-
+db = Database()
 class AdvertisementRepository:
     @staticmethod
     def save_advertisement(ad: Advertisement, room_id):
-        db = Database()
         db.connect()
         query = """
                 INSERT INTO Advertisements (RoomID, Description, Priority, ImagePath, CreatedAt)
@@ -17,15 +16,30 @@ class AdvertisementRepository:
         return result is not None
 
         # Ví dụ: dùng SQLAlchemy / sqlite3 để lưu vào bảng Advertisements
+
     @staticmethod
     def get_all_advertisements():
-        all_data_ad ={}
+        db.connect()
+        query = "SELECT * FROM Advertisements"
+        cursor = db.execute(query)
+        rows = cursor.fetchall() if cursor else []
+        db.close()
 
-        return all_data_ad
+        ads = []
+        for row in rows:
+            ad_data = {
+                "ad_id": row["AdID"],
+                "room_id": row["RoomID"],
+                "description": row["Description"],
+                "priority": row["Priority"],
+                "image_path": row["ImagePath"],
+                "created_at": row["CreatedAt"]
+            }
+            ads.append(Advertisement(ad_data))
+        return ads
 
     @staticmethod
     def get_all_advertised_rooms():
-        db = Database()
         db.connect()
         query = "SELECT * FROM Advertisements"
         cursor = db.execute(query)

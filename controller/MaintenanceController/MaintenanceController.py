@@ -1,5 +1,5 @@
 
-from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.RoomMaintenanceList import RoomMaintenanceList
+from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMaintenanceList import RoomMaintenanceList
 
 
 class MaintenanceController:
@@ -15,7 +15,7 @@ class MaintenanceController:
 
     @staticmethod
     def go_to_maintenance_detail_page(view, request_data):
-        from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.MaintenanceRequestDetail import \
+        from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMaintenanceRequestDetail import \
             MaintenanceRequestDetail
 
         detail_view = MaintenanceRequestDetail(request_data, parent=view.main_window)

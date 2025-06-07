@@ -1,5 +1,7 @@
 from PyQt5.QtCore import Qt
 
+from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
+from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
 from QLNHATRO.RentalManagementApplication.Repository.UserRepository import UserRepository
 from QLNHATRO.RentalManagementApplication.backend.model.Admin import Admin
 from QLNHATRO.RentalManagementApplication.backend.model.User import User
@@ -7,8 +9,6 @@ from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog impor
 from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
 from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
 
-from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.UpdateInfomationAfterRegister import \
-    OptimizedUpdateInfoView
 from QLNHATRO.RentalManagementApplication.utils.Validators import Validators
 
 
@@ -32,6 +32,21 @@ class RegisterController:
             # 2. Thêm user mới vào database
             UserRepository.add_user(username, password, role)
             user_id = UserRepository.get_user_id_from_username(username)
+            if role == "landlord":
+                # tạo bản ghi trống, sau đó mới cho vào màn hình cập nhật
+                lan = LanlordRepository.create_empty_landlord(user_id)
+                if lan is None:
+                    ErrorDialog.show_error("Lỗi khởi tạo chủ trọ.", main_window)
+                    return
+            elif role == "tenant":
+                ten = TenantRepository.create_empty_tenant(user_id)
+                if ten is None:
+                    ErrorDialog.show_error("Lỗi khởi tạo tenant.", main_window)
+                    return
+            else:
+                ErrorDialog.show_error("Vai trò không hợp lệ.", main_window)
+                return
+
 
             # 3. Điều hướng đến màn hình cập nhật thông tin cá nhân
             RegisterController.navigate_to_update_info(main_window, user_id,username, role)
@@ -46,9 +61,10 @@ class RegisterController:
         Không chuyển trang mà mở form riêng.
         """
         from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.HomeLogin import LoginWindow
+        from QLNHATRO.RentalManagementApplication.frontend.views.Login_Register.UpdateInfomationAfterRegister import \
+            OptimizedUpdateInfoView
 
-
-        update_window = OptimizedUpdateInfoView(
+        update_window = OptimizedUpdateInfoView(main_window = main_window,
             role=role,
             username=username,
             user_id=user_id,
@@ -88,3 +104,5 @@ class RegisterController:
                 main_window.switch_to_register_view()
             except Exception as e:
                 ErrorDialog.show_error(f"Lỗi khi hủy đăng ký: {str(e)}", main_window)
+
+

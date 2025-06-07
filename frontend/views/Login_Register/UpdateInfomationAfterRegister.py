@@ -1,16 +1,17 @@
 import sys
 import os
 
+from QLNHATRO.RentalManagementApplication.controller.LoginRegister.LoginController import LoginController
 from QLNHATRO.RentalManagementApplication.frontend.Component.ConfirmDialog import ConfirmDialog
 from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from QLNHATRO.RentalManagementApplication.frontend.Component.SuccessDialog import SuccessDialog
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..")))
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMessageBox, QPushButton, QHBoxLayout, QVBoxLayout,
                              QFrame, QWidget, QScrollArea, QLabel, QApplication)
-
-
 from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
 from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
 from QLNHATRO.RentalManagementApplication.frontend.Style.GlobalStyle import GlobalStyle
@@ -19,13 +20,14 @@ from QLNHATRO.RentalManagementApplication.frontend.views.Form.TenantUpdateFormVi
 
 
 class OptimizedUpdateInfoView(QWidget):
-    def __init__(self, role, username, user_id, save_callback=None, cancel_callback=None):
+    def __init__(self,main_window ,role, username, user_id, save_callback=None, cancel_callback=None):
         super().__init__()
         self.role = role
         self.user_id = user_id
         self.username = username
         self.save_callback = save_callback or self.default_save_callback
         self.cancel_callback = cancel_callback or self.default_cancel_callback
+        self.mainwindow = main_window
 
         # Set up window properties for standalone display
         self.setWindowTitle("Hoàn thiện thông tin đăng ký")
@@ -40,7 +42,6 @@ class OptimizedUpdateInfoView(QWidget):
         self.initUI()
 
     def center_on_screen(self):
-        """Center the window on the screen"""
         screen = QApplication.desktop().screenGeometry()
         size = self.geometry()
         self.move(
@@ -323,46 +324,68 @@ class OptimizedUpdateInfoView(QWidget):
         return button_frame
 
     def handle_save_clicked(self):
-        """Handle save button click with validation"""
+        """Validate form and update repository based on role"""
+
+        from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
+
         if not self.form.validate():
-            # Create styled message box
             msg = QMessageBox(self)
             msg.setWindowTitle("Thông tin chưa đầy đủ")
-            msg.setText("Vui lòng điền đầy đủ các thông tin bắt buộc:")
-            msg.setDetailedText("• Họ và tên\n• CCCD\n• Số điện thoại\n• Email")
+            msg.setText("Vui lòng điền đầy đủ các thông tin bắt buộc.")
             msg.setIcon(QMessageBox.Warning)
             msg.setStyleSheet(GlobalStyle.global_stylesheet())
             msg.exec_()
             return
 
-        # Show success message
+        raw = self.form.get_form_data()
+        if self.role == "tenant":
+            data = TenantService.prepare_update_data(raw)
+            print("[DEBUG] Preparing update_data:", data)
+            success = TenantRepository.update_user_info(self.user_id, data)
+            if success:
+                if success:
+                    SuccessDialog.show_success("Cập nhật thông tin thành công!", self)
+
+                    # 1) switch the main window back to Login
+                    LoginController.go_to_home_login(main_window=self.main_window)
+
+
+                    # 2) then close or hide this dialog
+                    self.close()
+                    return
+
+        else:
+            data = TenantService.prepare_update_data(raw)
+            success = LanlordRepository.update_user_info(self.user_id, data)
+            if success:
+                SuccessDialog.show_success("Cập nhật thông tin thành công!", self)
+
+                # 1) switch the main window back to Login
+                LoginController.go_to_home_login(main_window=self.main_window)
+
+                # 2) then close or hide this dialog
+                self.close()
+                return
+
+        if not success:
+            ErrorDialog.show_error("Không thể lưu thông tin. Vui lòng thử lại.", self)
+            return
+
+        # Show success and navigate
         msg = QMessageBox(self)
-        msg.setWindowTitle("Đăng ký thành công")
-        msg.setText("Thông tin đã được cập nhật thành công!\nBạn có thể bắt đầu sử dụng ứng dụng.")
+        msg.setWindowTitle("Cập nhật thành công")
+        msg.setText("Thông tin đã được cập nhật thành công!")
         msg.setIcon(QMessageBox.Information)
         msg.setStyleSheet(GlobalStyle.global_stylesheet())
+        msg.exec_()
 
-        reply = msg.exec_()
-        if reply == QMessageBox.Ok:
-            self.save_callback()
 
     def handle_cancel_clicked(self):
-        """Xử lý khi bấm nút Hủy với xác nhận"""
-        if ConfirmDialog.ask(self, "⚠️ Bạn có chắc chắn muốn hủy đăng ký?\nTất cả thông tin đã nhập sẽ bị mất và bạn sẽ cần đăng ký lại."):
-            self.cancel_callback()
+        if ConfirmDialog.ask(self, "Bạn có chắc chắn muốn hủy? Dữ liệu chưa lưu sẽ mất."):
+            self.close()
+        else:
+            return
 
-    def save_to_repository(self, user_id):
-        """Save form data to repository"""
-        try:
-            data = self.form.get_form_data()
-            if self.role == "tenant":
-                TenantRepository.update_user_info(user_id, data)
-            else:
-                LanlordRepository.update_user_info(user_id, data)
-            return True
-        except Exception as e:
-            ErrorDialog.show_error(f"Không thể lưu thông tin:\n{str(e)}", self)
-            return False
 
     def get_form_data(self):
         """Get form data"""
@@ -380,6 +403,7 @@ class OptimizedUpdateInfoView(QWidget):
     def default_cancel_callback(self):
         """Default cancel callback"""
         print("Registration cancelled!")
+
         self.close()
 
     def closeEvent(self, event):
@@ -394,26 +418,3 @@ class OptimizedUpdateInfoView(QWidget):
                     return
         event.accept()
 
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-
-    # Set application-wide font from GlobalStyle
-    from PyQt5.QtGui import QFont
-
-    font = QFont()
-    font.setFamily("Be Vietnam Pro")
-    app.setFont(font)
-
-    # Create test window
-    window = OptimizedUpdateInfoView(
-        role="landlord",  # Fixed typo: "lanlord" -> "landlord"
-        username="hoangphuc1235",
-        user_id=1
-    )
-
-    window.show()
-    window.activateWindow()
-
-    sys.exit(app.exec_())

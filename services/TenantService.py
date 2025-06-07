@@ -1,11 +1,12 @@
 
 from datetime import datetime
-
-
+from typing import Optional
 
 from QLNHATRO.RentalManagementApplication.Repository.InvoiceRepository import InvoiceRepository
 from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
 from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
+from QLNHATRO.RentalManagementApplication.backend.model.Tenant import Tenant
+from QLNHATRO.RentalManagementApplication.services.LanlordService import LanlordService
 
 
 class TenantService:
@@ -81,16 +82,18 @@ class TenantService:
             return month - 1, year
 
     @staticmethod
-    def get_tenant_infor(id_tenant):
-        #TODO: nếu có thay đổi trong xử lý data thì hiệu chỉnh
-        data = {} # nếu có xử lý thì hiệu chỉnh
-        raw_data = TenantRepository.get_tenant_infor_by_id_tenant(id_tenant)
-        return raw_data
+    def get_tenant_infor(id_tenant) -> dict:
+        tenant = TenantRepository.get_tenant_by_id(id_tenant)
+        if tenant:
+            # Trả về dict để view dùng initial_data.get(...)
+            return tenant.to_dict()
+        else:
+            return {}
 
     @staticmethod
     def update_tenant_info(tenant_id, updated_data):
         from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
-        print(f"[SERVICE] Đang cập nhật tenant {tenant_id} với dữ liệu: {updated_data}")
+        #print(f"[SERVICE] Đang cập nhật tenant {tenant_id} với dữ liệu: {updated_data}")
         return TenantRepository.update_tenant_info(tenant_id, updated_data)
 
     @staticmethod
@@ -215,19 +218,13 @@ class TenantService:
 
     @staticmethod
     def get_all_advertised_rooms():
-        from QLNHATRO.RentalManagementApplication.Repository.AdvertisementRepository import AdvertisementRepository
-        return AdvertisementRepository.get_all_advertised_rooms()
-
-
-    tenant_room_mapping = {
-        1: 101,
-        2: 102,
-        3: 103
-    }
+        from QLNHATRO.RentalManagementApplication.services.AdvertisementService import AdvertisementService
+        return AdvertisementService.get_all_advertised_rooms_for_view()
 
     @staticmethod
     def get_room_id_by_tenant(tenant_id):
-        room_id = TenantService.tenant_room_mapping.get(tenant_id)
+        #room_id = TenantService.tenant_room_mapping.get(tenant_id)
+        room_id = TenantRepository.get_room_id_by_tenant(tenant_id)
         print(f"[DEBUG][Service] room_id của tenant {tenant_id} là {room_id}")
         return room_id
 
@@ -237,3 +234,43 @@ class TenantService:
         monthly_costs = TenantRepository.get_tenant_monthly_costs(id_tenant)
         #print(f"[DEBUG] Monthly costs for tenant {id_tenant}: {monthly_costs}")
         return monthly_costs
+
+    @staticmethod
+    def convert_ddMMyyyy_to_ISO(s: str) -> str:
+        day, month, year = s.split("/")
+        return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+
+    @staticmethod
+    def prepare_update_data(raw: dict) -> dict:
+        # raw có keys: 'full_name', 'birth_date', 'citizen_id', 'gender',
+        # 'job_title', 'marital_status', 'email', 'phone_number', 'address', 'rent_start_date', 'rent_end_date'
+        if raw["marital_status"] == "Chưa kết hôn":
+            raw["marital_status"] = "Single"
+        elif raw["marital_status"] == "Đã kết hôn":
+            raw["marital_status"] = "Married"
+        elif raw["marital_status"] == "Ly hôn":
+            raw["marital_status"] = "Divorced"
+        elif raw["marital_status"] == "Khác":
+            raw["marital_status"] = "Other"
+
+        mapped_data = {
+            "Fullname": raw.get("name", "").strip(),
+            "Birth": LanlordService.convert_ddMMyyyy_to_ISO(raw.get("birthdate", "")),
+            "CCCD": raw.get("id_card", "").strip(),
+            "Gender": raw.get("gender", "").strip(),
+            "JobTitle": raw.get("job", "").strip(),
+            "MaritalStatus": raw.get("marital_status", "").strip(),
+            "Email": raw.get("email", "").strip(),
+            "PhoneNumber": raw.get("phone", "").strip(),
+            "HomeAddress": raw.get("address", "").strip(),
+        }
+        # Chỉ giữ những trường người dùng thực sự nhập
+        return {k: v for k, v in mapped_data.items() if v}
+    @staticmethod
+    def create_empty_tenant(user_id: int) -> Optional[Tenant]:
+        # Sử dụng add_tenant_to_db, truyền đầy đủ các trường null hoặc rỗng
+        return TenantRepository.add_tenant_to_db(
+            user_id=user_id,
+            full_name="", cccd="", gender="", job_title="", marital_status="",
+            email="", phone_number="", home_address="", rent_start=None, rent_end=None
+        )

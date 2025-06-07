@@ -518,7 +518,7 @@ class MaintenanceRequestDetail(QWidget):
                 MaintenanceController.go_to_maintenance_list(self, id_landlord)
             elif hasattr(self.main_window, "setCentralWidget"):
                 # Trường hợp main_window là QMainWindow với setCentralWidget
-                from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.RoomMaintenanceList import \
+                from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordMaintenanceList import \
                     RoomMaintenanceList
                 from QLNHATRO.RentalManagementApplication.services.MaintenanceService import MaintenanceService
 

@@ -27,11 +27,10 @@ class ControllerMaintenance:
         Gửi yêu cầu sửa chữa bằng Service.
         """
         try:
-            MaintenanceService.create_request(
+            MaintenanceService.create_maintenance_request(
                 room_id=request_data['room_id'],
                 tenant_id=request_data['tenant_id'],
-                description=request_data['description'],
-                image_path=request_data['image_path']
+                request_data
             )
             return True, "Gửi yêu cầu thành công!"
         except Exception as e:

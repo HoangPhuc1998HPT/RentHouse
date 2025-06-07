@@ -1,7 +1,9 @@
 from PyQt5.QtWidgets import QApplication
 
-from QLNHATRO.RentalManagementApplication.Repository.UserRepository import UserRepository
-from QLNHATRO.RentalManagementApplication.frontend.views.Admin.UserManagerView import AdminUserManagement
+
+
+from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+from QLNHATRO.RentalManagementApplication.frontend.views.Admin.AdminUserManager import AdminUserManagement
 from QLNHATRO.RentalManagementApplication.services.AdminService import AdminService
 from QLNHATRO.RentalManagementApplication.services.RoomService import RoomService
 
@@ -22,8 +24,7 @@ class AdminController:
 
     @staticmethod
     def go_to_user_management(view):
-
-        user_list = AdminService.get_all_users()  # Tạm thời có thể mock
+        user_list = AdminService.get_all_users()
         view.set_right_frame(lambda: AdminUserManagement(view.main_window, user_list))
 
     @staticmethod
@@ -70,34 +71,35 @@ class AdminController:
         from QLNHATRO.RentalManagementApplication.frontend.views.Landlord.LandlordInfo import LandlordInfo
         from QLNHATRO.RentalManagementApplication.frontend.Component.UserInfoWindow import UserInfoWindow
 
-        user_id = UserRepository.get_user_id_from_username(username)
         from QLNHATRO.RentalManagementApplication.Repository.LandlordRepository import LanlordRepository
-        id_landlord = LanlordRepository.get_id_landlord_from_user_id(user_id)
+        information_data = LanlordRepository.get_landlord_info_by_username(username)
 
-        from QLNHATRO.RentalManagementApplication.services.LanlordService import LanlordService
-        information_data = LanlordService.handle_data_infor_page(id_landlord)
+        id_landlord = information_data.pop('id_landlord', None)
 
         content_widget = LandlordInfo(None, id_landlord, information_data)
+
         window = UserInfoWindow(content_widget, title=f"Thông tin Chủ trọ: {username}")
         window.show()
         window.activateWindow()
         AdminController._user_windows.append(window)
 
-
-
     @staticmethod
-    def go_to_infor_tenant(username):
+    def go_to_infor_tenant(username: str):
         from QLNHATRO.RentalManagementApplication.frontend.views.Tenant.TenantInfo import TenantInfo
         from QLNHATRO.RentalManagementApplication.frontend.Component.UserInfoWindow import UserInfoWindow
         from QLNHATRO.RentalManagementApplication.Repository.TenantRepository import TenantRepository
 
-        user_id = UserRepository.get_user_id_from_username(username)
-        id_tenant = TenantRepository.get_tenant_id_from_user_id(user_id)
+        # 1 truy vấn duy nhất, trả về dict hoặc None
+        initial_data = TenantRepository.get_tenant_info_by_username(username)
+        if not initial_data:
+            ErrorDialog.show_error(f"Không tìm thấy thông tin Tenant cho user '{username}'.")
+            return
 
-        from QLNHATRO.RentalManagementApplication.services.TenantService import TenantService
-        initial_data = TenantService.get_tenant_infor(id_tenant)  # ✅ dùng hàm đúng để lấy data cá nhân
-        content_widget = TenantInfo(None, initial_data, id_tenant)
+        # tenant_id cần nếu bạn cập nhật sau này
+        tenant_id = initial_data.pop("tenant_id", None)
 
+        # Gởi thẳng dict vào view
+        content_widget = TenantInfo(None, initial_data, tenant_id)
         window = UserInfoWindow(content_widget, title=f"Thông tin Người thuê: {username}")
         window.show()
         window.activateWindow()

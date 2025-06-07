@@ -418,12 +418,6 @@ class RoomRepository:
             db.close()
 
     @staticmethod
-    def update_tenant_rent_room(room_id, tenant_id):
-        #TODO Tao hàm truy vấn update data
-        print(f"✅ Cập nhật người thuê {tenant_id} vào phòng {room_id}")
-        return True
-
-    @staticmethod
     def get_list_room_by_id_landlord(id_landlord):
         """Cập nhật thông tin phòng"""
         db.connect()

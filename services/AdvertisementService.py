@@ -5,10 +5,19 @@ from QLNHATRO.RentalManagementApplication.backend.model.Advertisement import Adv
 
 
 class AdvertisementService:
+
     @staticmethod
-    def create_advertisement(room_name, description, image_path, preferences,RoomID):
-        ad = Advertisement(room_name, description, image_path, preferences)
-        AdvertisementRepository.save_advertisement(ad,RoomID)
+    def create_advertisement(room_id: int, description: str, image_path: str, preferences: str):
+        # Tạo dict data đúng với khóa mà Advertisement __init__ mong đợi
+        data = {
+            "RoomID": room_id,
+            "description": description,
+            "priority": preferences,
+            "image_path": image_path
+            # Nếu cần ad_id (update) hoặc created_at, có thể thêm ở đây
+        }
+        ad = Advertisement(data)
+        AdvertisementRepository.save_advertisement(ad)
         return ad
 
     @staticmethod

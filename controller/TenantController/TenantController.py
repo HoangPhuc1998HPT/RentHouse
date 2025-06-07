@@ -88,7 +88,7 @@ class TenantController:
     @staticmethod
     def submit_maintenance_request(request_data):
         from QLNHATRO.RentalManagementApplication.services.MaintenanceService import MaintenanceService
-        MaintenanceService.create_request(**request_data)
+        MaintenanceService.create_maintenance_request(room_id, tenant_id,**request_data)
         print("[DEBUG] Gửi yêu cầu sửa chữa:", request_data)
 
     @staticmethod

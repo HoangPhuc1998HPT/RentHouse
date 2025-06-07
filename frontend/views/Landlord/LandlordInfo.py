@@ -15,20 +15,7 @@ class LandlordInfo(QWidget):
         self.setStyleSheet(GlobalStyle.global_stylesheet())
         self.id_lanlord = id_lanlord
         self.main_window = main_window
-
-        if information_data is None:
-            self.information = {
-                'name': 'None ',
-                'birth': 'None ',
-                'cccd': ' None',
-                'sex': ' None',
-                'job': 'None ',
-                'phone': ' None',
-                'email': 'None',
-                'marriage': 'None',
-                'password': '**********'}
-        else:
-            self.information = information_data
+        self.information = information_data
 
         main_layout = QVBoxLayout()
 

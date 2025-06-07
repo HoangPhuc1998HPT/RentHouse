@@ -1,13 +1,16 @@
 from PyQt5.QtWidgets import QMessageBox
 
 from QLNHATRO.RentalManagementApplication.Repository.LoginRepository import LoginRepository
+from QLNHATRO.RentalManagementApplication.Repository.UserRepository import UserRepository
+from QLNHATRO.RentalManagementApplication.controller.UpdateInfor.UpdateInfoController import UpdateInfoController
+from QLNHATRO.RentalManagementApplication.frontend.Component.ErrorDialog import ErrorDialog
+
 
 class LoginService:
     def __init__(self):
         pass
 
     landlord_window = None  # thuộc tính class-level
-
 
     # xử lý 1 vấn đề là check user tồn tại và password đúng
     @staticmethod
@@ -27,16 +30,6 @@ class LoginService:
 
 
     @staticmethod
-    def get_role_user(user_id):
-        role = LoginRepository.get_role_from_user_id(user_id)   # giả sủ role = landlord
-        print(f"[DEBUG] mở dashboard với, id={user_id}")
-        return role
-
-    @staticmethod
-    def open_dashboard_window_and_close_login(role, user_id):
-        pass
-
-    @staticmethod
     def close_main_window(main_window):
         main_window.close()
 
@@ -50,23 +43,30 @@ class LoginService:
 
     @staticmethod
     def handle_data_user_to_create_new_user(user, main_window):
+        """
+        user = [username, password, role]
+        - Bước 1: Kiểm tra trùng username (nếu trùng -> báo lỗi / return).
+        - Bước 2: Hash mật khẩu.
+        - Bước 3: Gọi LoginRepository.create_new_user_name để chèn vào Users.
+        - Bước 4: Nếu chèn thành công (trả về user_id), khởi UpdateInfoController.
+        """
         username, password, role = user
-        if LoginRepository.create_new_user_name(user):
-            user_id = LoginRepository.get_user(username)
-            # Use the factory method instead of direct instantiation
-            # Khi đăng ký thành công:
-            from QLNHATRO.RentalManagementApplication.controller.UpdateInfor.UpdateInfoController import \
-                UpdateInfoController
 
-            controller = UpdateInfoController(main_window, role, username, password, user_id)
-            controller.show()
+        # 1. Kiểm tra trùng username
+        if UserRepository.check_duplicate_user(username):
+            ErrorDialog.show_error("Tên tài khoản đã tồn tại, vui lòng chọn tên khác.")
+            return
 
-            '''UpdateInfoAfterRegister.create(
-                main_window=main_window,
-                role=role,
-                username=username,
-                password=password,
-                user_id = user_id
-            )'''
+        # 2. Hash mật khẩu
+        hashed_password = UserRepository.hash_password(password)
+
+        # 3. Chèn vào bảng Users (Repository chỉ làm INSERT)
+        new_user_id = LoginRepository.create_new_user_name(username, hashed_password, role)
+        if new_user_id is None:
+            ErrorDialog.show_error("Không thể tạo tài khoản mới. Vui lòng thử lại.")
+            return
+        # 4. Chuyển sang bước cập nhật thông tin (UpdateInfoController)
+        controller = UpdateInfoController(main_window, role, username, hashed_password, new_user_id)
+        controller.show()
 
 
